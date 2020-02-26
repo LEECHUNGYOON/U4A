@@ -1,0 +1,222 @@
+.U4A_VTLineArea, .U4A_VTLineArea *{
+	box-sizing: border-box;
+}
+
+.U4A_VTLineArea_content {
+  width:100%;
+  max-width: 800px;
+  margin-left : 5px;
+  margin-right : 5px;
+  /*width: 95%;
+  margin: 0 auto 40px;
+  */
+}
+
+.U4A_VTLineArea_content_title {
+  margin-bottom: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.U4A_VTLine {
+  position: relative;
+  min-height: 500px;
+  width: 100%;
+  padding: 60px 0;
+}
+
+.U4A_VTLine_bar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 6px;
+  height: 100%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+ /* background-image: linear-gradient(#ffce79, #9b74ff);*/
+}
+.U4A_VTLine_bar:before, .U4A_VTLine_bar:after {
+  position: absolute;
+  left: 50%;
+  display: block;
+  width: 12px;
+  height: 12px;
+  content: '';
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  border-radius: 50%;
+}
+.U4A_VTLine_bar:before {
+  top: -1px;
+  /*background-color: #ffce79;*/
+}
+.U4A_VTLine_bar:after {
+  bottom: -1px;
+  /*background-color: #9b74ff;*/
+}
+
+.U4A_VTLine_elem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+.U4A_VTLine_elem:last-child {
+  margin-bottom: 0;
+}
+@media (min-width: 900px) {
+  .U4A_VTLine_elem {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 900px) {
+  .U4A_VTLine_elem--right {
+    justify-content: flex-end;
+  }
+}
+
+.U4A_VTLine_date {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  color: #fff;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  border: 6px solid #fff;
+}
+@media (min-width: 900px) {
+  .U4A_VTLine_date {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+  }
+}
+
+.U4A_VTLine_date-day {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.U4A_VTLine_date-month {
+  font-size: .85rem;
+}
+
+.U4A_VTLine_event {
+  border-radius : 10px;
+  position: relative;
+  width: 90%;
+  margin: 30px auto 0;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+@media (min-width: 560px) {
+  .U4A_VTLine_event {
+    width: 65%;
+  }
+}
+@media (min-width: 900px) {
+  .U4A_VTLine_event {
+    width: calc((100% - 70px - 8px * 4) / 2);
+    margin: 0;
+  }
+}
+.U4A_VTLine_event:before {
+  position: absolute;
+  top: 50%;
+  display: none;
+  width: 0;
+  height: 0;
+  content: '';
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+.U4A_VTLine_event:after {
+  position: absolute;
+  top: 50%;
+  display: none;
+  width: 16px;
+  height: 16px;
+  content: '';
+  -webkit-transform: translateY(-50%) rotate(45deg);
+          transform: translateY(-50%) rotate(45deg);
+}
+@media (min-width: 900px) {
+  .U4A_VTLine_event:before, .U4A_VTLine_event:after {
+    display: block;
+  }
+}
+
+.U4A_VTLine_event--left:before {
+  right: -8px;
+  border-left: 8px solid #fff;
+}
+.U4A_VTLine_event--left:after {
+  right: -7px;
+  box-shadow: 2px -1px 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.U4A_VTLine_event--right:before {
+  left: -8px;
+  border-right: 8px solid #fff;
+}
+.U4A_VTLine_event--right:after {
+  left: -7px;
+  box-shadow: -2px 2px 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.U4A_VTLine_event-date-time {
+  padding: 20px 15px 0;
+  display: flex;
+  margin-bottom: 15px;
+  font-size: .8rem;
+  color: rgba(44, 44, 44, 0.7);
+}
+
+.U4A_VTLine_event-date {
+  margin-right: 10px;
+}
+
+.U4A_VTLine_event-title {
+  padding: 0 15px;
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.U4A_VTLine_event-title > .sapUiIcon {
+	margin-right : 10px
+}
+
+.U4A_VTLine_event-descr {
+  padding: 0 15px 20px;
+  font-size: .9rem;
+  line-height: 1rem;
+}
+
+.U4A_VTLine_event-actions {
+  padding: 20px 15px;
+  border-top: 1px solid rgba(160, 160, 160, 0.2);
+}
+
+.U4A_VTLine_event-action {
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
+  transition-delay: 0s;
+  margin-right: 24px;
+  font-size: .9rem;
+  text-transform: uppercase;
+}
+.U4A_VTLine_event-action:hover {
+  opacity: .4;
+}
