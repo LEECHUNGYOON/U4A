@@ -1,5 +1,4 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
-
 sap.ui.define("u4a.m.LetterMessage",[
 'jquery.sap.global',
 'sap/ui/core/library'
@@ -60,42 +59,42 @@ sap.ui.define("u4a.m.LetterMessage",[
         }
     };
 
-    LetterMessage._onInit = function(){
-
-        // Letter Message CSS를 Load 한적 있는지 확인하여 없으면 로드한다.
-        var sLetterDivId = 'letter_css_div',
-            oLetterDiv = document.getElementById('letter_css_div');
-
-        if(oLetterDiv != null){
-            return;
-        }
-
-        var oCssDiv = document.createElement("div");
-            oCssDiv.id = sLetterDivId;
-
-        var oU4A_CSS_AREA = document.getElementById('u4a_css_area');
-
-        if(oU4A_CSS_AREA == null){
-            console.error('[U4AIDE] U4A_CSS_AREA가 없습니다.');
-        }
-
-        oU4A_CSS_AREA.appendChild(oCssDiv);
-
-        $(oCssDiv).append("<link rel='stylesheet' type='text/css' href='/zu4a_imp/u4a_lib/v1000/css/m/LetterMessage.css'>");
-
-    };
-
     LetterMessage.show = function(mOptions){
-
-        var oMsgDomRef,
-            mSettings;
 
         if(LetterMessage._isShow){
             return;
         }
+        
+        // Letter Style이 로드 되었는지 확인한다.
+        var sLetterDivId = 'u4aMLetter_style',
+         oLetterDiv = document.getElementById(sLetterDivId);
+            
+        if(oLetterDiv != null){
+            LetterMessage._render(mOptions);
+            return;
+        }
 
-        // LetterMessage 초기 작업(css파일 로드 등..)
-        this._onInit();
+        var sCssUrl = '/zu4a_imp/u4a_lib/v1000/css/m/LetterMessage.css';
+
+        jQuery.ajax({
+            url: sCssUrl,
+            dataType: "text",
+            mimeType : "text/css",
+            success: function(data){
+                 $("<style id='" + sLetterDivId + "'></style>").appendTo("head").html(data);
+                LetterMessage._render(mOptions);
+            },
+            error : function(e){
+                throw new Error('[U4AIDE] Load Fail to LetterMessage css files');
+            }
+        });
+
+    }; // (function) end of show
+
+    LetterMessage._render = function(mOptions){
+
+         var oMsgDomRef,
+             mSettings;
 
         // default option을 복사한다.
         mSettings = jQuery.extend({}, LetterMessage._mSettings);
@@ -130,7 +129,7 @@ sap.ui.define("u4a.m.LetterMessage",[
 
         $(oMsgDomRef).fadeIn(mSettings.animationDuration);
 
-    }; // (function) end of show
+    };
 
     LetterMessage._isExpand = function(isExpand){
 
