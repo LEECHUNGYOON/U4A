@@ -86,13 +86,9 @@ sap.ui.define("u4a.m.SplitApp", [
 
         setMasterPageExpand : function(bExpand){
             
-            if(this.getMode() != sap.m.SplitAppMode.HideMode){
-                return;
-            }
+            this.getProperty("masterPageExpand", bExpand, true);
 
             this._bMasterPageExpand = bExpand;
-
-            this.getProperty("masterPageExpand", bExpand, true);
 
             this._setMasterPageExpand(this._bMasterPageExpand);
 
@@ -132,6 +128,8 @@ sap.ui.define("u4a.m.SplitApp", [
 
         setRightPageExpand : function(bExpand){
 
+        	this.setProperty("rightPageExpand", bExpand, true);
+
             if(this._oRightPage == null){
                 return;
             }
@@ -139,8 +137,6 @@ sap.ui.define("u4a.m.SplitApp", [
             var sRightWidth = this.getRightPageWidth();
 
             this._setPageWidthAndExpandAnimation(this._oRightPage, sRightWidth, bExpand);
-
-            this.setProperty("rightPageExpand", bExpand, true);
 
         },
 
