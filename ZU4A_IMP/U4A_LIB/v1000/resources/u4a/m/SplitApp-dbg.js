@@ -57,10 +57,7 @@ sap.ui.define("u4a.m.SplitApp", [
                 oMasterBtn.detachPress(oMasterBtn.mEventRegistry["press"][0].fFunction);
                 oMasterBtn.attachPress(this._attachPressMasterBtnEvent.bind(this));
             }
-             
-            // 마스터 페이지를 접어 놓는다.
-            this.setMasterPageExpand(false);
-
+            
             // Right Page를 SplitApp의 Dom 안에 옮긴다.
             var oSplitApp = this.getDomRef();
 
@@ -86,7 +83,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
         setMasterPageExpand : function(bExpand){
             
-            this.getProperty("masterPageExpand", bExpand, true);
+            this.setProperty("masterPageExpand", bExpand, true);
 
             this._bMasterPageExpand = bExpand;
 
