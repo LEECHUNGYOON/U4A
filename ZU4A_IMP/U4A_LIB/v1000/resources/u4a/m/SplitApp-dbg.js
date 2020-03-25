@@ -1,4 +1,4 @@
-﻿//Copyright 2017. INFOCG Inc. all rights reserved.
+//Copyright 2017. INFOCG Inc. all rights reserved.
 
 sap.ui.define("u4a.m.SplitApp", [
 "sap/m/SplitApp",
@@ -22,16 +22,19 @@ sap.ui.define("u4a.m.SplitApp", [
 
         }, // end of metadata
 
+        init : function(){
+        
+            SplitApp.prototype.init.apply(this, arguments);
+              
+            // u4a.m.SplitApp는 HideMode만 지원함.
+            this.setMode(sap.m.SplitAppMode.HideMode);
+            
+        },
+
         renderer : function(oRm, oControl){
 
             sap.m.SplitAppRenderer.render(oRm, oControl);
        
-            // 모바일일 경우는 RightPage를 그리지 않는다.
-            var isMobile = sap.ui.Device.system.phone;
-            if(isMobile){
-                return;
-            }
-
             if(oControl.getRightPage()){
                 oControl._rightPageRender(oRm, oControl);
             }
@@ -41,23 +44,15 @@ sap.ui.define("u4a.m.SplitApp", [
         onAfterRendering : function(){
 
             SplitApp.prototype.onAfterRendering.apply(this, arguments);
-            
-            this.setMode(sap.m.SplitAppMode.HideMode);
-            
-            var isMobile = sap.ui.Device.system.phone;
-            if(isMobile){
-                return;
-            }
 
-            /*  HideMode일 경우에만
-             *  마스터 버튼(메뉴펼침버튼)에 등록되어 있는 press 이벤트를 제거한 후 이벤트 핸들링을 변경한다.
-             */
+            // 마스터 버튼(메뉴펼침버튼)에 등록되어 있는 press 이벤트를 제거한 후 이벤트 핸들링을 변경한다.
             var oMasterBtn = this._oShowMasterBtn;
-            if(this.getMode() == sap.m.SplitAppMode.HideMode){
                 oMasterBtn.detachPress(oMasterBtn.mEventRegistry["press"][0].fFunction);
                 oMasterBtn.attachPress(this._attachPressMasterBtnEvent.bind(this));
-            }
-            
+        
+            // Master Page Expand or Collapse
+            this.setMasterPageExpand(this.getMasterPageExpand());
+
             // Right Page를 SplitApp의 Dom 안에 옮긴다.
             var oSplitApp = this.getDomRef();
 
@@ -69,7 +64,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
             oSplitApp.appendChild(this._oRightPage);
 
-            // Right Page를 접는다.
+            // rightPageExpand 여부에 따라 우측 페이지를 접거나 펼친다.
             this.setRightPageExpand(this.getRightPageExpand());
 
         }, // end of onAfterRendering
@@ -78,7 +73,8 @@ sap.ui.define("u4a.m.SplitApp", [
 
             this._bMasterPageExpand = !this._bMasterPageExpand;
 
-            this._setMasterPageExpand(this._bMasterPageExpand);
+            this.setMasterPageExpand(this._bMasterPageExpand);
+
         },
 
         setMasterPageExpand : function(bExpand){
@@ -97,6 +93,8 @@ sap.ui.define("u4a.m.SplitApp", [
 
             this.setProperty("masterPageWidth", sWidth);
 
+            this.setMasterPageExpand(this.getMasterPageExpand());
+
         },
 
         _setMasterPageExpand : function(bExpand){
@@ -109,8 +107,6 @@ sap.ui.define("u4a.m.SplitApp", [
 
             var sMasterWidth = this.getMasterPageWidth();
 
-            this._pageWidthValidCheck(sMasterWidth);
-
             this._setPageWidthAndExpandAnimation(oMaster, sMasterWidth, bExpand);
 
         },
@@ -120,6 +116,8 @@ sap.ui.define("u4a.m.SplitApp", [
             this._pageWidthValidCheck(sWidth);
 
             this.setProperty("rightPageWidth", sWidth);
+
+            this.setRightPageExpand(this.getRightPageExpand());
 
         },
 
@@ -169,21 +167,43 @@ sap.ui.define("u4a.m.SplitApp", [
         // master & Right Page width & Expand Common function
         _setPageWidthAndExpandAnimation : function(oPage, sWidth, bExpand){
 
-            if(oPage == null || typeof bExpand != "boolean"){
+             if(oPage == null || typeof bExpand != "boolean"){
                 return;
             }
 
             this._pageWidthValidCheck(sWidth);
 
-            var iWidth = parseInt(sWidth);
-            var isMaster = false;
-            
-            if(jQuery.sap.endsWith(oPage.id, "Master")){
-                iWidth = iWidth * -1;
-                isMaster = true;
-            }
+            var iWidth,
+                sComputedWidth,
+                isMaster = false;
 
-            var sComputedWidth = iWidth + "px";
+            // px단위일 경우
+            if(jQuery.sap.endsWith(sWidth, "px")){
+
+                iWidth = parseInt(sWidth);
+                
+                // master page인 경우 width값에 마이너스로 변경하여 css animation에 적용한다.
+                if(jQuery.sap.endsWith(oPage.id, "Master")){
+                    iWidth = iWidth * -1;
+                    isMaster = true;
+                }
+
+                sComputedWidth = iWidth + "px";
+            }
+            else {
+
+                sComputedWidth = "100%";
+                
+                // master page인 경우 width값에 마이너스로 변경하여 css animation에 적용한다.
+                if(jQuery.sap.endsWith(oPage.id, "Master") && bExpand == false){
+                    isMaster = true;
+                    iWidth = parseInt(sComputedWidth);
+                    iWidth = iWidth * -1;
+
+                    sComputedWidth = iWidth + "%";
+                }
+
+            }
 
             $(oPage).css("width", sWidth);
 
@@ -198,15 +218,12 @@ sap.ui.define("u4a.m.SplitApp", [
 
             }
             else {
-                
-               if((isMaster && this.getMode() != sap.m.SplitAppMode.ShowHideMode) || jQuery.sap.endsWith(oPage.id, "RightPage")){
-                  $(oPage).css("transform", "translate3d(" + sComputedWidth + ",0,0)");
-                  $(oPage).css("-webkit-transform", "translate3d(" + sComputedWidth + ",0,0)");
-               } 
-              
+
+               $(oPage).css("transform", "translate3d(" + sComputedWidth + ",0,0)");
+               $(oPage).css("-webkit-transform", "translate3d(" + sComputedWidth + ",0,0)");
                $(oPage).css("transition", "all 300ms");
                $(oPage).css("-webkit-transition", "all 300ms");
-               $(oPage).css("box-shadow", "");
+               $(oPage).css("box-shadow", "rgba(255, 255, 255, 0) 0px 0rem 0rem 0px, rgba(255, 255, 255, 0) 0px 0px 0px 0px");
 
             }
 
@@ -214,18 +231,15 @@ sap.ui.define("u4a.m.SplitApp", [
        
         _pageWidthValidCheck : function(sWidth){
 
-            if(!jQuery.sap.endsWith(sWidth, 'px')){
-                throw new Error("[U4AIDE] property Type Error 'rightPageWidth' : 'px' 단위만 입력 가능합니다.");
+            if(!jQuery.sap.endsWith(sWidth, 'px') && !jQuery.sap.endsWith(sWidth, '%')){
+                throw new Error("[U4AIDE] property Type Error 'rightPageWidth' : 'px' 또는 % 단위만 입력 가능합니다.");
             }
 
         },
 
         showMaster : function(){
             
-            if(this.getMode() != sap.m.SplitAppMode.HideMode){
-                SplitApp.prototype.showMaster.apply(this, arguments);
-                return;
-            }
+            SplitApp.prototype.showMaster.apply(this, arguments);
             
             this.setMasterPageExpand(true);
             
@@ -233,10 +247,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
         hideMaster : function(){
         
-            if(this.getMode() != sap.m.SplitAppMode.HideMode){
-                SplitApp.prototype.hideMaster.apply(this, arguments);
-                return;
-            }
+            SplitApp.prototype.hideMaster.apply(this, arguments);
 
             this.setMasterPageExpand(false);
             
