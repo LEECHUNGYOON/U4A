@@ -47,8 +47,10 @@ sap.ui.define("u4a.m.SplitApp", [
 
             // 마스터 버튼(메뉴펼침버튼)에 등록되어 있는 press 이벤트를 제거한 후 이벤트 핸들링을 변경한다.
             var oMasterBtn = this._oShowMasterBtn;
+            if(oMasterBtn != null){
                 oMasterBtn.detachPress(oMasterBtn.mEventRegistry["press"][0].fFunction);
                 oMasterBtn.attachPress(this._attachPressMasterBtnEvent.bind(this));
+            }                
         
             // Master Page Expand or Collapse
             this.setMasterPageExpand(this.getMasterPageExpand());
