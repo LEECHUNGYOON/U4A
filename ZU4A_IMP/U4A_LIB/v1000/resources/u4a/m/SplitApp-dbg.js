@@ -147,7 +147,7 @@ sap.ui.define("u4a.m.SplitApp", [
            oRm.addStyle("height", "100%");
            oRm.addStyle("display", "inline-block");
            oRm.addStyle("position", "absolute");
-           oRm.addStyle("z-index: 5");
+           oRm.addStyle("z-index", "4");
            oRm.addStyle("top", "0");
            oRm.addStyle("box-sizing", "border-box");
            oRm.addStyle("width", sRightWidth);
