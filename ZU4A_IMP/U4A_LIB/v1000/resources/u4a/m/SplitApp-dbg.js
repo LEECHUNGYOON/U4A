@@ -2,8 +2,9 @@
 
 sap.ui.define("u4a.m.SplitApp", [
 "sap/m/SplitApp",
+"sap/ui/thirdparty/jquery"
 
-], function(SplitApp){
+], function(SplitApp, jQuery){
     "use strict";
 
     var oSplitApp = SplitApp.extend("u4a.m.SplitApp", {
