@@ -14,7 +14,7 @@ sap.ui.define("u4a.m.SplitApp", [
                 masterPageExpand : { type : "boolean", defaultValue : false },
                 rightPageWidth : { type : "sap.ui.core.CSSSize", defaultValue : "330px" },
                 rightPageExpand : { type : "boolean", defaultValue : false },
-                rightPageAutoHide : { type : "boolean", defaultValue : false }
+                rightPageAutoHide : { type : "boolean", defaultValue : true }
             },
 
             aggregations : {
