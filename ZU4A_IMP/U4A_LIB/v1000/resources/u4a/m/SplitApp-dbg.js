@@ -13,11 +13,12 @@ sap.ui.define("u4a.m.SplitApp", [
                 masterPageWidth : { type : "sap.ui.core.CSSSize", defaultValue : "330px" },
                 masterPageExpand : { type : "boolean", defaultValue : false },
                 rightPageWidth : { type : "sap.ui.core.CSSSize", defaultValue : "330px" },
-                rightPageExpand : { type : "boolean", defaultValue : false }
+                rightPageExpand : { type : "boolean", defaultValue : false },
+                rightPageAutoHide : { type : "boolean", defaultValue : false }
             },
 
             aggregations : {
-              "rightPage" : { type : "sap.m.Page", multiple : false},
+              "rightPage" : { type : "sap.m.Page", multiple : false },
             }
 
         }, // end of metadata
@@ -253,6 +254,20 @@ sap.ui.define("u4a.m.SplitApp", [
 
             this.setMasterPageExpand(false);
             
+        },
+
+        ontap : function(oEvent){
+        
+            SplitApp.prototype.ontap.apply(this, arguments);
+        
+            var $targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster");
+            
+            if ($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerDetail")) {
+		            if(this.getRightPageAutoHide()){
+                    	this.setRightPageExpand(false);
+                	}  	
+	          }
+    
         }
 
     });
