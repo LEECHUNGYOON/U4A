@@ -54,24 +54,41 @@ sap.ui.define("u4a.m.SplitApp", [
             if(oMasterBtn != null){
                 oMasterBtn.detachPress(oMasterBtn.mEventRegistry["press"][0].fFunction);
                 oMasterBtn.attachPress(this._attachPressMasterBtnEvent.bind(this));
-            }                
-        
-            // Master Page Expand or Collapse
-            this.setMasterPageExpand(this.getMasterPageExpand());
-
-            // Right Page를 SplitApp의 Dom 안에 옮긴다.
-            var oSplitApp = this.getDomRef();
+            } 
 
             this._oRightPage = document.getElementById(this.getId() + "-RightPage");
+            
+            if(this._oRightPage != null){
+                 
+                 /* RightPage를 구성할 때, 접속 Device 별로 DOM의 위치가 다르다.
+                  * - Desktop && Tablet
+                  *   : SplitApp DOM 안에 구성한다.
+                  *
+                  * - Mobile
+                  *   : Mobile 모드이면 NavContainer가 생성되며, 
+                  *     NavContainer DOM 안에 RightPage를 삽입한다.
+                  */
 
-            if(this._oRightPage == null){
-                return;
+                 // Right Page를 SplitApp의 Dom 안에 옮긴다.
+                var oSplitAppDOM = this.getDomRef();
+                
+                if(Device.system.phone){
+                 
+                    var oNaviCon = this.getAggregation("_navMaster"),
+                        oNaviConDOM = oNaviCon.getDomRef();
+                        
+                        this._oRightPage.style.visibility = "hidden";
+                        oNaviConDOM.appendChild(this._oRightPage);
+                    
+                }
+                else {
+                    oSplitAppDOM.appendChild(this._oRightPage);
+                }
+            
+                // rightPageExpand 여부에 따라 우측 페이지를 접거나 펼친다.
+                this.setRightPageExpand(this.getRightPageExpand());    
+                
             }
-
-            oSplitApp.appendChild(this._oRightPage);
-
-            // rightPageExpand 여부에 따라 우측 페이지를 접거나 펼친다.
-            this.setRightPageExpand(this.getRightPageExpand());
 
         }, // end of onAfterRendering
 
@@ -183,7 +200,7 @@ sap.ui.define("u4a.m.SplitApp", [
                 sComputedWidth,
                 isMaster = false;
 
-            // px단위일 경우
+            // px단위 일경우
             if(jQuery.sap.endsWith(sWidth, "px")){
 
                 iWidth = parseInt(sWidth);
@@ -198,6 +215,7 @@ sap.ui.define("u4a.m.SplitApp", [
             }
             else {
 
+            // % 단위 일경우    
                 sComputedWidth = "100%";
                 
                 // master page인 경우 width값에 마이너스로 변경하여 css animation에 적용한다.
