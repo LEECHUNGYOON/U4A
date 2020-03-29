@@ -2,9 +2,11 @@
 
 sap.ui.define("u4a.m.SplitApp", [
 "sap/m/SplitApp",
-"sap/ui/thirdparty/jquery"
+"sap/ui/thirdparty/jquery",
+"sap/ui/Device",
+"sap/ui/dom/containsOrEquals"
 
-], function(SplitApp, jQuery){
+], function(SplitApp, jQuery, Device, containsOrEquals){
     "use strict";
 
     var oSplitApp = SplitApp.extend("u4a.m.SplitApp", {
@@ -259,16 +261,29 @@ sap.ui.define("u4a.m.SplitApp", [
 
         ontap : function(oEvent){
         
-            SplitApp.prototype.ontap.apply(this, arguments);
-        
-            var $targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster");
-            
-            if ($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerDetail")) {
-		            if(this.getRightPageAutoHide()){
-                    	this.setRightPageExpand(false);
-                	}  	
-	          }
-    
+            if (Device.system.phone) {
+		  		return;
+    		}
+
+			var bIsMasterNav = true,
+				$targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster"), 
+				metaData = oEvent.srcControl.getMetadata();
+
+			if ($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerDetail")) {
+			  	bIsMasterNav = false;
+			}
+
+			if (((!this._oldIsLandscape && this.getMode() == "ShowHideMode") || this.getMode() == "HideMode")
+				&& !bIsMasterNav
+				&& !containsOrEquals(this._oShowMasterBtn.getDomRef(), oEvent.target)
+				&& (!metaData.getEvent("tap") || !metaData.getEvent("press"))) {
+	        
+			  	this.hideMaster();
+	        
+		        if(this.getRightPageAutoHide()){
+		           	this.setRightPageExpand(false);
+		        } 
+			}    
         }
 
     });
