@@ -56,6 +56,9 @@ sap.ui.define("u4a.m.SplitApp", [
                 oMasterBtn.attachPress(this._attachPressMasterBtnEvent.bind(this));
             } 
 
+            // 마스터 페이지의 Expand 여부에 따라 동작시킨다.
+            this.setMasterPageExpand(this.getMasterPageExpand());
+
             this._oRightPage = document.getElementById(this.getId() + "-RightPage");
             
             if(this._oRightPage != null){
