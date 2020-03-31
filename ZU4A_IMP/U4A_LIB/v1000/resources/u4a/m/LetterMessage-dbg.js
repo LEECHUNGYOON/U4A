@@ -1,12 +1,16 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
 sap.ui.define("u4a.m.LetterMessage",[
 'jquery.sap.global',
-'sap/ui/core/library'
-], function(jQuery, coreLibrary){
+'sap/ui/core/library',
+'sap/ui/base/DataType'
+], function(jQuery, coreLibrary, DataType){
     "use strict";
 
     // shortcut for sap.ui.core.Dock
     var Dock = coreLibrary.Dock;
+
+    // float type
+    var oFloatType = DataType.getType("float");
 
     // shortcut for sap.ui.core.CSSSize
     var CSSSize = coreLibrary.CSSSize;
@@ -16,9 +20,10 @@ sap.ui.define("u4a.m.LetterMessage",[
     // Default Options
     LetterMessage._mSettings = {
         onClick: null,              // click Event
-        animationDuration : 250,   // Letter FadeIn Time
-        position : "center center",  // Letter Position
-        expand : false              // Letter Expand
+        animationDuration : 250,   	// Letter FadeIn Time
+        position : "center center", // Letter Position
+        expand : false,             // Letter Expand
+        scale : 1                   // Letter Scale
     };
 
     LetterMessage._isShow = false;
@@ -32,6 +37,8 @@ sap.ui.define("u4a.m.LetterMessage",[
         LetterMessage._validateOnClick(mSettings.onClick);
 
         LetterMessage._validateBoolean(mSettings.expand);
+
+        LetterMessage._isFiniteFloat(mSettings.scale);
 
     };
 
@@ -59,6 +66,14 @@ sap.ui.define("u4a.m.LetterMessage",[
         }
     };
 
+    LetterMessage._isFiniteFloat = function(iFloat){
+        var oFloatType = DataType.getType("float");
+        var iParse = oFloatType.parseValue(iFloat);
+        if(isNaN(iParse) || !oFloatType.isValid(iParse) || iParse <= 0){
+            throw new Error('[U4AIDE] "scale" should be a float on ' + LetterMessage + "._isFiniteFloat");
+        }
+    };
+
     LetterMessage.show = function(mOptions){
 
         if(LetterMessage._isShow){
@@ -80,8 +95,13 @@ sap.ui.define("u4a.m.LetterMessage",[
             url: sCssUrl,
             dataType: "text",
             mimeType : "text/css",
-            success: function(data){
-                 $("<style id='" + sLetterDivId + "'></style>").appendTo("head").html(data);
+            success: function(cssData){
+
+            	if(cssData == ""){
+                    throw new Error('[U4AIDE] Load Fail to LetterMessage css files');
+                }
+
+                $("<style id='" + sLetterDivId + "'></style>").appendTo("head").html(cssData);
                 LetterMessage._render(mOptions);
             },
             error : function(e){
@@ -202,7 +222,7 @@ sap.ui.define("u4a.m.LetterMessage",[
     }; // (function) end of hide
 
     LetterMessage._getLetterMsgDomRef = function(){
-        return document.getElementById("__Letter");
+        return document.getElementById("__LetterArea");
     }; // (function) end of _getLetterMsgDomRef
 
     function createHTMLMarkup(mSettings){
@@ -212,8 +232,12 @@ sap.ui.define("u4a.m.LetterMessage",[
             return oLetter;
         }
 
-        var oMsgDomRoot = document.createElement("div");
+        var oMsgArea = document.createElement("div");
+            oMsgArea.id = "__LetterArea";
+            oMsgArea.className = "u4aMLetterMsgArea";
+            oMsgArea.style.zIndex = '10000';
 
+        var oMsgDomRoot = document.createElement("div");
             oMsgDomRoot.id = "__Letter";
             oMsgDomRoot.className = "u4aMLetterMsg";
             oMsgDomRoot.style.display = "none";
@@ -221,7 +245,7 @@ sap.ui.define("u4a.m.LetterMessage",[
             oMsgDomRoot.style.height = "200px";
 
             // 레터 메시지의 위치를 설정한다.
-            LetterMessage._setPosition(oMsgDomRoot, mSettings.position);
+            LetterMessage._setPosition(oMsgDomRoot, mSettings);
 
         var oMsgDomLv1 = document.createElement("div");
             oMsgDomLv1.className = "u4aMLetterMsgAnimated";
@@ -276,63 +300,76 @@ sap.ui.define("u4a.m.LetterMessage",[
             oMsgDomLv2_2.appendChild(oMsgDomLv3_3);
             oMsgDomLv2_2.appendChild(oMsgDomLv3_4);
 
-            document.body.appendChild(oMsgDomRoot);
+            oMsgArea.appendChild(oMsgDomRoot);
+
+            document.body.appendChild(oMsgArea);
 
             return oMsgDomRoot;
 
     }; // (function) end of createHTMLMarkup
 
-    LetterMessage._setPosition = function(oMsgDom, oPos){
+    LetterMessage._setPosition = function(oMsgDom, mSetting){
+    	var oPos = mSetting.position,
+          	aPos = oPos.split(" "),
+          	xPos = aPos[0],
+          	yPos = aPos[1],
 
-          var aPos = oPos.split(" "),
-              xPos = aPos[0],
-              yPos = aPos[1];
+			sScale = mSetting.scale,
+			iDomWidth = parseInt(oMsgDom.style.width),
+			iHalfWidth_P = iDomWidth / 2,
+			iHalfWidth_M = iHalfWidth_P * -1;
 
-          oMsgDom.setAttribute('u4a-data-position', xPos + '-' + yPos);
+      	oMsgDom.setAttribute('u4a-data-position', xPos + '-' + yPos);
 
-          switch(xPos){
+		var xScale,
+  			yScale;
 
-              case "begin" :
-              case "left" :
-                  oMsgDom.style.left = "100px";
-                  break;
+		switch(xPos){
 
-              case "center" :
-                  oMsgDom.style.left = "50%";
-                  oMsgDom.style.transform = "translate(-50%,-50%)";
-                  oMsgDom.style.webkitTransform = "translate(-50%,-50%)";
+			case "begin" :
+			case "left" :
+				xScale = sScale * iHalfWidth_P;
+				break;
 
-                  break;
+			case "center" :
+			  	oMsgDom.style.left = "50%";
+			  	xScale = sScale * iHalfWidth_M;
+			  	break;
 
-              case "right":
-              case "end" :
-                  oMsgDom.style.left = "auto";
-                  oMsgDom.style.right = "100px";
-                  break;
+			case "right":
+			case "end" :
+			  	oMsgDom.style.left = "auto";
+			  	oMsgDom.style.right = (sScale * iHalfWidth_P) + "px";
+			  	xScale = iDomWidth - ((sScale * iHalfWidth_P) * 2);
+			  	break;
 
-          }
+		}
 
-          switch(yPos){
-              case "top":
-                  oMsgDom.style.top = "100px";
-                  break;
+		switch(yPos){
+		  	case "top":
+	      		oMsgDom.style.top = "100px";
+		      	yScale = iHalfWidth_M;
+		      	break;
 
-              case "center" :
-                oMsgDom.style.top = "50%";
-                break;
+		  	case "center" :
+		    	oMsgDom.style.top = "50%";
+		    	yScale = sScale * iHalfWidth_M;
+		    	break;
 
-              case "bottom" :
+		  	case "bottom" :
+		  		oMsgDom.style.bottom = ((((iHalfWidth_P + 40) * sScale) + iHalfWidth_P) - iDomWidth) + "px";
+		  		yScale = ((iHalfWidth_M * -1) - (sScale * iHalfWidth_P));
 
-                oMsgDom.style.bottom = "50px";
-                oMsgDom.style.transform = "translateY(0%)";
+			  	if(xPos == "center"){
+			      	oMsgDom.style.transform = "translate(-50%)";
+			  	}
 
-                if(xPos == "center"){
-                    oMsgDom.style.transform = "translate(-50%)";
-                }
+		    	break;
+		}
 
-                break;
-          }
-
+      	oMsgDom.style.transform = "matrix(" + sScale + ", 0, 0," + sScale + ", " + xScale + ", " + yScale + ")";
+      	oMsgDom.style.webkitTransform = "matrix(" + sScale + ", 0, 0," + sScale + ", " + xScale + ", " + yScale + ")";
+      	oMsgDom.style.transformOrigin = "0 0";
     };
 
     LetterMessage.toString = function() {
