@@ -149,7 +149,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
         setRightPageExpand : function(bExpand){
 
-        	this.setProperty("rightPageExpand", bExpand, true);
+          this.setProperty("rightPageExpand", bExpand, true);
 
             if(this._oRightPage == null){
                 return;
@@ -168,6 +168,7 @@ sap.ui.define("u4a.m.SplitApp", [
            var sComputedWidth = iWidth + "px";
 
            oRm.write("<div");
+           oRm.addClass("u4aMSplitAppRightPage");
            oRm.addStyle("height", "100%");
            oRm.addStyle("display", "inline-block");
            oRm.addStyle("position", "absolute");
@@ -182,6 +183,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
            oRm.writeAttribute("id", oControl.getId() + "-RightPage");
            oRm.writeStyles();
+           oRm.writeClasses();
            oRm.write(">");
 
            oRm.renderControl(oControl.getRightPage());
@@ -283,29 +285,69 @@ sap.ui.define("u4a.m.SplitApp", [
         ontap : function(oEvent){
         
             if (Device.system.phone) {
-		  		return;
-    		}
+                return;
+            }
 
-			var bIsMasterNav = true,
-				$targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster"), 
-				metaData = oEvent.srcControl.getMetadata();
+            var bIsCollapse = true,  // 접을지 말지 여부
+                bIsMasterNav = false,   // 마스터 여부
+                bIsDetail = false,      // 디테일 위치 여부
+                bIsRightPage = false,   // RightPage 여부
 
-			if ($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerDetail")) {
-			  	bIsMasterNav = false;
-			}
+            $targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster, .u4aMSplitAppRightPage"),
+            $targetHeader = jQuery(oEvent.target).closest(".sapMPageHeader"),
+            metaData = oEvent.srcControl.getMetadata();
 
-			if (((!this._oldIsLandscape && this.getMode() == "ShowHideMode") || this.getMode() == "HideMode")
-				&& !bIsMasterNav
-				&& !containsOrEquals(this._oShowMasterBtn.getDomRef(), oEvent.target)
-				&& (!metaData.getEvent("tap") || !metaData.getEvent("press"))) {
-	        
-			  	this.hideMaster();
-	        
-		        if(this.getRightPageAutoHide()){
-		           	this.setRightPageExpand(false);
-		        } 
-			}    
-        }
+            // is Master Page?
+            if($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerMaster")){
+                bIsMasterNav = true;
+            }
+
+            // is Detail Page?
+            if ($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerDetail")) {
+                bIsDetail = true;
+            }
+
+            // is Right Page?
+            if ($targetContainer.length > 0 && $targetContainer.hasClass("u4aMSplitAppRightPage")) {
+                bIsRightPage = true;
+            }
+
+            // Detail에 위치 하면서 페이지 헤더 인 경우
+            var bIsHeader = false;
+            if(bIsDetail && ($targetHeader.length > 0 && $targetHeader.hasClass("sapMPageHeader"))){
+                bIsHeader = true;
+                bIsCollapse = false;
+            }
+           
+            // 헤더에 위치 하면서 버튼이 아닌 경우
+            if(bIsHeader && metaData._sClassName != "sap.m.Button"){
+                bIsCollapse = true;
+            }
+            
+            // 헤더에 있으면서 부모가 버튼인 경우
+            if( bIsHeader && (metaData == sap.ui.core.Icon.getMetadata() && oEvent.srcControl.getParent() instanceof sap.m.Button)){
+                bIsCollapse = false;
+            }
+
+            // 마스터 또는 Right 페이지 일 경우
+            if(bIsMasterNav || bIsRightPage){
+                bIsCollapse = false;
+            }
+            
+            // 헤더에 위치 하는 아이콘 이지만 부모가 버튼이 아닌경우 (아이콘 단독 UI 일 경우)
+            if((bIsHeader && metaData == sap.ui.core.Icon.getMetadata()) && oEvent.srcControl.getParent() instanceof sap.m.Button == false){
+                bIsCollapse = true;
+            }
+
+            if(bIsCollapse) {
+                this.hideMaster();
+
+                if(this.getRightPageAutoHide()){
+                    this.setRightPageExpand(false);
+                }
+            }      
+
+        } // end of ontap(event)
 
     });
 
