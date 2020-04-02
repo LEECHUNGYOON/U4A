@@ -1,4 +1,4 @@
-//Copyright 2017. INFOCG Inc. all rights reserved.
+﻿//Copyright 2017. INFOCG Inc. all rights reserved.
 
 sap.ui.define("u4a.m.BadgeButton", [
 "sap/ui/core/Control",
