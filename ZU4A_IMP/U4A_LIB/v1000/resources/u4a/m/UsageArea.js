@@ -9,6 +9,10 @@ sap.ui.define("u4a.m.UsageArea", [
     var oUsageArea = Control.extend("u4a.m.UsageArea", {
         metadata : {
             library : "u4a.m",
+            properties : {
+		  		width : { type : "sap.ui.core.CSSSize", defaultValue : "100%" },
+		  		height : { type : "sap.ui.core.CSSSize", defaultValue : "100%" }
+			},
 
             defaultAggregation : "contents",
 
@@ -25,6 +29,11 @@ sap.ui.define("u4a.m.UsageArea", [
 
             oRm.write("<div");
             oRm.writeControlData(oControl);
+            oRm.addClass("u4aMUsageArea");
+            oRm.addStyle("width", oControl.getWidth());
+            oRm.addStyle("height", oControl.getHeight());
+            oRm.writeStyles();
+            oRm.writeClasses();
             oRm.write(">");
 
             for(var i = 0; i < iCnt; i++){
