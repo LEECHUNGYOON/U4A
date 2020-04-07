@@ -318,8 +318,6 @@ sap.ui.define("u4a.m.SplitApp", [
 
         },
 
-
-
         _attachPressMasterBtnEvent : function(){
 
             this._bMasterPageExpand = !this._bMasterPageExpand;
@@ -506,7 +504,6 @@ sap.ui.define("u4a.m.SplitApp", [
                && (!metaData.getEvent('press'))){
                bIsCollapse = true;
             }
-
 
             if(bIsCollapse) {
                 this.hideMaster();
