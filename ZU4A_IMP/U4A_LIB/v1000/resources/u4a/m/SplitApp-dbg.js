@@ -84,13 +84,6 @@ sap.ui.define("u4a.m.SplitApp", [
 
         }, // end of renderer
 
-        onBeforeRendering : function(){
-
-            this._setMasterAnimation();
-            this._setRightAnimation();
-
-        },
-
         onAfterRendering : function(){
 
             SplitApp.prototype.onAfterRendering.apply(this, arguments);
@@ -185,6 +178,14 @@ sap.ui.define("u4a.m.SplitApp", [
 
         },
 
+        _getMasterStyleDomId : function(){
+            return this.getId() + "-u4aMSplitApp_masterStyle";
+        },
+
+        _getRightStyleDomId : function(){
+            return this.getId() + "-u4aMSplitApp_rightStyle";
+        },
+
         _setMasterAnimation : function(){
 
             var oMaster = this._oMasterNav,
@@ -194,24 +195,26 @@ sap.ui.define("u4a.m.SplitApp", [
             // 마스터 페이지 유무 확인
             if(oMaster == null){
                 return;
-            }
+            }            
 
             // 마스터 페이지 동적 CSS 생성
-            var oMasterStyle = document.getElementById('u4aMSplitApp_masterStyle');
+            var oMasterStyle = document.getElementById(this._getMasterStyleDomId());
             if(oMasterStyle != null){
                $(oMasterStyle).remove();
             }
 
             var oMasterStyleDom = document.createElement("style");
-                oMasterStyleDom.id = 'u4aMSplitApp_masterStyle';
+                oMasterStyleDom.id = this._getMasterStyleDomId();
+
+            var sAppId = this.getId();
 
             // Master Page CSS
-            var sMasterCSS = '.u4aMSplitAppMaster {';
+            var sMasterCSS = '.u4aMSplitAppMaster' + sAppId + '{';
                 sMasterCSS += 'width : ' + sMasterWidth;
                 sMasterCSS += '}';
 
             // masterPageShow CSS
-                sMasterCSS += '.u4aMSplitAppMasterShow {';
+                sMasterCSS += '.u4aMSplitAppMasterShow' + sAppId +'{';
                 sMasterCSS += 'transform: translate3d(0px, 0px, 0px) !important;';
                 sMasterCSS += 'transition: all 300ms ease 0s !important;';
                 sMasterCSS += 'box-shadow: rgba(0, 0, 0, 0.15) 0px 0.625rem 1.875rem 0px, rgba(0, 0, 0, 0.15) 0px 0px 0px 1px !important;';
@@ -219,7 +222,7 @@ sap.ui.define("u4a.m.SplitApp", [
                 sMasterCSS += '}';
 
             // masterPageHide CSS
-                sMasterCSS += '.u4aMSplitAppMasterHide {';
+                sMasterCSS += '.u4aMSplitAppMasterHide' + sAppId + '{';
                 sMasterCSS += 'transform: translate3d(' + sMasterCompWidth + ',0,0) !important;';
                 sMasterCSS += '-webkit-transform: translate3d(' + sMasterCompWidth + ',0,0) !important;';
                 sMasterCSS += 'transition: all 300ms !important;';
@@ -231,16 +234,16 @@ sap.ui.define("u4a.m.SplitApp", [
                 document.head.appendChild(oMasterStyleDom);
 
             // 기 적용된 CSS를 삭제한다.
-            oMaster.removeStyleClass('u4aMSplitAppMaster');
-            oMaster.removeStyleClass('u4aMSplitAppMasterShow');
-            oMaster.removeStyleClass('u4aMSplitAppMasterHide');
+            oMaster.removeStyleClass('u4aMSplitAppMaster' + sAppId);
+            oMaster.removeStyleClass('u4aMSplitAppMasterShow' + sAppId);
+            oMaster.removeStyleClass('u4aMSplitAppMasterHide' + sAppId);
 
-            oMaster.addStyleClass('u4aMSplitAppMaster');
+            oMaster.addStyleClass('u4aMSplitAppMaster' + sAppId);
             if(this.getMasterPageExpand()){
-                oMaster.addStyleClass('u4aMSplitAppMasterShow');
+                oMaster.addStyleClass('u4aMSplitAppMasterShow' + sAppId);
             }
             else {
-                oMaster.addStyleClass('u4aMSplitAppMasterHide');
+                oMaster.addStyleClass('u4aMSplitAppMasterHide' + sAppId);
             }
 
         },
@@ -259,16 +262,18 @@ sap.ui.define("u4a.m.SplitApp", [
             var sRightPageWidth = this.getRightPageWidth(),
                 sRightCompWidth = this._getComputedWidth(oRightPage, sRightPageWidth);
 
-            var oRightStyle = document.getElementById('u4aMSplitApp_rightStyle');
+            var oRightStyle = document.getElementById(this._getRightStyleDomId());
                 if(oRightStyle != null){
                    $(oRightStyle).remove();
                 }
 
                 var oRightStyleDom = document.createElement("style");
-                    oRightStyleDom.id = 'u4aMSplitApp_rightStyle';
+                    oRightStyleDom.id = this._getRightStyleDomId();
+
+                var sAppId = this.getId();
 
                 // rightPage CSS
-                var sRightCss = '.u4aMSplitAppRightPage {';
+                var sRightCss = '.u4aMSplitAppRightPage' + sAppId + '{';
                     sRightCss += 'height: 100%;';
                     sRightCss += 'display: inline-block;';
                     sRightCss += 'position: absolute;';
@@ -282,7 +287,7 @@ sap.ui.define("u4a.m.SplitApp", [
                     sRightCss += '}';
 
                     // rightPageShow Css
-                    sRightCss += '.u4aMSplitAppRightShow {';
+                    sRightCss += '.u4aMSplitAppRightShow' + sAppId + '{';
                     sRightCss += 'transform: translate3d(0px, 0px, 0px) !important;';
                     sRightCss += 'transition: all 300ms ease 0s !important;';
                     sRightCss += 'box-shadow: rgba(0, 0, 0, 0.15) 0px 0.625rem 1.875rem 0px, rgba(0, 0, 0, 0.15) 0px 0px 0px 1px !important;';
@@ -290,7 +295,7 @@ sap.ui.define("u4a.m.SplitApp", [
                     sRightCss += '}';
 
                     // masterPageHide CSS
-                    sRightCss += '.u4aMSplitAppRightHide {';
+                    sRightCss += '.u4aMSplitAppRightHide' + sAppId + '{';
                     sRightCss += 'transform: translate3d(' + sRightCompWidth + ',0,0) !important;';
                     sRightCss += '-webkit-transform: translate3d(' + sRightCompWidth + ',0,0) !important;';
                     sRightCss += 'transition: all 300ms !important;';
@@ -303,17 +308,17 @@ sap.ui.define("u4a.m.SplitApp", [
                     document.head.appendChild(oRightStyleDom);
 
               var $RightPage = $(oRight);
-                  $RightPage.removeClass('u4aMSplitAppRightPage');
-                  $RightPage.removeClass('u4aMSplitAppRightShow');
-                  $RightPage.removeClass('u4aMSplitAppRightHide');
+                  $RightPage.removeClass('u4aMSplitAppRightPage' + sAppId);
+                  $RightPage.removeClass('u4aMSplitAppRightShow' + sAppId);
+                  $RightPage.removeClass('u4aMSplitAppRightHide' + sAppId);
 
-              $RightPage.addClass('u4aMSplitAppRightPage');
+              $RightPage.addClass('u4aMSplitAppRightPage' + sAppId);
 
               if(this.getRightPageExpand()){
-                  $RightPage.addClass('u4aMSplitAppRightShow');
+                  $RightPage.addClass('u4aMSplitAppRightShow' + sAppId);
               }
               else {
-                  $RightPage.addClass('u4aMSplitAppRightHide');
+                  $RightPage.addClass('u4aMSplitAppRightHide' + sAppId);
               }
 
         },
@@ -331,16 +336,16 @@ sap.ui.define("u4a.m.SplitApp", [
             /* true  : SplitAppMode 를 'StretchCompressMode' 로 설정하여 masterPage를 Fix 한다.
              * false : SplitAppMode 를 'HideMode' 로 설정하여 masterPage를 Fix 하지 않는다.
              */
+            
+            this.setProperty("masterPageFixed", bFixed, true);
+            
             if(bFixed){
                 this.setMode(sap.m.SplitAppMode.StretchCompressMode);
+                this.setMasterPageExpand(bFixed);
             }
             else {
                 this.setMode(sap.m.SplitAppMode.HideMode);
-            }
-
-            //this.setMasterPageExpand(bFixed);
-
-            this.setProperty("masterPageFixed", bFixed, true);
+            }        
 
         },
 
@@ -403,15 +408,17 @@ sap.ui.define("u4a.m.SplitApp", [
 
         _rightPageRender : function(oRm, oControl){
 
-           oRm.write("<div");
-           oRm.addClass("u4aMSplitAppRightPage");
-           oRm.writeAttribute("id", oControl.getId() + "-RightPage");
-           oRm.writeClasses();
-           oRm.write(">");
+            var sAppId = oControl.getId();
 
-           oRm.renderControl(oControl.getRightPage());
+            oRm.write("<div");
+            oRm.addClass("u4aMSplitAppRightPage" + sAppId);
+            oRm.writeAttribute("id", sAppId + "-RightPage");
+            oRm.writeClasses();
+            oRm.write(">");
 
-           oRm.write("</div>");
+            oRm.renderControl(oControl.getRightPage());
+
+            oRm.write("</div>");
 
         }, // end of _rightPageRender
 
@@ -449,8 +456,9 @@ sap.ui.define("u4a.m.SplitApp", [
                 bIsMasterNav = false,   // 마스터 여부
                 bIsDetail = false,      // 디테일 위치 여부
                 bIsRightPage = false,   // RightPage 여부
+                sAppId = this.getId(),
 
-            $targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster, .u4aMSplitAppRightPage"),
+            $targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster, .u4aMSplitAppRightPage" + sAppId),
             $targetHeader = jQuery(oEvent.target).closest(".sapMPageHeader"),
             metaData = oEvent.srcControl.getMetadata();
 
@@ -465,7 +473,7 @@ sap.ui.define("u4a.m.SplitApp", [
             }
 
             // is Right Page?
-            if ($targetContainer.length > 0 && $targetContainer.hasClass("u4aMSplitAppRightPage")) {
+            if ($targetContainer.length > 0 && $targetContainer.hasClass("u4aMSplitAppRightPage" + sAppId)) {
                 bIsRightPage = true;
             }
 
