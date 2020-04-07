@@ -296,6 +296,7 @@ sap.ui.define("u4a.m.SplitApp", [
                     sRightCss += 'transition: all 300ms !important;';
                     sRightCss += '-webkit-transition: all 300ms !important;';
                     sRightCss += 'box-shadow: rgba(255, 255, 255, 0) 0px 0rem 0rem 0px, rgba(255, 255, 255, 0) 0px 0px 0px 0px !important;';
+                    sRightCss += 'visibility: hidden;';
                     sRightCss += '}';
 
                     oRightStyleDom.innerText = sRightCss;
