@@ -88,8 +88,30 @@ sap.ui.define("u4a.m.SplitApp", [
 
             SplitApp.prototype.onAfterRendering.apply(this, arguments);
 
+            // 접속 Device 가 Mobile 이면 MasterPageWidth를 100%로 한다. (Standard 사상 동일)
+            if(Device.system.phone){
+                this.setMasterPageWidth("100%");
+            }
+
+             // masterPage 고정 여부에 따라 동작 시킨다.
+            if(this.getMasterPageFixed()){
+                
+                // mode를 'StretchCompressMode'로 주면 MasterPage가 고정된 효과를 준다.
+                this.setMode(sap.m.SplitAppMode.StretchCompressMode);
+                
+                // MasterPage를 항상 펼쳐놓는다.
+                this.setMasterPageExpand(true);
+                
+                // 상위(sap.m.SplitContaier) 의 Resize Event를 재정의 한다.
+                this._handleResize();
+                
+            }
+            else {
+                this.setMode(sap.m.SplitAppMode.HideMode);
+            }
+
             // masterPage 고정 여부에 따라 동작 시킨다.
-            this.setMasterPageFixed(this.getMasterPageFixed());
+            //this.setMasterPageFixed(this.getMasterPageFixed());
 
             // 마스터 버튼(메뉴펼침버튼)에 등록되어 있는 press 이벤트를 제거한 후 이벤트 핸들링을 변경한다.
             var oMasterBtn = this._oShowMasterBtn;
@@ -133,6 +155,24 @@ sap.ui.define("u4a.m.SplitApp", [
             }
 
         }, // end of onAfterRendering
+
+        _handleResize : function(){  
+
+        	// 상위 (sap.m.SplitContaier) 의 _handleResize를 먼저 수행한다.
+            SplitApp.prototype._handleResize.apply(this, arguments);
+            
+            /* Standard(sap.m.SplitContainer) 의 Resize Event 에서,
+             * 'StretchCompressMode' 이고 Browser 창을 줄이면
+             * MasterPage 의 width를 330px 로 고정시키는 CSS를 적용함으로써 CSS 충돌 현상이 발생하여,
+             * Resize Event Handle를 현재 인스턴스에서 재정의하여 이상현상을 회피하기 위한 로직.
+             */
+            if(this.getMode() == sap.m.SplitAppMode.StretchCompressMode 
+              && this.$().hasClass("sapMSplitContainerPortrait")){
+
+                this.$().removeClass("sapMSplitContainerPortrait");    
+            }           
+            
+        }, // end of _handleResize
 
         _getComputedWidth : function(oPage, sWidth){
 
@@ -187,6 +227,11 @@ sap.ui.define("u4a.m.SplitApp", [
         },
 
         _setMasterAnimation : function(){
+
+        	 // 모바일로 접속한 경우는 MasterPageWidth를 100% 준다. (standard 기본기능)            
+            if(Device.system.phone) {
+                return;
+            }
 
             var oMaster = this._oMasterNav,
                 sMasterWidth = this.getMasterPageWidth(),
@@ -337,6 +382,10 @@ sap.ui.define("u4a.m.SplitApp", [
              * false : SplitAppMode 를 'HideMode' 로 설정하여 masterPage를 Fix 하지 않는다.
              */
             
+            if(Device.system.phone){
+                bFixed = true;
+            } 
+            
             this.setProperty("masterPageFixed", bFixed, true);
             
             if(bFixed){
@@ -356,7 +405,7 @@ sap.ui.define("u4a.m.SplitApp", [
              * 'bExpand' Parameter 를 true로 강제 변환한다.
              */
 
-            if (this.getMode() == sap.m.SplitAppMode.StretchCompressMode){
+            if (Device.system.phone || this.getMode() == sap.m.SplitAppMode.StretchCompressMode){
                 bExpand = true;
             }
 
@@ -371,6 +420,10 @@ sap.ui.define("u4a.m.SplitApp", [
         setMasterPageWidth : function(sWidth){
 
             this._pageWidthValidCheck(sWidth);
+
+            if(Device.system.phone){
+                sWidth = "100%";
+            }
 
             this.setProperty("masterPageWidth", sWidth, true);
 
