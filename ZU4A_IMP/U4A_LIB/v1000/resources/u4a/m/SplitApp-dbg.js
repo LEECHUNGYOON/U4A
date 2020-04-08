@@ -385,12 +385,13 @@ sap.ui.define("u4a.m.SplitApp", [
             if(Device.system.phone){
                 bFixed = true;
             } 
-            
+
             this.setProperty("masterPageFixed", bFixed, true);
             
             if(bFixed){
                 this.setMode(sap.m.SplitAppMode.StretchCompressMode);
                 this.setMasterPageExpand(bFixed);
+                this._handleResize();
             }
             else {
                 this.setMode(sap.m.SplitAppMode.HideMode);
