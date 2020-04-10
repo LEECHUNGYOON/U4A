@@ -477,6 +477,10 @@ sap.ui.define("u4a.m.SplitApp", [
         }, // end of _rightPageRender
 
         _pageWidthValidCheck : function(sWidth){
+            
+            if(sWidth.toLowerCase){
+                sWidth = sWidth.toLowerCase();
+            };
 
             if(!jQuery.sap.endsWith(sWidth, 'px') && !jQuery.sap.endsWith(sWidth, '%')){
                 throw new Error("[U4AIDE] property Type Error 'rightPageWidth' : 'px' 또는 % 단위만 입력 가능합니다.");
