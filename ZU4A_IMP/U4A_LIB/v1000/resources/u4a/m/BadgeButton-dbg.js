@@ -90,6 +90,17 @@ sap.ui.define("u4a.m.BadgeButton", [
 
         }, // end of onAfterRendering
 
+        setSize : function(sSize){
+      
+          if(sSize == null || sSize == ""){
+            Icon.prototype.setSize.call(this, "30px")
+            return;
+          }
+          
+           Icon.prototype.setSize.apply(this, arguments);
+           
+        },
+
         _setDefaultStyle : function(){
 
             // icon default Size
