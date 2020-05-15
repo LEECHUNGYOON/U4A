@@ -1,3 +1,5 @@
+//Copyright 2017. INFOCG Inc. all rights reserved. 
+
 sap.ui.define("u4a.charts.am.AmPieChart", [
 "sap/ui/core/Control",
 
