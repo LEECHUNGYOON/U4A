@@ -1,5 +1,3 @@
-//Copyright 2017. INFOCG Inc. all rights reserved. 
-
 sap.ui.define("u4a.charts.am.AmPieChart", [
 "sap/ui/core/Control",
 
@@ -110,6 +108,11 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
             //this._c.startDuration = this.getStartDuration();
 
 			this._c.innerRadius = this.getInnerRadius();
+			
+			if(typeof this._c.innerRadius === "undefined" || this._c.innerRadius === null || this._c.innerRadius === ""){
+				this._c.innerRadius = 0;
+			}
+			
 			this._c.labelRadius = this.getLabelRadius();
 			this._c.outlineAlpha = this.getOutlineAlpha();
 			this._c.outlineColor = this.getOutlineColor();
@@ -277,8 +280,16 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
         },
 
         setInnerRadius : function(p){
-            this.setProperty('innerRadius',p,true);
-            this._setChartProp('innerRadius',p);
+            this.setProperty('innerRadius',p,true);			
+			if(!this._c){return;}
+			this._c.innerRadius = p;
+			
+			if(typeof p === "undefined" || p === null || p === ""){
+				this._c.innerRadius = 0;
+			}
+			
+			this._c.validateNow();
+			
         },
         setLabelRadius : function(p){
             this.setProperty('labelRadius',p,true);
