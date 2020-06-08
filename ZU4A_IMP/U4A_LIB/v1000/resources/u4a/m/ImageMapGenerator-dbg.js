@@ -299,7 +299,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
                          .addStyleClass("sapUiTinyMarginEnd");
                 oCombo.addItem(new sap.ui.core.Item({ key : "rect", text : "Rect" }));
                 oCombo.addItem(new sap.ui.core.Item({ key : "poly", text : "Poly" }));
-                oCombo.addItem(new sap.ui.core.Item({ key : "circle", text : "Circle" }));
+                // oCombo.addItem(new sap.ui.core.Item({ key : "circle", text : "Circle" }));
 
                 oCombo.attachEvent("selectionChange", function(oEvent){
                     that._comboSelectChange(oEvent);
