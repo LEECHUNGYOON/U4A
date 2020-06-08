@@ -23,7 +23,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             defaultAggregation : "contents",
 
             aggregations : {
-                "_container" : { type : "sap.m.VBox", multiple : false }
+                "_container" : { type : "sap.m.VBox", multiple : false, visibility : "hidden" }
             },
 
             events : {
