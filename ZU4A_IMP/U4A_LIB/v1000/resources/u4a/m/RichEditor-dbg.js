@@ -181,15 +181,23 @@ sap.ui.define("u4a.m.RichEditor", [
             if(!oContent){
                 return;
             }
+			
+			if(sHtml == null){
+				sHtml = "";
+			}
 
-                oContent.innerHTML = sHtml;
+			oContent.innerHTML = sHtml;
 
         },
 
         _setValue : function(sHtml){
 
             var oContent = this._oEditContent;
-
+			
+			if(sHtml == null){
+				sHtml = "";
+			}
+			
             oContent.innerHTML = sHtml;
 
         },
