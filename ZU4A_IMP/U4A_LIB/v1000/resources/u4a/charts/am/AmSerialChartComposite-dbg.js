@@ -1,5 +1,3 @@
-//Copyright 2017. INFOCG Inc. all rights reserved. 
-
 sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 "sap/ui/core/Control",
 
@@ -171,10 +169,9 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 
 
             this._c.write(this.getId());
+			this._c.validateData();
+			this._c.validateNow();
             
-            /*this._c.div.style.width = this.getWidth();
-            this._c.div.style.height = this.getHeight();*/
-
         },
 
         _setLegend : function(p,g){
@@ -390,3 +387,4 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
     return Sample;
 
 });
+

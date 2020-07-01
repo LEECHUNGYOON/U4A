@@ -174,10 +174,8 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
             });
             
             this._c.write(this.getId());		
-
-            
-            /*this._c.div.style.width = this.getWidth();
-            this._c.div.style.height = this.getHeight();*/
+			this._c.validateData();
+			this._c.validateNow();
 
         },
 

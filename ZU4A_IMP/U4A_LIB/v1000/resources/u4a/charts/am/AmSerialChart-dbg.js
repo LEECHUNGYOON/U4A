@@ -1,5 +1,3 @@
-//Copyright 2017. INFOCG Inc. all rights reserved. 
-
 sap.ui.define("u4a.charts.am.AmSerialChart", [
 "sap/ui/core/Control",
 
@@ -128,6 +126,8 @@ sap.ui.define("u4a.charts.am.AmSerialChart", [
 
 
             this._c.write(this.getId());
+			this._c.validateData();
+			this._c.validateNow();
             
             /*this._c.div.style.width = this.getWidth();
             this._c.div.style.height = this.getHeight();*/
