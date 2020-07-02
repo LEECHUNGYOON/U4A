@@ -61,7 +61,8 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
                 jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/pie.js", function(){});
             }
 			
-			this._c = new AmCharts.AmPieChart();			
+			this._c = new AmCharts.AmPieChart();
+			this._setChartEvent();			
 
         },
 
@@ -93,7 +94,7 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
 
         _createChart : function(){
 			
-            if(!this._c){this._c = new AmCharts.AmPieChart();}
+            if(!this._c){this._c = new AmCharts.AmPieChart();this._setChartEvent();}
             this._c.creditsPosition = "top-right";
             //this._c.categoryAxis.gridPosition = "start";
 
@@ -147,7 +148,15 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
             this._c.borderAlpha = this.getBorderAlpha();
             this._c.borderColor = this.getBorderColor();
             
-            var that = this;
+            this._c.write(this.getId());		
+			this._c.validateData();
+			this._c.validateNow();
+
+        },
+		
+		_setChartEvent : function(){
+			if(!this._c){return;}
+			var that = this;
             
             this._c.addListener('init',function(e){
                 that.fireInit(e);
@@ -172,12 +181,8 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
             this._c.addListener('rollOverSlice',function(e){
                 that.fireRollOverSlice(e);
             });
-            
-            this._c.write(this.getId());		
-			this._c.validateData();
-			this._c.validateNow();
-
-        },
+			
+		},
 
         _setLegend : function(p,g){
 

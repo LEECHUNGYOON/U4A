@@ -45,6 +45,7 @@ sap.ui.define("u4a.charts.am.AmSerialChart", [
             }
 			
 			this._c = new AmCharts.AmSerialChart();
+			this._setChartEvent();
 
         },
 
@@ -76,9 +77,11 @@ sap.ui.define("u4a.charts.am.AmSerialChart", [
 
         _createChart : function(){
 			
-            if(!this._c){this._c = new AmCharts.AmSerialChart();}
+            if(!this._c){this._c = new AmCharts.AmSerialChart();this._setChartEvent();}
             this._c.creditsPosition = "top-right";
             this._c.categoryAxis.gridPosition = "start";
+			this._c.plotAreaBorderColor = "#DADADA";
+			this._c.plotAreaBorderAlpha = 1;
 
             this._setTitle(this.getTitle());
 
@@ -94,7 +97,18 @@ sap.ui.define("u4a.charts.am.AmSerialChart", [
 
 			this._c.fontSize = this.getFontSize();
             
-            var that = this;
+            this._c.write(this.getId());
+			this._c.validateData();
+			this._c.validateNow();
+            
+            /*this._c.div.style.width = this.getWidth();
+            this._c.div.style.height = this.getHeight();*/
+
+        },
+		
+		_setChartEvent : function(){
+			if(!this._c){return;}
+			var that = this;
             
             this._c.addListener('init',function(e){
                 that.fireInit(e);
@@ -123,16 +137,7 @@ sap.ui.define("u4a.charts.am.AmSerialChart", [
             this._c.addListener('rollOverGraphItem',function(e){
                 that.fireRollOverGraphItem(e);
             });
-
-
-            this._c.write(this.getId());
-			this._c.validateData();
-			this._c.validateNow();
-            
-            /*this._c.div.style.width = this.getWidth();
-            this._c.div.style.height = this.getHeight();*/
-
-        },
+		},
 
         _setLegend : function(p,g){
 
