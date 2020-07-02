@@ -253,6 +253,7 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
         
+		/*
         setAxisTitleOffset : function(iValue){
             
             this.setProperty("axisTitleOffset", iValue, true);
@@ -264,6 +265,7 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
             this._chartUpdateData();
         
         },
+		*/
 		
 		setShowLegend : function(p){
 			
@@ -370,7 +372,8 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 			this._c.validateNow();			
 			
 		},
-
+		
+		/*
         _setValueAxis : function(){
             
             var oAmRadar = this._c,
@@ -395,6 +398,7 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
             this._oValueAxes = this._c.valueAxes[0];
 
         },
+		*/
 
         _attachChartEvent : function(){
 			
