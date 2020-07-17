@@ -449,17 +449,46 @@ sap.ui.define("u4a.charts.am.UnitedStateMap",[
 					}
 					else {
 						//oMap.fireMapClick(oEvent.mapObject);
-						oMap.fireMapClick();
+						// 2020-07-17 이벤트 발생 시 클릭한 Location 정보를 전달
+						var oMapInfo = oEvent.mapObject,
+							oMapBindingInfo = oMap.getBindingInfo("locations"),
+
+							mParameter = {
+								id : oMapInfo.id,
+								title : oMapInfo.title
+							};
+
+						// 바인딩 정보가 있을 경우
+						if(oMapBindingInfo){
+
+							var aAggr = oMap.getAggregation("locations"),
+								iAggrLen = aAggr.length;
+
+							for(var i = 0; i < iAggrLen; i++ ){
+								var oLoc = aAggr[i],
+									sLocName = oLoc.getProperty("locationName");
+
+								if(sLocName != oMapInfo.title){
+									continue;
+								}
+
+								mParameter.binding = oLoc.getBindingContext();
+								break;
+							}
+
+						}
+
+						oMap.fireMapClick(mParameter);
+
 					}
-				}
+				}				
 
 				// monitor when home icon was clicked and also go to continents map
 				oAmChart.addListener("homeButtonClicked", handleGoHome);
 				oAmChart.addListener("clickMapObject", handleMapObjectClick);
 
 				// map write
-				oAmChart.write(oMap.getId());
-				
+				oAmChart.write(oMap.getId());				
 				
 				var _aCssClass = oMap.aCustomStyleClasses;
 				if(_aCssClass == null){
