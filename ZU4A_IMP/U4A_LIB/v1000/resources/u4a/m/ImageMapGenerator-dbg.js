@@ -1,6 +1,7 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
 
-u4a.m.ImageMarkShapeType = { Rect : "rect", Circle : "circle",  Poly : "poly" };
+//u4a.m.ImageMarkShapeType = { Rect : "rect", Circle : "circle",  Poly : "poly" };
+u4a.m.ImageMarkShapeType = { Rect : "rect", Poly : "poly" };
 
 sap.ui.define("u4a.m.ImageMapGenerator", [
 "sap/ui/core/Control",
