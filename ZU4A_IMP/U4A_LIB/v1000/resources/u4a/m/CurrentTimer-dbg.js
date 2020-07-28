@@ -37,10 +37,27 @@ sap.ui.define("u4a.m.CurrentTimer",[
             oRm.addStyle("color", sFontColor);
             oRm.addStyle("font-size", sFontSize);
 
+
+            /***************************************************************** 
+            	2020-07-28 by soccerhs 
+            	- TextAlign Property의 'End' 값이 IE 에서 인식 안되는 문제 개선
+            ******************************************************************/
+            /*
             if(sTextAlign){
                 sTextAlign = oControl.getTextAlign(sTextAlign);
                 if(sTextAlign){
                     oRm.addStyle("text-align", sTextAlign);
+                }
+            }
+            */
+            if(sTextAlign){
+            	var sBrowser = sap.ui.Device.browser.name;
+               
+                if(sBrowser == "ie" && sTextAlign == TextAlign.End){
+                	oRm.addStyle("text-align", "right");
+                } 
+                else {
+                	oRm.addStyle("text-align", sTextAlign); 
                 }
             }
 			
