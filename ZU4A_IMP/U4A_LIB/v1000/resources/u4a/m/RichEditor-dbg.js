@@ -123,7 +123,11 @@ sap.ui.define("u4a.m.RichEditor", [
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
                 [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-                [{ 'direction': 'ltr' }],                         // text direction
+				
+				/*	2020-07-28 by soccerhs
+					textDirection 버튼을 눌러도 반응이 없는 문제 수정 */				
+				[{ 'direction': 'rtl' }],                         // text direction
+                //[{ 'direction': 'ltr' }],                         // text direction
                 [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
                 [{ 'align': [] }],
                 ['clean']                                         // remove formatting button
