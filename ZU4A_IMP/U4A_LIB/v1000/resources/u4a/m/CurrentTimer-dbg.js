@@ -40,7 +40,7 @@ sap.ui.define("u4a.m.CurrentTimer",[
 
             /***************************************************************** 
             	2020-07-28 by soccerhs 
-            	- TextAlign Property의 'End' 값이 IE 에서 인식 안되는 문제 개선
+            	- TextAlign Property의 'End' 값이 IE, (구) Edge 에서 인식 안되는 문제 개선
             ******************************************************************/
             /*
             if(sTextAlign){
@@ -53,7 +53,7 @@ sap.ui.define("u4a.m.CurrentTimer",[
             if(sTextAlign){
             	var sBrowser = sap.ui.Device.browser.name;
                
-                if(sBrowser == "ie" && sTextAlign == TextAlign.End){
+                if((sBrowser == "ie" || sBrowser == "ed") && sTextAlign == TextAlign.End){
                 	oRm.addStyle("text-align", "right");
                 } 
                 else {
