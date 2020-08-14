@@ -123,10 +123,10 @@ sap.ui.define("u4a.m.RichEditor", [
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
                 [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-				
-				/*	2020-07-28 by soccerhs
-					textDirection 버튼을 눌러도 반응이 없는 문제 수정 */				
-				[{ 'direction': 'rtl' }],                         // text direction
+
+        /*  2020-07-28 by soccerhs
+          textDirection 버튼을 눌러도 반응이 없는 문제 수정 */
+        [{ 'direction': 'rtl' }],                         // text direction
                 //[{ 'direction': 'ltr' }],                         // text direction
                 [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
                 [{ 'align': [] }],
@@ -142,7 +142,7 @@ sap.ui.define("u4a.m.RichEditor", [
            var oQuill = new Quill(sContainerId, {
                    modules: { toolbar: toolbarOptions },
                    theme: 'snow',
-                   placeholder: "입력하세요.."
+				   //placeholder: "입력하세요.."
                });
 
            var oEditor = this.getDomRef(),
@@ -185,23 +185,23 @@ sap.ui.define("u4a.m.RichEditor", [
             if(!oContent){
                 return;
             }
-			
-			if(sHtml == null){
-				sHtml = "";
-			}
 
-			oContent.innerHTML = sHtml;
+      if(sHtml == null){
+        sHtml = "";
+      }
+
+      oContent.innerHTML = sHtml;
 
         },
 
         _setValue : function(sHtml){
 
             var oContent = this._oEditContent;
-			
-			if(sHtml == null){
-				sHtml = "";
-			}
-			
+
+      if(sHtml == null){
+        sHtml = "";
+      }
+
             oContent.innerHTML = sHtml;
 
         },
@@ -253,10 +253,15 @@ sap.ui.define("u4a.m.RichEditor", [
             if(bEdit){
                oEditorContent.style.backgroundColor = "#ffffff";
                oQuill.enable();
+
+               oEditorContent.setAttribute("data-placeholder", "입력하세요..");
             }
             else {
                oEditorContent.style.backgroundColor = "#f7f7f7";
                oQuill.disable();
+
+               // 2020-08-14 @Disabled 일 경우 placeHolder를 제거하는 로직 추가함.
+               oEditorContent.setAttribute("data-placeholder", "");
             }
 
         }
