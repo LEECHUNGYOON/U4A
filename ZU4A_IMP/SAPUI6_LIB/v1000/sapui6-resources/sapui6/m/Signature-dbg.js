@@ -88,6 +88,7 @@ sapui6.m.Signature.prototype._startDraw = function(e){
 };
 
 sapui6.m.Signature.prototype._stopDraw = function(e){
+    if(!this._start){return;}
     this._end = e.touches?this._prevPosition[1]:this._getCoords(e);
 
     if(this._start.x == this._end.x && this._start.y == this._end.y){
