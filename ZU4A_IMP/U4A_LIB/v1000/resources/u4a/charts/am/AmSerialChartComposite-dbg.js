@@ -34,7 +34,20 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 				backgroundAlpha : { type: "float", defaultValue: 0 },
 				backgroundColor : {type: "sap.ui.core.CSSColor",defaultValue:"#FFFFFF"},
 				borderAlpha : { type: "float", defaultValue: 0 },
-				borderColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"}
+				borderColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"},
+				legendMarkerSize : { type: "int", defaultValue: 16 },	//
+				legendValueWidth : { type: "int", defaultValue: 50 },
+				legendVerticalGap : { type: "int", defaultValue: 10 },
+				legendHorizontalGap : { type: "int", defaultValue: 0 },
+				showChartScrollbar : { type: "boolean", defaultValue: false },
+				updateOnReleaseOnly : { type: "boolean", defaultValue: false },
+				zoomOutText : { type: "string", defaultValue: "Show all" },
+				zoomOutButtonAlpha : { type: "float", defaultValue: 0 },
+				zoomOutButtonColor : { type: "sap.ui.core.CSSColor", defaultValue: "#e5e5e5" },
+				zoomOutButtonPadding : { type: "int", defaultValue: 8 },
+				zoomOutButtonRollOverAlpha : { type: "float", defaultValue: 1 },
+				legendColor : { type: "sap.ui.core.CSSColor", defaultValue: "#000000" }				
+				
             },
 
             events : {
@@ -137,6 +150,15 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
             this._c.borderAlpha = this.getBorderAlpha();
             this._c.borderColor = this.getBorderColor();
 			
+			this._setChartScrollbar(this.getShowChartScrollbar());
+			
+			this._c.zoomOutText = this.getZoomOutText();
+			this._c.zoomOutButtonAlpha = this.getZoomOutButtonAlpha();
+			this._c.zoomOutButtonColor = this.getZoomOutButtonColor();
+			this._c.zoomOutButtonPadding = this.getZoomOutButtonPadding();
+			this._c.zoomOutButtonRollOverAlpha = this.getZoomOutButtonRollOverAlpha();
+			
+			
             this._c.write(this.getId());
 			this._c.validateData();
 			this._c.validateNow();
@@ -176,6 +198,19 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
             });
 			
 		},
+		
+		_setChartScrollbar : function(p,g){
+			if(!this._c){return;}
+			if(p === false){
+				this._c.removeChartScrollbar();
+				return;
+			}
+			this._c.addChartScrollbar(new AmCharts.ChartScrollbar);
+			this._c.chartScrollbar.updateOnReleaseOnly = this.getUpdateOnReleaseOnly();
+			if(!g){return;}
+			this._c.validateNow();
+			
+		},
 
         _setLegend : function(p,g){
 
@@ -190,6 +225,11 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 			l.position = this.getLegendPosition();
 			if(l.position === ""){l.position = "bottom";}
 			l.fontSize = this.getLegendFontSize();
+			l.valueWidth = this.getLegendValueWidth();
+			l.verticalGap = this.getLegendVerticalGap();
+			l.horizontalGap = this.getLegendHorizontalGap();
+			l.color = this.getLegendColor();
+			l.markerSize = this.getLegendMarkerSize();
 	
 			this._c.addLegend(l);
 	
@@ -222,7 +262,7 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 			this.addStyleClass(p);
 			
 		},
-		
+				
 		_setTitle : function(p,g){
 			if(!this._c){return;}
 			this._c.titles = [];
@@ -383,12 +423,81 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
         setBorderColor : function(p){
 			this.setProperty('borderColor',p,true);
 			this._setChartProp('borderColor',p);
-        }
+        },
+		
+		setLegendMarkerSize : function(p){
+			this.setProperty('legendMarkerSize',p,true);
+			if(!this._c || !this._c.legend){return;}
+			this._c.legend.markerSize = p;
+			this._c.updateLegend();
+		},
+		
+		setLegendValueWidth : function(p){
+			this.setProperty('legendValueWidth',p,true);
+			if(!this._c || !this._c.legend){return;}
+			this._c.legend.valueWidth = p;
+			this._c.updateLegend();
+		},
 
+		setLegendVerticalGap : function(p){
+			this.setProperty('legendVerticalGap',p,true);
+			if(!this._c || !this._c.legend){return;}
+			this._c.legend.verticalGap = p;
+			this._c.updateLegend();
+		},
+		
+		setLegendHorizontalGap : function(p){
+			this.setProperty('legendHorizontalGap',p,true);
+			if(!this._c || !this._c.legend){return;}
+			this._c.legend.horizontalGap = p;
+			this._c.updateLegend();
+		},
+		
+		setShowChartScrollbar : function(p){
+			this.setProperty('showChartScrollbar',p,true);
+			this._setChartScrollbar(p,true);
+		},
+		
+		setUpdateOnReleaseOnly : function(p){
+			this.setProperty('updateOnReleaseOnly',p,true);
+			if(!this._c || !this._c.chartScrollbar){return;}
+			this._c.chartScrollbar.updateOnReleaseOnly = p;
+			this._c.chartScrollbar.update();
+		},
+		
+		setZoomOutText : function(p){
+			this.setProperty('zoomOutText',p,true);
+			this._setChartProp('zoomOutText',p);
+		},
+		
+		setZoomOutButtonAlpha : function(p){
+			this.setProperty('zoomOutButtonAlpha',p,true);
+			this._setChartProp('zoomOutButtonAlpha',p);
+		},
+		
+		setZoomOutButtonColor : function(p){
+			this.setProperty('zoomOutButtonColor',p,true);
+			this._setChartProp('zoomOutButtonColor',p);
+		},
+		
+		setZoomOutButtonPadding : function(p){
+			this.setProperty('zoomOutButtonPadding',p,true);
+			this._setChartProp('zoomOutButtonPadding',p);
+		},
+		
+		setZoomOutButtonRollOverAlpha : function(p){
+			this.setProperty('zoomOutButtonRollOverAlpha',p,true);
+			this._setChartProp('zoomOutButtonRollOverAlpha',p);
+		},
+		
+		setLegendColor : function(p){
+			this.setProperty('legendColor',p,true);
+			if(!this._c || !this._c.legend){return;}
+			this._c.legend.color = p;
+			this._c.updateLegend();
+        }
     });
 
     return Sample;
 
 });
-
-
