@@ -102,7 +102,13 @@ sap.ui.define("u4a.m.BadgeButton", [
         },
 
         _setDefaultStyle : function(){
-
+			
+			/*@ 2020-09-22 v1772 BugFix
+             *  - v1772 버전에서 뱃지의 위치가 오동작 하는 현상 수정함.
+             */
+            var oBtnDom = this.getDomRef();
+                oBtnDom.style.position = "relative";
+			 
             // icon default Size
             var iconsize = this.getSize();
             if(iconsize == ""){
