@@ -88,6 +88,46 @@ sap.ui.define("u4a.m.RichEditor", [
                             oU4aCss += "user-select : text !important;";
                             oU4aCss += "-webkit-user-drag : none !important;";
                             oU4aCss += "}";
+
+                            // 2020-09-07 @sap_fiori_3_dark theme css 추가
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor > div,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker.ql-expanded .ql-picker-label {";
+                            oU4aCss += "border: .0625rem solid #8696a9;";
+                            oU4aCss += "border-top: .0625rem solid #8696a9 !important;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor > div:hover{";
+                            oU4aCss += "border-color: #91c8f6 !important;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor.u4aRichEditorDisabled > div {";
+                            oU4aCss += "border-color: #546375;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-editor {";
+                            oU4aCss += "background-color: #29313a !important;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor.u4aRichEditorDisabled .ql-editor {";
+                            oU4aCss += "background: rgba(58,69,82,0.5) !important;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker-label:hover, ";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker-label.ql-active,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar button:hover,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker-item:hover,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar button.ql-active {";
+                            oU4aCss += "color: #91c8f6;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-editor.ql-blank::before {";
+                            oU4aCss += "color: rgba(146, 201, 246, 0.4);";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker-label:hover .ql-stroke,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar button.ql-active .ql-stroke, ";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker-label.ql-active .ql-stroke,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar button:hover .ql-stroke {"
+                            oU4aCss += "stroke: #91c8f6;";
+                            oU4aCss += "}";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar button:hover .ql-fill,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar .ql-picker-label:hover .ql-fill,";
+                            oU4aCss += ".sapUiTheme-sap_fiori_3_dark .u4aRichEditor .ql-toolbar button.ql-active .ql-fill {";
+                            oU4aCss += "fill: #91c8f6;";
+                            oU4aCss += "}";
                             cssData += oU4aCss;
 
                         $("<style id='" + sEditorCssDomId + "'></style>").appendTo("head").html(cssData);
@@ -113,84 +153,110 @@ sap.ui.define("u4a.m.RichEditor", [
 
         _setInitSettings : function(){
 
-             var toolbarOptions = [
-                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                [{ 'font': [] }],
-                [{ 'size': [ 'small', false, 'large', 'huge']}],
-                ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                ['blockquote'],
-                [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-                [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+			var toolbarOptions = [
+					[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+					[{ 'font': [] }],
+					[{ 'size': [ 'small', false, 'large', 'huge']}],
+					['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+					['blockquote'],
+					[{ 'header': 1 }, { 'header': 2 }],               // custom button values
+					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+					[{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+					[{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
 
-        /*  2020-07-28 by soccerhs
-          textDirection 버튼을 눌러도 반응이 없는 문제 수정 */
-        [{ 'direction': 'rtl' }],                         // text direction
-                //[{ 'direction': 'ltr' }],                         // text direction
-                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                [{ 'align': [] }],
-                ['clean']                                         // remove formatting button
-           ];
+					/*  2020-07-28 by soccerhs
+					  textDirection 버튼을 눌러도 반응이 없는 문제 수정 */
+					[{ 'direction': 'rtl' }],                         // text direction
+					//[{ 'direction': 'ltr' }],                         // text direction
+					[{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+					[{ 'align': [] }],
+					['clean']                                         // remove formatting button
+				];
 
-           var that = this,
-               oEditerInfo = this._oEditorInfo,
+			var that = this,
+				oEditerInfo = this._oEditorInfo,
 
-               sEditId = "#" + this.getId(),
-               sContainerId = "#" + oEditerInfo.editorContainerId;
+				sEditId = "#" + this.getId(),
+				sContainerId = "#" + oEditerInfo.editorContainerId;
 
-           var oQuill = new Quill(sContainerId, {
-                   modules: { toolbar: toolbarOptions },
-                   theme: 'snow',
-				   //placeholder: "입력하세요.."
-               });
+			var oQuill = new Quill(sContainerId, {
+				modules: { toolbar: toolbarOptions },
+				theme: 'snow',
+				//placeholder: "입력하세요.."
+			});
 
-           var oEditor = this.getDomRef(),
-               oEditorToolBar = oEditor.firstChild,
-               oEditContainer = document.getElementById(oEditerInfo.editorContainerId),
-               oEditorContent = oEditContainer.firstChild;
+			var oEditor = this.getDomRef(),
+				oEditorToolBar = oEditor.firstChild,
+				oEditContainer = document.getElementById(oEditerInfo.editorContainerId),
+				oEditorContent = oEditContainer.firstChild;
 
-               oEditContainer.addEventListener("focusout", function(oEvent){
+			oEditContainer.addEventListener("focusout", function(oEvent){
 
-                  oEvent.preventDefault();
-                  oEvent.stopPropagation();
-                  oEvent.stopImmediatePropagation();
+				oEvent.preventDefault();
+				oEvent.stopPropagation();
+				oEvent.stopImmediatePropagation();
 
-                    var oEditorContent = that._oEditContent,
-                        oContentText = oEditorContent.innerHTML;
+				var oEditorContent = that._oEditContent,
+					oContentText = oEditorContent.innerHTML;
 
-                    that.setProperty("value", oContentText, true);
+				that.setProperty("value", oContentText, true);
 
-               });
+			});
+			
+			/* 2020-10-04 
+				- @sap_fiori_3_dark 테마 일 경우 본문 문자 색상을 기본 흰색으로 지정 시 IE 일 경우 				
+			*/
+			oEditContainer.addEventListener("focusin", function(oEvent){
 
-           $(oEditorToolBar).css("-ms-flex", "0 0 auto");
+				oEvent.preventDefault();
+				oEvent.stopPropagation();
+				oEvent.stopImmediatePropagation();
+		
+				if(!that.getEditable()){
+                    return;
+				}
+				// 2020-09-07 @sap_fiori_3_dark 테마 일 경우 본문 문자 색상을 기본 흰색으로 지정
+				var sUI5_Theme = sap.ui.getCore().getConfiguration().getTheme();
+				if(sUI5_Theme == "sap_fiori_3_dark"){
+					that._Quill.format("color", "#ffffff");
+				}
 
-           this._Quill = oQuill;
-           this._oEditToolBar = oEditorToolBar;
-           this._oEditContent = oEditorContent;
+			});
 
-           // Editable 설정
-           this._setEditable(this.getEditable());
+			$(oEditorToolBar).css("-ms-flex", "0 0 auto");
 
-           // Value 설정
-           this._setValue(this.getValue());
+			this._Quill = oQuill;
+			this._oEditToolBar = oEditorToolBar;
+			this._oEditContent = oEditorContent;
+
+			// Editable 설정
+			this._setEditable(this.getEditable());
+
+			// Value 설정
+			this._setValue(this.getValue());
+
+			// 2020-09-07 @sap_fiori_3_dark 테마 일 경우 본문 문자 색상을 기본 흰색으로 지정
+			var sUI5_Theme = sap.ui.getCore().getConfiguration().getTheme();
+			if(sUI5_Theme == "sap_fiori_3_dark"){
+				this._Quill.format("color", "#ffffff");
+			}
 
         },
 
         setValue : function(sHtml){
 
-            this.setProperty("value", sHtml, true);
+			this.setProperty("value", sHtml, true);
 
-            var oContent = this._oEditContent;
-            if(!oContent){
-                return;
-            }
+			var oContent = this._oEditContent;
+			if(!oContent){
+				return;
+			}
 
-      if(sHtml == null){
-        sHtml = "";
-      }
+			if(sHtml == null){
+				sHtml = "";
+			}
 
-      oContent.innerHTML = sHtml;
+			oContent.innerHTML = sHtml;
 
         },
 
@@ -198,9 +264,9 @@ sap.ui.define("u4a.m.RichEditor", [
 
             var oContent = this._oEditContent;
 
-      if(sHtml == null){
-        sHtml = "";
-      }
+			if(sHtml == null){
+				sHtml = "";
+			}
 
             oContent.innerHTML = sHtml;
 
@@ -247,16 +313,25 @@ sap.ui.define("u4a.m.RichEditor", [
 
         _setEditable : function(bEdit){
 
-            var oEditorContent = this._oEditContent,
+            var $Editor = this.$(),
+                oEditorContent = this._oEditContent,
                 oQuill = this._Quill;
 
             if(bEdit){
+
+               // 2020-09-06 @Editable: true 일 경우 css Class의 'u4aRichEditorDisabled' 제거
+               $Editor.removeClass("u4aRichEditorDisabled");
+
                oEditorContent.style.backgroundColor = "#ffffff";
                oQuill.enable();
 
                oEditorContent.setAttribute("data-placeholder", "입력하세요..");
             }
             else {
+
+               // 2020-09-06 @Editable: false 일 경우 css Class의 'u4aRichEditorDisabled' 추가
+               $Editor.addClass("u4aRichEditorDisabled");
+
                oEditorContent.style.backgroundColor = "#f7f7f7";
                oQuill.disable();
 
