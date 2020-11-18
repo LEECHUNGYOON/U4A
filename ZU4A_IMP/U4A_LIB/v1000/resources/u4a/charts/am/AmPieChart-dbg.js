@@ -36,7 +36,9 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
 				backgroundAlpha : { type: "float", defaultValue: 0 },
 				backgroundColor : {type: "sap.ui.core.CSSColor",defaultValue:"#FFFFFF"},
 				borderAlpha : { type: "float", defaultValue: 0 },
-				borderColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"}
+				borderColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"},
+				textColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"},
+				legendTextColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"}
 
             },
 
@@ -147,6 +149,8 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
 
             this._c.borderAlpha = this.getBorderAlpha();
             this._c.borderColor = this.getBorderColor();
+
+	    this._c.color = this.getTextColor();
             
             this._c.write(this.getId());		
 			this._c.validateData();
@@ -197,6 +201,7 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
 			l.position = this.getLegendPosition();
 			if(l.position === ""){l.position = "bottom";}
 			l.fontSize = this.getLegendFontSize();
+			l.color = this.getLegendTextColor();
 
 			this._c.addLegend(l);
 
@@ -410,6 +415,16 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
         setBorderColor : function(p){
 			this.setProperty('borderColor',p,true);
 			this._setChartProp('borderColor',p);
+        },
+	setTextColor : function(p){
+			this.setProperty('textColor',p,true);
+			this._setChartProp('color',p);
+        },
+	setLegendTextColor : function(p){
+			this.setProperty('legendTextColor',p,true);
+			if(!this._c || !this._c.legend){return;}
+			this._c.legend.color = p;
+			this._c.validateNow();
         }
 
     });

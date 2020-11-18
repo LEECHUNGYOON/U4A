@@ -46,8 +46,8 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 				zoomOutButtonColor : { type: "sap.ui.core.CSSColor", defaultValue: "#e5e5e5" },
 				zoomOutButtonPadding : { type: "int", defaultValue: 8 },
 				zoomOutButtonRollOverAlpha : { type: "float", defaultValue: 1 },
-				legendColor : { type: "sap.ui.core.CSSColor", defaultValue: "#000000" }				
-				
+				legendColor : { type: "sap.ui.core.CSSColor", defaultValue: "#000000" },
+				textColor : {type: "sap.ui.core.CSSColor",defaultValue:"#000000"}	
             },
 
             events : {
@@ -149,6 +149,7 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 
             this._c.borderAlpha = this.getBorderAlpha();
             this._c.borderColor = this.getBorderColor();
+	    this._c.color = this.getTextColor();
 			
 			this._setChartScrollbar(this.getShowChartScrollbar());
 			
@@ -495,7 +496,11 @@ sap.ui.define("u4a.charts.am.AmSerialChartComposite", [
 			if(!this._c || !this._c.legend){return;}
 			this._c.legend.color = p;
 			this._c.updateLegend();
-        }
+	        },
+		setTextColor : function(p){
+			this.setProperty('textColor',p,true);
+			this._setChartProp('color',p);
+	        }
     });
 
     return Sample;
