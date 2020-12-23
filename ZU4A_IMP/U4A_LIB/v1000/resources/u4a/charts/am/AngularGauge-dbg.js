@@ -46,6 +46,8 @@ sap.ui.define("u4a.charts.am.AngularGauge", [
                 // 화살표
                 arrowValue : { type: "float", defaultValue: 0 }, // 화살표 가리키는 위치
                 arrowRadius : {  type : "sap.ui.core.CSSSize", defaultValue : "100%" }, // 화살표 길이
+				arrowColor : { type : "sap.ui.core.CSSColor", defaultValue : "#000000" }, // 화살표 색상
+				
             },
 
             defaultAggregation : "gaugeBand",
@@ -112,6 +114,21 @@ sap.ui.define("u4a.charts.am.AngularGauge", [
 			// this._gaugeChart.validateNow();			
 			
 		},	// end of setArrowValue
+		
+		// 차트 화살표의 색상 설정
+		setArrowColor : function(sColor){
+
+			this.setProperty("arrowColor", sColor, true);
+
+			if(typeof this._gaugeArrow == "undefined" 
+			   && typeof this._gaugeChart == "undefined"){
+				return;
+			}
+			
+			this._gaugeArrow.color = sColor;
+			this._gaugeChart.validateNow();
+			
+		},
 
 		// 차트의 하단 텍스트 설정
 		setBottomText : function(sText){
@@ -290,6 +307,7 @@ sap.ui.define("u4a.charts.am.AngularGauge", [
 
             oArrow.setValue(iArrowValue);
             oArrow.radius = this.getArrowRadius();
+			oArrow.color = this.getArrowColor();
 
             chart.addArrow(oArrow);
             chart.write(this.getId());

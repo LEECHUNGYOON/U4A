@@ -4,12 +4,23 @@ sap.ui.define("u4a.m.SplitApp", [
 "sap/m/SplitApp",
 "sap/ui/thirdparty/jquery",
 "sap/ui/Device",
-"sap/ui/dom/containsOrEquals"
-
-], function(SplitApp, jQuery, Device, containsOrEquals){
+"sap/m/Button"
+], function(SplitApp, jQuery, Device, Button){
     "use strict";
 
     /* @property
+	 *	- showMasterPageNavButton
+	 *	  #param (boolean) {
+     *      true  : masterPage의 Navigation 버튼 활성화
+     *      false : masterPage의 Navigation 버튼 비활성화
+     *    }
+	 * 
+	 *	- masterPageNavButtonTop
+	 *	  #param (CSSSize) 
+	 *	  #설명 {	
+	 *		masterPageNavButton의 위치를 지정한다.
+	 *	  }
+	 *
      *  - masterPageFixed
      *    #param (boolean) {
      *      true  : masterPage 고정,
@@ -60,16 +71,18 @@ sap.ui.define("u4a.m.SplitApp", [
         metadata : {
             library : "u4a.m",
             properties : {
+                showMasterPageNavButton : { type : "boolean", defaultValue : false },
+                masterPageNavButtonTop : { type : "sap.ui.core.CSSSize", defaultValue : "50px" },
                 masterPageFixed : { type : "boolean", defaultValue : false },
                 masterPageWidth : { type : "sap.ui.core.CSSSize", defaultValue : "330px" },
                 masterPageExpand : { type : "boolean", defaultValue : false },
-                rightPageWidth : { type : "sap.ui.core.CSSSize", defaultValue : "330px" },
+                rightPageWidth : { type: "sap.ui.core.CSSSize", defaultValue : "330px" },
                 rightPageExpand : { type : "boolean", defaultValue : false },
                 rightPageAutoHide : { type : "boolean", defaultValue : true }
             },
 
             aggregations : {
-              "rightPage" : { type : "sap.m.Page", multiple : false },
+                "rightPage" : { type : "sap.m.Page", multiple : false },
             }
 
         }, // end of metadata
@@ -86,32 +99,41 @@ sap.ui.define("u4a.m.SplitApp", [
 
         onAfterRendering : function(){
 
-            SplitApp.prototype.onAfterRendering.apply(this, arguments);
+			SplitApp.prototype.onAfterRendering.apply(this, arguments);
+
+			// Master & Right Page 관련 CSS를 생성한다.
+			this._setMasterAnimation();
+			this._setRightAnimation();
 
             // 접속 Device 가 Mobile 이면 MasterPageWidth를 100%로 한다. (Standard 사상 동일)
             if(Device.system.phone){
                 this.setMasterPageWidth("100%");
             }
+            else {
+                // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 메소드
+                // MasterPageNavButton을 그린다. 단, DeskTop 모드일 경우에만 실행.
+                this._renderMasterNavButton();
+            }
 
              // masterPage 고정 여부에 따라 동작 시킨다.
             if(this.getMasterPageFixed()){
-                
+
                 // mode를 'StretchCompressMode'로 주면 MasterPage가 고정된 효과를 준다.
                 this.setMode(sap.m.SplitAppMode.StretchCompressMode);
-                
+
                 // MasterPage를 항상 펼쳐놓는다.
                 this.setMasterPageExpand(true);
-                
+
+                // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 메소드
+                //
+                this.setShowMasterPageNavButton(false);
+
                 // 상위(sap.m.SplitContaier) 의 Resize Event를 재정의 한다.
                 this._handleResize();
-                
             }
             else {
                 this.setMode(sap.m.SplitAppMode.HideMode);
             }
-
-            // masterPage 고정 여부에 따라 동작 시킨다.
-            //this.setMasterPageFixed(this.getMasterPageFixed());
 
             // 마스터 버튼(메뉴펼침버튼)에 등록되어 있는 press 이벤트를 제거한 후 이벤트 핸들링을 변경한다.
             var oMasterBtn = this._oShowMasterBtn;
@@ -141,7 +163,7 @@ sap.ui.define("u4a.m.SplitApp", [
                     var oNaviCon = this.getAggregation("_navMaster"),
                         oNaviConDOM = oNaviCon.getDomRef();
 
-                        this._oRightPage.style.visibility = "hidden";
+						this._oRightPage.style.visibility = "hidden";
                         oNaviConDOM.appendChild(this._oRightPage);
 
                 }
@@ -156,22 +178,83 @@ sap.ui.define("u4a.m.SplitApp", [
 
         }, // end of onAfterRendering
 
-        _handleResize : function(){  
+        // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 메소드
+        //  -- MasterNavButton Rendering
+        _renderMasterNavButton : function(){
 
-        	// 상위 (sap.m.SplitContaier) 의 _handleResize를 먼저 수행한다.
+            var oAppDom = this.getDomRef();
+
+            if(!oAppDom){
+                return;
+            }
+
+            if(this._oMasterNavBtn){
+                delete this._oMasterNavBtn;
+            }
+
+            this._oMasterNavBtn = new sap.m.Button({
+                visible: this.getShowMasterPageNavButton(),
+                press: this._pressMasterNavBtn.bind(this)
+            }).addStyleClass("u4aSplitAppMasterNavBtn");
+
+            var oRm = sap.ui.getCore().createRenderManager(),
+                bIsExpand = this.getMasterPageExpand();
+
+            // masterPageNavButton의 화살표 방향을 설정한다.
+            this._masterNavBtnIconChange(bIsExpand);
+
+            oRm.renderControl(this._oMasterNavBtn);
+
+            oRm.flush(oAppDom, false, true);
+
+        },
+
+        _masterNavBtnIconChange : function(bIsExpand){
+
+            var oBtn = this._oMasterNavBtn;
+            if(oBtn == null){
+                return;
+            }
+
+            var sIconUrl = "sap-icon://navigation-right-arrow";
+
+            oBtn.removeStyleClass("u4aSplitAppMasterNavBtnShow");
+
+            if(bIsExpand){
+                sIconUrl = "sap-icon://navigation-left-arrow";
+                oBtn.addStyleClass("u4aSplitAppMasterNavBtnShow");
+            }
+
+            // 버튼 아이콘 화살표 방향 변경
+            oBtn.setIcon(sIconUrl);
+            oBtn.rerender();
+
+        },
+
+        _pressMasterNavBtn : function(oEvent){
+
+            var bIsExpand = this.getMasterPageExpand();
+
+            this.setMasterPageExpand(!bIsExpand);
+
+        },
+
+        _handleResize : function(){
+
+          // 상위 (sap.m.SplitContaier) 의 _handleResize를 먼저 수행한다.
             SplitApp.prototype._handleResize.apply(this, arguments);
-            
+
             /* Standard(sap.m.SplitContainer) 의 Resize Event 에서,
              * 'StretchCompressMode' 이고 Browser 창을 줄이면
              * MasterPage 의 width를 330px 로 고정시키는 CSS를 적용함으로써 CSS 충돌 현상이 발생하여,
              * Resize Event Handle를 현재 인스턴스에서 재정의하여 이상현상을 회피하기 위한 로직.
              */
-            if(this.getMode() == sap.m.SplitAppMode.StretchCompressMode 
-              && this.$().hasClass("sapMSplitContainerPortrait")){
+            if(this.getMode() == sap.m.SplitAppMode.StretchCompressMode
+			&& this.$().hasClass("sapMSplitContainerPortrait")){
 
-                this.$().removeClass("sapMSplitContainerPortrait");    
-            }           
-            
+                this.$().removeClass("sapMSplitContainerPortrait");
+            }
+
         }, // end of _handleResize
 
         _getComputedWidth : function(oPage, sWidth){
@@ -228,40 +311,118 @@ sap.ui.define("u4a.m.SplitApp", [
 
         _setMasterAnimation : function(){
 
-        	 // 모바일로 접속한 경우는 MasterPageWidth를 100% 준다. (standard 기본기능)            
-            if(Device.system.phone) {
+            var oMaster = this._oMasterNav;
+
+            // 모바일로 접속한 경우는 MasterPageWidth를 100% 준다. (standard 기본기능)
+            if(Device.system.phone || oMaster == null) {
                 return;
             }
 
-            var oMaster = this._oMasterNav,
+            var sAppId = this.getId(),
                 sMasterWidth = this.getMasterPageWidth(),
                 sMasterCompWidth = this._getComputedWidth(oMaster, sMasterWidth);
 
-            // 마스터 페이지 유무 확인
-            if(oMaster == null){
-                return;
-            }            
+            var aMaserPages = this.getMasterPages(),
+                iPageLen = aMaserPages.length;
 
+            if(iPageLen == 0){
+                return;
+            }
+
+            // MasterPage를 Visible 상태로 설정한다.
+            for(var i = 0; i < iPageLen; i++){
+
+                var oPage = aMaserPages[i],
+                    bIsVisi = oPage.getVisible();
+
+                if(bIsVisi){
+                    continue;
+                }
+
+                oPage.setVisible(true);
+
+            }
+
+            // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 로직
+            // showMasterPageNavButton: true,
+            // 마스터 페이지 끝 부분이 보이게 한다.
+            if(this.getShowMasterPageNavButton()){
+
+                var oMasterNav = oMaster.getDomRef();
+                if(!oMasterNav){
+                    return;
+                }
+
+                /* MasterPage의 Width 값을 구하기 위해 더미 DOM을 생성하여 구한다. */
+                var oSplitAppDom = oMaster.getParent().getDomRef(),
+                    oMasterClone = oMasterNav.cloneNode();
+
+                oMasterClone.style.visibility = "hidden";
+
+                oSplitAppDom.appendChild(oMasterClone);
+
+                $(oMasterClone).css("width", sMasterWidth);
+
+                var sMasterWidth = $(oMasterClone).css("width");
+
+                $(oMasterClone).remove();
+
+                /* 2020-12-14 기 적용된 CSS를 삭제한다.
+                 * 특정 Dom width의 %단위의 값을 px로 구하기 위해서
+                 * 일시적으로 Dom에 %단위로 width를 준 후,
+                 * jQuery.css("width") 로 px를 구할때,
+                 * 기 적용된 CSS 중, Animation 효과가 적용되어 있으면
+                 * 값을 잘못 구해지는 현상이 있다.
+                 * 그래서, Animation 효과의 CSS를 지운 후에 구해야 정확한 %단위의 값을 px로 구할 수 있다.
+                 */
+
+                oMaster.removeStyleClass('sapMSplitContainerMaster');
+                oMaster.removeStyleClass('sapMSplitContainerMasterHidden');
+                oMaster.removeStyleClass('u4aMSplitAppMasterHide' + sAppId);
+
+                $(oMasterNav).css("width", sMasterWidth);
+
+                var sMasPgDefGap = 30;
+
+                sMasterCompWidth = ((parseInt(sMasterWidth) * -1) + sMasPgDefGap) + "px";
+
+                // showMasterPageNavButton == true && masterPageExpand = true 이면
+                // MasterPage 내의 Page들을 Invisible 처리한다.
+                if(iPageLen == 0){
+                    return;
+                }
+
+                // masterPage를 접은 상태일 경우 masterPage가 안보이게 Invisible 처리한다.
+                for(var i = 0; i < iPageLen; i++){
+
+                    var oPage = aMaserPages[i];
+                        oPage.setVisible(this.getMasterPageExpand());
+
+                }
+
+            } /* end of if(this.getShowMasterPageNavButton()) */
+
+            // masterPageNavButton을 활성화 할 경우, 스탠다드의 메뉴접기펼치기 버튼을 비활성화한다.
+            this._oShowMasterBtn.setVisible(!this.getShowMasterPageNavButton());
+			
             // 마스터 페이지 동적 CSS 생성
             var oMasterStyle = document.getElementById(this._getMasterStyleDomId());
             if(oMasterStyle != null){
-               $(oMasterStyle).remove();
+				$(oMasterStyle).remove();
             }
 
             var oMasterStyleDom = document.createElement("style");
                 oMasterStyleDom.id = this._getMasterStyleDomId();
 
-            var sAppId = this.getId();
-
             // Master Page CSS
             var sMasterCSS = '.u4aMSplitAppMaster' + sAppId + '{';
-                sMasterCSS += 'width : ' + sMasterWidth;
+                sMasterCSS += 'width : ' + sMasterWidth + ";";
+                sMasterCSS += 'transition : all 300ms ease 0s !important;';
                 sMasterCSS += '}';
 
             // masterPageShow CSS
                 sMasterCSS += '.u4aMSplitAppMasterShow' + sAppId +'{';
                 sMasterCSS += 'transform: translate3d(0px, 0px, 0px) !important;';
-                sMasterCSS += 'transition: all 300ms ease 0s !important;';
                 sMasterCSS += 'box-shadow: rgba(0, 0, 0, 0.15) 0px 0.625rem 1.875rem 0px, rgba(0, 0, 0, 0.15) 0px 0px 0px 1px !important;';
                 sMasterCSS += 'visibility: visible !important;';
                 sMasterCSS += '}';
@@ -270,26 +431,79 @@ sap.ui.define("u4a.m.SplitApp", [
                 sMasterCSS += '.u4aMSplitAppMasterHide' + sAppId + '{';
                 sMasterCSS += 'transform: translate3d(' + sMasterCompWidth + ',0,0) !important;';
                 sMasterCSS += '-webkit-transform: translate3d(' + sMasterCompWidth + ',0,0) !important;';
-                sMasterCSS += 'transition: all 300ms !important;';
-                sMasterCSS += '-webkit-transition: all 300ms !important;';
+                sMasterCSS += 'transition: all 300ms ease 0s !important;';
+                sMasterCSS += '-webkit-transition: all 300ms ease 0s !important;';
                 sMasterCSS += 'box-shadow: rgba(255, 255, 255, 0) 0px 0rem 0rem 0px, rgba(255, 255, 255, 0) 0px 0px 0px 0px !important;';
+
+            // 2020-12-14 'showMasterPageNavButton' 이 활성화 상태면
+            // masterPage의 오른쪽 끝 부분을 기본적으로 보여준다.
+            if(this.getShowMasterPageNavButton()){
+                sMasterCSS += 'box-shadow: rgba(0, 0, 0, 0.15) 0px 0.625rem 1.875rem 0px, rgba(0, 0, 0, 0.15) 0px 0px 0px 1px !important;';
+                sMasterCSS += 'visibility: visible !important;';
+            }
+
                 sMasterCSS += '}';
 
-                oMasterStyleDom.innerText = sMasterCSS;
-                document.head.appendChild(oMasterStyleDom);
+            // masterPageNavButton Css
+                // sizeCompact 적용일 경우
+                sMasterCSS += '.sapUiSizeCompact .u4aSplitAppMasterNavBtn,';
+                sMasterCSS += '.sapUiSizeCompact.u4aSplitAppMasterNavBtn { ';
+                sMasterCSS += 'padding: 0px;';
+                sMasterCSS += 'height: 1.5rem;';
+                sMasterCSS += 'width: 1.5rem;';
+                sMasterCSS += '}';
+                sMasterCSS += '.sapUiSizeCompact .u4aSplitAppMasterNavBtn .sapMBtnInner,';
+                sMasterCSS += '.sapUiSizeCompact.u4aSplitAppMasterNavBtn .sapMBtnInner { ';
+                sMasterCSS += 'width: 1.5rem;';
+                sMasterCSS += 'min-width: 1.5rem;';
+                sMasterCSS += 'height: 1.5rem;';
+                sMasterCSS += '}';
+                sMasterCSS += '.u4aSplitAppMasterNavBtn { ';
+                sMasterCSS += 'position: absolute;';
+                sMasterCSS += 'left: 12px;';
+                sMasterCSS += 'top: ' + this.getMasterPageNavButtonTop() + ';';
+                sMasterCSS += 'z-index: 10;';
+                sMasterCSS += 'transition: all 300ms;';
+                sMasterCSS += '-webkit-transition: all 300ms;';
+                sMasterCSS += '}';
+                sMasterCSS += '.u4aSplitAppMasterNavBtn .sapMBtnInner { ';
+                sMasterCSS += 'border-radius: 2rem;';
+                sMasterCSS += '}';
+                sMasterCSS += '.sapUiSizeCompact .u4aSplitAppMasterNavBtn .sapMBtnInner { ';
+                sMasterCSS += 'border-radius: 1rem;';
+                sMasterCSS += '}';
+
+			// 2020-12-14 'showMasterPageNavButton' 이 활성화 상태이고,
+			// MasterPageExpand시 적용할 CSS
+			var iMasterBtnDefPos = 12,
+				sMbDefPosPx = iMasterBtnDefPos + "px",
+				iMasterBtnPos = (Math.abs(parseInt(sMasterCompWidth)) + iMasterBtnDefPos) + "px";
+
+			sMasterCSS += '.u4aSplitAppMasterNavBtnShow { ';
+			sMasterCSS += 'left: ' + iMasterBtnPos + ';';
+			sMasterCSS += 'transition: all 300ms ease 0s;';
+			sMasterCSS += '}';
+
+			oMasterStyleDom.innerText = sMasterCSS;
+
+			document.head.appendChild(oMasterStyleDom);
 
             // 기 적용된 CSS를 삭제한다.
             oMaster.removeStyleClass('u4aMSplitAppMaster' + sAppId);
             oMaster.removeStyleClass('u4aMSplitAppMasterShow' + sAppId);
             oMaster.removeStyleClass('u4aMSplitAppMasterHide' + sAppId);
 
-            oMaster.addStyleClass('u4aMSplitAppMaster' + sAppId);
             if(this.getMasterPageExpand()){
                 oMaster.addStyleClass('u4aMSplitAppMasterShow' + sAppId);
             }
             else {
                 oMaster.addStyleClass('u4aMSplitAppMasterHide' + sAppId);
             }
+
+            oMaster.addStyleClass('u4aMSplitAppMaster' + sAppId);
+
+            oMaster.addStyleClass('sapMSplitContainerMaster');
+            oMaster.addStyleClass('sapMSplitContainerMasterHidden');
 
         },
 
@@ -308,63 +522,63 @@ sap.ui.define("u4a.m.SplitApp", [
                 sRightCompWidth = this._getComputedWidth(oRightPage, sRightPageWidth);
 
             var oRightStyle = document.getElementById(this._getRightStyleDomId());
-                if(oRightStyle != null){
-                   $(oRightStyle).remove();
-                }
+			if(oRightStyle != null){
+			   $(oRightStyle).remove();
+			}
 
-                var oRightStyleDom = document.createElement("style");
-                    oRightStyleDom.id = this._getRightStyleDomId();
+			var oRightStyleDom = document.createElement("style");
+				oRightStyleDom.id = this._getRightStyleDomId();
 
-                var sAppId = this.getId();
+			var sAppId = this.getId();
 
-                // rightPage CSS
-                var sRightCss = '.u4aMSplitAppRightPage' + sAppId + '{';
-                    sRightCss += 'height: 100%;';
-                    sRightCss += 'display: inline-block;';
-                    sRightCss += 'position: absolute;';
-                    sRightCss += 'z-index: 4;';
-                    sRightCss += 'top: 0;';
-                    sRightCss += 'box-sizing: border-box;';
-                    sRightCss += 'width: ' + sRightPageWidth + ';';
-                    sRightCss += 'right: 0;';
-                    sRightCss += 'border-left: #ebebeb;';
-                    sRightCss += 'background-color: #ffffff;';
-                    sRightCss += '}';
+			// rightPage CSS
+			var sRightCss = '.u4aMSplitAppRightPage' + sAppId + '{';
+				sRightCss += 'height: 100%;';
+				sRightCss += 'display: inline-block;';
+				sRightCss += 'position: absolute;';
+				sRightCss += 'z-index: 4;';
+				sRightCss += 'top: 0;';
+				sRightCss += 'box-sizing: border-box;';
+				sRightCss += 'width: ' + sRightPageWidth + ';';
+				sRightCss += 'right: 0;';
+				sRightCss += 'border-left: #ebebeb;';
+				sRightCss += 'background-color: #ffffff;';
+				sRightCss += '}';
 
-                    // rightPageShow Css
-                    sRightCss += '.u4aMSplitAppRightShow' + sAppId + '{';
-                    sRightCss += 'transform: translate3d(0px, 0px, 0px) !important;';
-                    sRightCss += 'transition: all 300ms ease 0s !important;';
-                    sRightCss += 'box-shadow: rgba(0, 0, 0, 0.15) 0px 0.625rem 1.875rem 0px, rgba(0, 0, 0, 0.15) 0px 0px 0px 1px !important;';
-                    sRightCss += 'visibility: visible !important;';
-                    sRightCss += '}';
+				// rightPageShow Css
+				sRightCss += '.u4aMSplitAppRightShow' + sAppId + '{';
+				sRightCss += 'transform: translate3d(0px, 0px, 0px);';
+				sRightCss += 'transition: all 300ms ease 0s;';
+				sRightCss += 'box-shadow: rgba(0, 0, 0, 0.15) 0px 0.625rem 1.875rem 0px, rgba(0, 0, 0, 0.15) 0px 0px 0px 1px;';
+				sRightCss += 'visibility: visible;';
+				sRightCss += '}';
 
-                    // masterPageHide CSS
-                    sRightCss += '.u4aMSplitAppRightHide' + sAppId + '{';
-                    sRightCss += 'transform: translate3d(' + sRightCompWidth + ',0,0) !important;';
-                    sRightCss += '-webkit-transform: translate3d(' + sRightCompWidth + ',0,0) !important;';
-                    sRightCss += 'transition: all 300ms !important;';
-                    sRightCss += '-webkit-transition: all 300ms !important;';
-                    sRightCss += 'box-shadow: rgba(255, 255, 255, 0) 0px 0rem 0rem 0px, rgba(255, 255, 255, 0) 0px 0px 0px 0px !important;';
-                    sRightCss += 'visibility: hidden;';
-                    sRightCss += '}';
+				// masterPageHide CSS
+				sRightCss += '.u4aMSplitAppRightHide' + sAppId + '{';
+				sRightCss += 'transform: translate3d(' + sRightCompWidth + ',0,0);';
+				sRightCss += '-webkit-transform: translate3d(' + sRightCompWidth + ',0,0);';
+				sRightCss += 'transition: all 300ms;';
+				sRightCss += '-webkit-transition: all 300ms;';
+				sRightCss += 'box-shadow: rgba(255, 255, 255, 0) 0px 0rem 0rem 0px, rgba(255, 255, 255, 0) 0px 0px 0px 0px;';
+				sRightCss += 'visibility: hidden;';
+				sRightCss += '}';
 
-                    oRightStyleDom.innerText = sRightCss;
-                    document.head.appendChild(oRightStyleDom);
+				oRightStyleDom.innerText = sRightCss;
+				document.head.appendChild(oRightStyleDom);
 
-              var $RightPage = $(oRight);
-                  $RightPage.removeClass('u4aMSplitAppRightPage' + sAppId);
-                  $RightPage.removeClass('u4aMSplitAppRightShow' + sAppId);
-                  $RightPage.removeClass('u4aMSplitAppRightHide' + sAppId);
+			var $RightPage = $(oRight);
+				$RightPage.removeClass('u4aMSplitAppRightPage' + sAppId);
+				$RightPage.removeClass('u4aMSplitAppRightShow' + sAppId);
+				$RightPage.removeClass('u4aMSplitAppRightHide' + sAppId);
 
-              $RightPage.addClass('u4aMSplitAppRightPage' + sAppId);
+				$RightPage.addClass('u4aMSplitAppRightPage' + sAppId);
 
-              if(this.getRightPageExpand()){
-                  $RightPage.addClass('u4aMSplitAppRightShow' + sAppId);
-              }
-              else {
-                  $RightPage.addClass('u4aMSplitAppRightHide' + sAppId);
-              }
+			if(this.getRightPageExpand()){
+				$RightPage.addClass('u4aMSplitAppRightShow' + sAppId);
+			}
+			else {
+				$RightPage.addClass('u4aMSplitAppRightHide' + sAppId);
+			}
 
         },
 
@@ -381,22 +595,24 @@ sap.ui.define("u4a.m.SplitApp", [
             /* true  : SplitAppMode 를 'StretchCompressMode' 로 설정하여 masterPage를 Fix 한다.
              * false : SplitAppMode 를 'HideMode' 로 설정하여 masterPage를 Fix 하지 않는다.
              */
-            
+
             if(Device.system.phone){
                 bFixed = true;
-            } 
+            }
 
-            this.setProperty("masterPageFixed", bFixed, true);
-            
+            this.setProperty("masterPageFixed", bFixed);
+			
             if(bFixed){
-                this.setMode(sap.m.SplitAppMode.StretchCompressMode);
-                this.setMasterPageExpand(bFixed);
+                this.setMode(sap.m.SplitAppMode.StretchCompressMode);				
                 this._handleResize();
             }
             else {
                 this.setMode(sap.m.SplitAppMode.HideMode);
-            }        
 
+            }
+			
+			this.setMasterPageExpand(bFixed);
+			
         },
 
         setMasterPageExpand : function(bExpand){
@@ -410,7 +626,11 @@ sap.ui.define("u4a.m.SplitApp", [
                 bExpand = true;
             }
 
-            this.setProperty("masterPageExpand", bExpand, true);
+			this.setProperty("masterPageExpand", bExpand, true);
+
+            // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 로직추가
+            // MasterPageNavButton의 화살표 아이콘 설정
+            this._masterNavBtnIconChange(bExpand);
 
             this._bMasterPageExpand = bExpand;
 
@@ -477,7 +697,7 @@ sap.ui.define("u4a.m.SplitApp", [
         }, // end of _rightPageRender
 
         _pageWidthValidCheck : function(sWidth){
-            
+
             if(sWidth.toLowerCase){
                 sWidth = sWidth.toLowerCase();
             };
@@ -518,10 +738,21 @@ sap.ui.define("u4a.m.SplitApp", [
 
             $targetContainer = jQuery(oEvent.target).closest(".sapMSplitContainerDetail, .sapMSplitContainerMaster, .u4aMSplitAppRightPage" + sAppId),
             $targetHeader = jQuery(oEvent.target).closest(".sapMPageHeader"),
-            metaData = oEvent.srcControl.getMetadata();
+            metaData = oEvent.srcControl.getMetadata(),
+
+            // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 로직
+            // 클릭한 위치가 masterPageNavButton 인지 여부 확인
+            oTarget = oEvent.srcControl,
+            $targetButton = jQuery(oTarget.getDomRef()).closest(".u4aSplitAppMasterNavBtn");
 
             // is Master Page?
             if($targetContainer.length > 0 && $targetContainer.hasClass("sapMSplitContainerMaster")){
+                bIsMasterNav = true;
+            }
+
+            // 2020-12-14 신규 추가된 'showMasterPageNavButton' Property 관련 메소드
+            // 클릭한 위치가 MasterPageNavButton일 경우 MasterPage를 접지 않는다.
+            if($targetButton.length > 0 && $targetButton.hasClass("u4aSplitAppMasterNavBtn")){
                 bIsMasterNav = true;
             }
 
@@ -572,7 +803,10 @@ sap.ui.define("u4a.m.SplitApp", [
             }
 
             if(bIsCollapse) {
-                this.hideMaster();
+
+                if(!this.getMasterPageFixed()){
+                    this.hideMaster();
+                }
 
                 if(this.getRightPageAutoHide()){
                     this.setRightPageExpand(false);
