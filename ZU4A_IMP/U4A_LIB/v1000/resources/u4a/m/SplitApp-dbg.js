@@ -382,7 +382,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
                 $(oMasterNav).css("width", sMasterWidth);
 
-                var sMasPgDefGap = 30;
+                var sMasPgDefGap = 10;
 
                 sMasterCompWidth = ((parseInt(sMasterWidth) * -1) + sMasPgDefGap) + "px";
 
@@ -428,7 +428,11 @@ sap.ui.define("u4a.m.SplitApp", [
                 sMasterCSS += '}';
 
             // masterPageHide CSS
+				sMasterCSS += '.sapUiTheme-sap_fiori_3_dark .u4aMSplitAppMasterHide' + sAppId + '{';
+                sMasterCSS += 'background-color: #43505f;';
+                sMasterCSS += '}';
                 sMasterCSS += '.u4aMSplitAppMasterHide' + sAppId + '{';
+				sMasterCSS += 'background-color: #CCCCCC;';
                 sMasterCSS += 'transform: translate3d(' + sMasterCompWidth + ',0,0) !important;';
                 sMasterCSS += '-webkit-transform: translate3d(' + sMasterCompWidth + ',0,0) !important;';
                 sMasterCSS += 'transition: all 300ms ease 0s !important;';
@@ -460,7 +464,7 @@ sap.ui.define("u4a.m.SplitApp", [
                 sMasterCSS += '}';
                 sMasterCSS += '.u4aSplitAppMasterNavBtn { ';
                 sMasterCSS += 'position: absolute;';
-                sMasterCSS += 'left: 12px;';
+                sMasterCSS += 'left: 0px;';
                 sMasterCSS += 'top: ' + this.getMasterPageNavButtonTop() + ';';
                 sMasterCSS += 'z-index: 10;';
                 sMasterCSS += 'transition: all 300ms;';
@@ -475,7 +479,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
 			// 2020-12-14 'showMasterPageNavButton' 이 활성화 상태이고,
 			// MasterPageExpand시 적용할 CSS
-			var iMasterBtnDefPos = 12,
+			var iMasterBtnDefPos = -9,
 				sMbDefPosPx = iMasterBtnDefPos + "px",
 				iMasterBtnPos = (Math.abs(parseInt(sMasterCompWidth)) + iMasterBtnDefPos) + "px";
 
@@ -553,7 +557,7 @@ sap.ui.define("u4a.m.SplitApp", [
 				sRightCss += 'visibility: visible;';
 				sRightCss += '}';
 
-				// masterPageHide CSS
+				// rightPageHide CSS
 				sRightCss += '.u4aMSplitAppRightHide' + sAppId + '{';
 				sRightCss += 'transform: translate3d(' + sRightCompWidth + ',0,0);';
 				sRightCss += '-webkit-transform: translate3d(' + sRightCompWidth + ',0,0);';
