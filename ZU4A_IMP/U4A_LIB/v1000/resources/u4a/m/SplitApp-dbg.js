@@ -14,11 +14,19 @@ sap.ui.define("u4a.m.SplitApp", [
      *      true  : masterPage의 Navigation 버튼 활성화
      *      false : masterPage의 Navigation 버튼 비활성화
      *    }
+	 *
+	 *	- showMasterPageAnimation 
+	 *	  (showMasterPageNavButton: true,
+	 *	   masterPageExpand : false 일 경우만 동작함)
+	 *	  #param (boolean) {
+	 *		true : masterPage의 영역에 불빛이 내려가는 것 같은 애니메이션 동작 실행
+	 *		false: 애니메이션 동작 중지
+	 *	  }	
      *
      *  - masterPageNavButtonTop
 	 *    #param (CSSSize)
 	 *    #설명 {
-	 *    masterPageNavButton의 위치를 지정한다.
+	 *	    masterPageNavButton의 위치를 지정한다.
 	 *    }
 	 *
      *  - masterPageFixed
@@ -665,7 +673,16 @@ sap.ui.define("u4a.m.SplitApp", [
              */
 
             if (Device.system.phone || this.getMode() == sap.m.SplitAppMode.StretchCompressMode){
-                bExpand = true;
+				
+				if(!bExpand){
+                
+                    this.setProperty("masterPageExpand", bExpand, false);
+                    return;
+                
+                    bExpand = true;
+                
+                }
+                
             }
             
             this.setProperty("masterPageExpand", bExpand, true);
