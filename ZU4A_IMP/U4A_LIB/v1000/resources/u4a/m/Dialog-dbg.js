@@ -347,9 +347,10 @@ sap.ui.define("u4a.m.Dialog", [
 
 			if(this._oBeforePosition && this.getRememberPosition()){
 				$dialog.css('top', this._oBeforePosition.top);
-				$dialog.css('left', this._oBeforePosition.left);
-				return;
+				$dialog.css('left', this._oBeforePosition.left);				
 			}
+			
+			this.oPopup._updateBlindLayer();
 	
 		},
 
