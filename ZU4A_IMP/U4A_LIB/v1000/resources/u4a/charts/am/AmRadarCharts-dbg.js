@@ -1,71 +1,142 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
-
 sap.ui.define("u4a.charts.am.AmRadarCharts", [
-"sap/ui/core/Control",
+    "sap/ui/core/Control",
 
-], function(Control){
+], function(Control) {
     "use strict";
 
     var AmRadarChart = Control.extend("u4a.charts.am.AmRadarCharts", {
-        metadata : {
-            library : "u4a.charts.am",
-            properties : {
-                width : { type : "sap.ui.core.CSSSize", defaultValue : "100%" },
-                height : { type : "sap.ui.core.CSSSize", defaultValue : "500px" },
-                marginBottom : { type: "int", defaultValue: 0 },
-                marginLeft : { type: "int", defaultValue: 0 },
-                marginRight : { type: "int", defaultValue: 0 },
-                marginTop : { type: "int", defaultValue: 0 },
-                startDuration : { type: "int", defaultValue: 2 },
-                fontSize : { type: "int", defaultValue: 11 },
-                radius : { type : "string", defaultValue : "35%" },
-                startAlpha : { type: "float", defaultValue: 1 },
-                backgroundAlpha : { type: "float", defaultValue: 0 },
-                backgroundColor : { type : "sap.ui.core.CSSColor", defaultValue : "#ffffff" },
-                borderAlpha : { type: "float", defaultValue: 0 },
-                borderColor : { type : "sap.ui.core.CSSColor", defaultValue : "#000000" },
-                color : { type : "sap.ui.core.CSSColor", defaultValue : "#000000" },    // font color
+        metadata: {
+            library: "u4a.charts.am",
+            properties: {
+                width: {
+                    type: "sap.ui.core.CSSSize",
+                    defaultValue: "100%"
+                },
+                height: {
+                    type: "sap.ui.core.CSSSize",
+                    defaultValue: "500px"
+                },
+                marginBottom: {
+                    type: "int",
+                    defaultValue: 0
+                },
+                marginLeft: {
+                    type: "int",
+                    defaultValue: 0
+                },
+                marginRight: {
+                    type: "int",
+                    defaultValue: 0
+                },
+                marginTop: {
+                    type: "int",
+                    defaultValue: 0
+                },
+                startDuration: {
+                    type: "int",
+                    defaultValue: 2
+                },
+                fontSize: {
+                    type: "int",
+                    defaultValue: 11
+                },
+                radius: {
+                    type: "string",
+                    defaultValue: "35%"
+                },
+                startAlpha: {
+                    type: "float",
+                    defaultValue: 1
+                },
+                backgroundAlpha: {
+                    type: "float",
+                    defaultValue: 0
+                },
+                backgroundColor: {
+                    type: "sap.ui.core.CSSColor",
+                    defaultValue: "#ffffff"
+                },
+                borderAlpha: {
+                    type: "float",
+                    defaultValue: 0
+                },
+                borderColor: {
+                    type: "sap.ui.core.CSSColor",
+                    defaultValue: "#000000"
+                },
+                color: {
+                    type: "sap.ui.core.CSSColor",
+                    defaultValue: "#000000"
+                }, // font color
                 //axisTitleOffset : { type: "int", defaultValue: 20 },   // Axis 타이틀 위치
-				showLegend : { type: "boolean", defaultValue: true },
-				legendPosition : { type: "string", defaultValue: "bottom" },
-				legendAlign : { type: "string", defaultValue: "center" },
-				legendFontSize : { type: "int", defaultValue: 11 }                
+                showLegend: {
+                    type: "boolean",
+                    defaultValue: true
+                },
+                legendPosition: {
+                    type: "string",
+                    defaultValue: "bottom"
+                },
+                legendAlign: {
+                    type: "string",
+                    defaultValue: "center"
+                },
+                legendFontSize: {
+                    type: "int",
+                    defaultValue: 11
+                },
+                legendMarkerSize: {
+                    type: "int",
+                    defaultValue: 16
+                },
+                legendValueWidth: {
+                    type: "int",
+                    defaultValue: 50
+                },
+                legendVerticalGap: {
+                    type: "int",
+                    defaultValue: 10
+                },
+                legendHorizontalGap: {
+                    type: "int",
+                    defaultValue: 0
+                }
             },
 
-            events : {
-                clickGraphItem : {
+            events: {
+                clickGraphItem: {
                     allowPreventDefault: true,
                 }
             }
 
         }, // end of metadata
 
-        init : function(){
+        init: function() {
 
             try {
 
                 var amChart = AmCharts;
-                if(typeof amChart == "undefined"){
-                    jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function(){});
+                if (typeof amChart == "undefined") {
+                    jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function() {});
                 }
 
-                if(typeof AmCharts.AmRadarChart == "undefined"){
-                    jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/radar.js", function(){});
+                if (typeof AmCharts.AmRadarChart == "undefined") {
+                    jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/radar.js", function() {});
                 }
 
+            } catch (e) {
+                jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function() {});
+                jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/radar.js", function() {});
             }
-            catch(e){
-                jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function(){});
-                jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/radar.js", function(){});
-            }
-			
-			this._c = new AmCharts.AmRadarChart();
-			
-			this._attachChartEvent();
+
+            this._c = new AmCharts.AmRadarChart();
+
+            this._attachChartEvent();
 
         },
 
-        renderer : function(oRm, oControl){
+        renderer: function(oRm, oControl) {
 
             oRm.openStart("div", oControl);
             oRm.class("u4aAmRadarChart");
@@ -77,27 +148,26 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         }, // end of renderer
 
-        onAfterRendering : function(){
+        onAfterRendering: function() {
 
-           // 차트를 생성한다.
-           this._createChart();
+            // 차트를 생성한다.
+            this._createChart();
 
-           // 차트의 이벤트를 등록한다.
-           //this._attachChartEvent();
+            // 차트의 이벤트를 등록한다.
+            //this._attachChartEvent();
 
-           // Radar 차트의 ValueAxis 속성을 설정한다.
-           //this._setValueAxis();
-
-           // Radar 차트 finish
-           this._chartUpdateData();
+            // Radar 차트의 ValueAxis 속성을 설정한다.
+            //this._setValueAxis();
 
         }, // end of onAfterRendering
 
-        setMarginBottom : function(iMargin){
+        setMarginBottom: function(iMargin) {
 
             this.setProperty("marginBottom", iMargin, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.marginBottom = iMargin;
 
@@ -105,11 +175,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setMarginLeft : function(iMargin){
+        setMarginLeft: function(iMargin) {
 
             this.setProperty("marginLeft", iMargin, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.marginLeft = iMargin;
 
@@ -117,11 +189,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setMarginRight : function(iMargin){
+        setMarginRight: function(iMargin) {
 
             this.setProperty("marginRight", iMargin, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.marginRight = iMargin;
 
@@ -129,11 +203,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setMarginTop : function(iMargin){
+        setMarginTop: function(iMargin) {
 
             this.setProperty("marginTop", iMargin, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.marginTop = iMargin;
 
@@ -141,11 +217,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setStartDuration : function(iMargin){
+        setStartDuration: function(iMargin) {
 
             this.setProperty("startDuration", iMargin, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.startDuration = iMargin;
 
@@ -153,11 +231,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setFontSize : function(iFontSize){
+        setFontSize: function(iFontSize) {
 
             this.setProperty("fontSize", iFontSize, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.fontSize = iFontSize;
 
@@ -165,15 +245,17 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setRadius : function(iValue){
+        setRadius: function(iValue) {
 
             this.setProperty("radius", iValue, true);
 
-            if(isNaN(iValue) && !jQuery.sap.endsWith(iValue, "%")){
+            if (isNaN(iValue) && !jQuery.sap.endsWith(iValue, "%")) {
                 throw new Error('[U4AIDE] "Radius" 값은 숫자타입 또는 "%" 단위만 가능합니다');
             }
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.radius = iValue;
 
@@ -181,11 +263,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setStartAlpha : function(iValue){
+        setStartAlpha: function(iValue) {
 
             this.setProperty("startAlpha", iValue, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.startAlpha = iValue;
 
@@ -193,11 +277,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setBackgroundAlpha : function(iValue){
+        setBackgroundAlpha: function(iValue) {
 
             this.setProperty("backgroundAlpha", iValue, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.backgroundAlpha = iValue;
 
@@ -205,11 +291,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setBackgroundColor : function(sColor){
+        setBackgroundColor: function(sColor) {
 
             this.setProperty("backgroundColor", sColor, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.backgroundColor = sColor;
 
@@ -217,11 +305,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setBorderAlpha : function(iValue){
+        setBorderAlpha: function(iValue) {
 
             this.setProperty("borderAlpha", iValue, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.borderAlpha = iValue;
 
@@ -229,11 +319,13 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setBorderColor : function(iValue){
+        setBorderColor: function(iValue) {
 
             this.setProperty("borderColor", iValue, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.borderColor = iValue;
 
@@ -241,19 +333,21 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
 
         },
 
-        setColor : function(sColor){
+        setColor: function(sColor) {
 
             this.setProperty("color", sColor, true);
 
-            if(this._c == null) { return; }
+            if (this._c == null) {
+                return;
+            }
 
             this._c.color = sColor;
 
             this._chartUpdateData();
 
         },
-        
-		/*
+
+        /*
         setAxisTitleOffset : function(iValue){
             
             this.setProperty("axisTitleOffset", iValue, true);
@@ -266,114 +360,171 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
         
         },
 		*/
-		
-		setShowLegend : function(p){
-			
-			this.setProperty('showLegend', p, true);
-			
-			this._setLegend(p, true);
-			
-        },
-		
-		setLegendPosition : function(p){
-			
-			this.setProperty('legendPosition', p, true);
-			
-			if(!this._c || !this._c.legend){ return; }
-			
-			this._c.legend.position = p;
-			
-			if(this._c.legend.position === ""){
-				this._c.legend.position = "bottom";
-			}
-			
-			this._c.validateNow();
-			
-        },
-		
-		setLegendAlign : function(p){
-			
-			this.setProperty('legendAlign', p, true);
-			
-			if(!this._c || !this._c.legend){ return; }
-			
-			this._c.legend.align = p;
-			
-			this._c.validateNow();
-        },		
 
-        _chartUpdateData : function(){
-        
-            if(this._c == null) { return; }
-            
+        setShowLegend: function(p) {
+
+            this.setProperty('showLegend', p, true);
+
+            this._setLegend(p, true);
+
+        },
+
+        setLegendPosition: function(p) {
+
+            this.setProperty('legendPosition', p, true);
+
+            if (!this._c || !this._c.legend) {
+                return;
+            }
+
+            this._c.legend.position = p;
+
+            if (this._c.legend.position === "") {
+                this._c.legend.position = "bottom";
+            }
+
+            this._c.validateNow();
+
+        },
+
+        setLegendAlign: function(p) {
+
+            this.setProperty('legendAlign', p, true);
+
+            if (!this._c || !this._c.legend) {
+                return;
+            }
+
+            this._c.legend.align = p;
+
+            this._c.validateNow();
+        },
+        setLegendMarkerSize: function(p) {
+            this.setProperty('legendMarkerSize', p, true);
+            if (!this._c || !this._c.legend) {
+                return;
+            }
+            this._c.legend.markerSize = p;
+            this._c.validateNow();
+        },
+
+        setLegendValueWidth: function(p) {
+            this.setProperty('legendValueWidth', p, true);
+            if (!this._c || !this._c.legend) {
+                return;
+            }
+            this._c.legend.valueWidth = p;
+            this._c.validateNow();
+        },
+
+        setLegendVerticalGap: function(p) {
+            this.setProperty('legendVerticalGap', p, true);
+            if (!this._c || !this._c.legend) {
+                return;
+            }
+            this._c.legend.verticalGap = p;
+            this._c.validateNow();
+        },
+
+        setLegendHorizontalGap: function(p) {
+            this.setProperty('legendHorizontalGap', p, true);
+            if (!this._c || !this._c.legend) {
+                return;
+            }
+            this._c.legend.horizontalGap = p;
+            this._c.validateNow();
+        },
+
+        _chartUpdateData: function() {
+
+            if (this._c == null) {
+                return;
+            }
+
             this._c.validateNow();
             this._c.validateData();
 
         },
+        _setChart: function() {
 
-        _createChart : function(){
-
-            // create Radar Chart
-            if(!this._c){
-				this._c = new AmCharts.AmRadarChart();
-			}
-			
-			var oChart = this._c;
-			
-            // AmRadarChart setting
-            oChart.marginBottom = this.getMarginBottom();
-            oChart.marginLeft = this.getMarginLeft();
-            oChart.marginRight = this.getMarginRight();
-            oChart.marginTop = this.getMarginTop();
-            oChart.startDuration = this.getStartDuration();
-            oChart.fontSize = this.getFontSize();
-            oChart.radius = this.getRadius();
-            oChart.startAlpha = this.getStartAlpha();
-            oChart.backgroundAlpha = this.getBackgroundAlpha();
-            oChart.backgroundColor = this.getBackgroundColor();
-            oChart.borderAlpha = this.getBorderAlpha();
-            oChart.borderColor = this.getBorderColor();
-            oChart.color = this.getColor();
+            this._c.marginBottom = this.getMarginBottom();
+            this._c.marginLeft = this.getMarginLeft();
+            this._c.marginRight = this.getMarginRight();
+            this._c.marginTop = this.getMarginTop();
+            this._c.startDuration = this.getStartDuration();
+            this._c.fontSize = this.getFontSize();
+            this._c.radius = this.getRadius();
+            this._c.startAlpha = this.getStartAlpha();
+            this._c.backgroundAlpha = this.getBackgroundAlpha();
+            this._c.backgroundColor = this.getBackgroundColor();
+            this._c.borderAlpha = this.getBorderAlpha();
+            this._c.borderColor = this.getBorderColor();
+            this._c.color = this.getColor();
 
             // 차트 요소에 css 클래스 부여하기
-            oChart.addClassNames = true;
-			
-			// Legend 생성
-			this._setLegend(this.getShowLegend());
+            this._c.addClassNames = true;
 
-            oChart.write(this.getId());
+            // Legend 생성
+            this._setLegend(this.getShowLegend());
+
+            this._c.validateData();
+            this._c.validateNow();
 
         },
-		
-		_setLegend : function(p, g){
-			
-			if(!this._c){ return; }
-			
-			this._c.removeLegend();
-	
-			var l = new AmCharts.AmLegend();
-			
-			l.enabled = p;
-	
-			l.align = this.getLegendAlign();
-			
-			l.position = this.getLegendPosition();
-			
-			if(l.position === ""){
-				l.position = "bottom";
-			}
-			
-			l.fontSize = this.getLegendFontSize();
-	
-			this._c.addLegend(l);
-	
-			if(!g){ return; }
-	
-			this._c.validateNow();			
-			
-		},
-		
-		/*
+
+        _createChart: function() {
+            if (this._c.events.init.length !== 0) {
+                this._c.write(this.getId());
+                this._c.validateData();
+                this._c.validateNow();
+                return;
+            }
+
+            this._c.addListener('init', function() {
+                this._setChart();
+            }.bind(this));
+
+            this._c.write(this.getId());
+
+        },
+
+        _setLegend: function(p, g) {
+
+            if (!this._c) {
+                return;
+            }
+
+            this._c.removeLegend();
+
+            var l = new AmCharts.AmLegend();
+
+            l.enabled = p;
+
+            l.align = this.getLegendAlign();
+
+            l.position = this.getLegendPosition();
+
+            if (l.position === "") {
+                l.position = "bottom";
+            }
+
+            l.fontSize = this.getLegendFontSize();
+            l.valueWidth = this.getLegendValueWidth();
+            l.verticalGap = this.getLegendVerticalGap();
+            l.horizontalGap = this.getLegendHorizontalGap();
+            l.markerSize = this.getLegendMarkerSize();
+
+            this._c.addLegend(l);
+
+            if (!g) {
+                return;
+            }
+
+            this._c.validateNow();
+
+        },
+
+        /*
         _setValueAxis : function(){
             
             var oAmRadar = this._c,
@@ -400,20 +551,20 @@ sap.ui.define("u4a.charts.am.AmRadarCharts", [
         },
 		*/
 
-        _attachChartEvent : function(){
-			
-			if(!this._c){
-				return;				
-			}	
-			
-			var that = this;
-			
-            this._c.addListener("clickGraphItem", function(oEvent){
-				that.fireClickGraphItem(oEvent);				
-			});            
+        _attachChartEvent: function() {
+
+            if (!this._c) {
+                return;
+            }
+
+            var that = this;
+
+            this._c.addListener("clickGraphItem", function(oEvent) {
+                that.fireClickGraphItem(oEvent);
+            });
 
         }
-        
+
     });
 
     return AmRadarChart;
