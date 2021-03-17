@@ -25,6 +25,7 @@ sap.ui.define("u4a.m.RichEditorJodit", [
 				maxLength: { type : "int", defaultValue: 0 },
 				stickyToolbar: { type : "boolean", defaultValue : false },
 				textDirection: { type: "sap.ui.core.TextDirection", defaultValue: TextDirection.Inherit },
+				insertImageDragDrop : { type : "boolean", defaultValue : false },
             }
 
         }, /**** end of metadata ****/
@@ -90,7 +91,7 @@ sap.ui.define("u4a.m.RichEditorJodit", [
                 disablePlugins: "file,image-properties,video,about,class-span,copy-format,placeholder,fullsize,search,source,stat,print,preview,symbols,selectall",
 				enter: "DIV",
 				uploader: {
-					insertImageAsBase64URI: false,
+					insertImageAsBase64URI: this.getInsertImageDragDrop(),
 					imagesExtensions: [
 						"jpg",
 						"png",
@@ -175,6 +176,8 @@ sap.ui.define("u4a.m.RichEditorJodit", [
                     cssData += ".jodit-toolbar-button_fullsize { display: none; }";                    
                     cssData += ".jodit-toolbar-button_copyformat { display: none; }";                    
                     cssData += ".jodit-toolbar-button_source { display: none; }";                    
+                    cssData += ".jodit-toolbar-button_source { display: none; }";                    
+                    cssData += ".jodit.jodit-popup-container .jodit-popup { border: 1px solid #dcdcdc; }";                    
 
                     $("<style id='" + sEditorCssDomId + "'></style>").appendTo("head").html(cssData);
 
