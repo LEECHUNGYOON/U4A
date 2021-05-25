@@ -175,18 +175,17 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
 
         init: function() {
             try {
-                var amChart = AmCharts.AmSerialChart;
+                var amChart = AmCharts.AmPieChart;
                 if (typeof amChart == "undefined") {
                     jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/pie.js", function() {});
                 }
+
             } catch (e) {
                 jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function() {});
                 jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/pie.js", function() {});
             }
-
             this._c = new AmCharts.AmPieChart();
             this._setChartEvent();
-
         },
 
         renderer: function(oRm, oControl) {
