@@ -676,8 +676,8 @@ sap.ui.define("u4a.m.SplitApp", [
 				
 				if(!bExpand){
                 
-                    this.setProperty("masterPageExpand", bExpand, true);
-                    return;
+                    // this.setProperty("masterPageExpand", bExpand, true);
+                    // return;
                 
                     bExpand = true;
                 
