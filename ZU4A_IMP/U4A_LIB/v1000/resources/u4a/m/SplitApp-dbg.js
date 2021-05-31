@@ -185,6 +185,8 @@ sap.ui.define("u4a.m.SplitApp", [
                 this.setRightPageExpand(this.getRightPageExpand());
 
             }
+			
+			this.setMasterPageExpand(this.getMasterPageExpand());
 
         }, // end of onAfterRendering
 
@@ -661,7 +663,7 @@ sap.ui.define("u4a.m.SplitApp", [
 
             }
 
-            this.setMasterPageExpand(bFixed);
+            // this.setMasterPageExpand(bFixed);
 
         },
 
