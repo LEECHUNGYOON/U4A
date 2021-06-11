@@ -80,6 +80,7 @@ sap.ui.define("u4a.m.CurrentTimer",[
 			
 			if(this._oWorker instanceof Worker){
 				this._oWorker.terminate();
+				this._oWorker = null;
             }
 			
             this._oWorker = new Worker('/zu4a_imp/publish/CommonJS/workers/CurrentTimerWorker.js');
@@ -102,9 +103,12 @@ sap.ui.define("u4a.m.CurrentTimer",[
 		},
 		
 		exit : function(){
-			        
-			this._oWorker.terminate();
-			this._oWorker = null;
+			
+			if(this._oWorker){
+				this._oWorker.terminate();
+				this._oWorker = null;
+			}
+			
 		}
 
     });
