@@ -73,6 +73,7 @@ sap.ui.define("u4a.util.SessionWorker",[
 			
 			if(this._oWorker instanceof Worker){
 				this._oWorker.terminate();
+				this._oWorker = null;
             }
 			
 			if(iKeepTime == 0){
@@ -106,6 +107,15 @@ sap.ui.define("u4a.util.SessionWorker",[
 		onAfterRendering : function(){
 			
 			this.createWorker();
+			
+		},
+		
+		exit : function(){
+			
+			if(this._oWorker){
+				this._oWorker.terminate();
+				this._oWorker = null;
+			}
 			
 		}
 
