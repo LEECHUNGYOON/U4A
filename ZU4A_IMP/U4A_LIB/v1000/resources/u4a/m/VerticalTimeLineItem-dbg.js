@@ -221,15 +221,30 @@ sap.ui.define("u4a.m.VerticalTimeLineItem", [
 
 		onclick : function(e){
 			
-			if(e.target.offsetParent.classList.contains("U4A_VTLine_child")
-			  && e.target.classList.contains("U4A_VTLine_child")){
-				//return;
-			}
-			else {
-			  return;
-			}
+			// if(e.target.offsetParent.classList.contains("U4A_VTLine_child")
+			//   && e.target.classList.contains("U4A_VTLine_child")){
+			// 	//return;
+			// }
+			// else {
+			//   return;
+			// }
 
-			this.fireItemPress();
+			// this.fireItemPress();
+
+			let oTarget = e.target,
+            oItem = $(oTarget).closest(".U4A_VTLine_event"),
+            oIcon = $(oTarget).closest(".sapUiIcon");
+			
+			// 클릭한 영역이 Item의 바깥 영역일 경우는 press 이벤트를 발생시키지 않는다.
+            if (!oItem.length) {
+                return;
+            }
+			
+            if (oIcon.length) {
+                return;
+            }
+
+            this.fireItemPress();
 			
 		},
 
@@ -243,9 +258,14 @@ sap.ui.define("u4a.m.VerticalTimeLineItem", [
 				this._styleClassName = "";
 			}
 
-			if(this._oIcon != null){
-				this._oIcon = null;
-			}
+			// if(this._oIcon != null){
+			// 	this._oIcon = null;
+			// }
+
+			if (this._oIcon) {
+                this._oIcon.destroy();
+                delete this._oIcon;
+            }
 
 		},
 
@@ -264,6 +284,8 @@ sap.ui.define("u4a.m.VerticalTimeLineItem", [
 				this.$ItemFooter.slideUp(500);
 				this._oIcon.setSrc(sCollapsedIconURI);
 			}
+
+			this._oIcon.rerender();
 		},
 
 		onAfterRendering : function(oEvent){
@@ -300,11 +322,33 @@ sap.ui.define("u4a.m.VerticalTimeLineItem", [
 			  // CSS 그리기 로컬 펑션
 			function LF_CSS_Render(){
 
+				var oVTLineDate = document.querySelectorAll('.U4A_VTLine_date'),
+                	oVTLineElem = document.querySelectorAll('.U4A_VTLine_elem'),
+                	oVTLineBar = document.querySelector('.U4A_VTLine_bar');
+
+                if (oVTLineDate.length === 0) {
+                    return;
+                }
+                
+                if (oVTLineElem.length === 0) {
+                    return;
+                }
+                
+                if (!oVTLineBar) {
+                    return;
+                }              
+
+				// var DOM = {
+				// 	timelineDate: document.querySelectorAll('.U4A_VTLine_date'),
+				// 	timelineElem: document.querySelectorAll('.U4A_VTLine_elem'),
+				// 	timelineBar: document.querySelector('.U4A_VTLine_bar')
+				// };
+
 				var DOM = {
-					timelineDate: document.querySelectorAll('.U4A_VTLine_date'),
-					timelineElem: document.querySelectorAll('.U4A_VTLine_elem'),
-					timelineBar: document.querySelector('.U4A_VTLine_bar')
-				};
+                    timelineDate: oVTLineDate,
+                    timelineElem: oVTLineElem,
+                    timelineBar: oVTLineBar
+                };
 
 				var __getDir = function(timelineElem){
 					if (timelineElem.classList.contains('U4A_VTLine_elem--left')) {
