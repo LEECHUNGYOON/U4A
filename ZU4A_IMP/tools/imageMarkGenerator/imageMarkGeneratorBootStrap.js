@@ -252,10 +252,10 @@ a.proxy(this.keydown, this)), "hover" == this.options.pause && !("ontouchstart" 
       }).emulateTransitionEnd(c.TRANSITION_DURATION)) : (e.removeClass("active"), f.addClass("active"), this.sliding = !1, this.$element.trigger(m)), g && this.cycle(), this
     }
   };
-  var d = a.fn.carousel;
-  a.fn.carousel = b, a.fn.carousel.Constructor = c, a.fn.carousel.noConflict = function ()
+  var d = a.fn.u4a_carousel;
+  a.fn.u4a_carousel = b, a.fn.u4a_carousel.Constructor = c, a.fn.u4a_carousel.noConflict = function ()
   {
-    return a.fn.carousel = d, this
+    return a.fn.u4a_carousel = d, this
   };
   var e = function (c)
   {

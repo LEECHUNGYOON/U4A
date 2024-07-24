@@ -174,7 +174,10 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
         }, // end of metadata
 
         init: function() {
-            try {
+			//20240721 PES -START.
+			//amcharts 로드 하는 로직 주석 처리.
+			//(am chart의 존재하지 않는 라이브러리만 로드 처리 하기 위함)
+            /*try {
                 var amChart = AmCharts.AmPieChart;
                 if (typeof amChart == "undefined") {
                     jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/pie.js", function() {});
@@ -183,7 +186,17 @@ sap.ui.define("u4a.charts.am.AmPieChart", [
             } catch (e) {
                 jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function() {});
                 jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/pie.js", function() {});
-            }
+            }*/
+			//20240721 PES -END.
+			
+			if(typeof window.AmCharts === "undefined"){
+				jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function() {});
+			}
+			
+			if(typeof window.AmCharts.AmPieChart === "undefined"){
+				jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/pie.js", function() {});
+			}
+			
             this._c = new AmCharts.AmPieChart();
             this._setChartEvent();
         },

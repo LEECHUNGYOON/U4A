@@ -25,8 +25,11 @@ sap.ui.define("u4a.charts.am.WorldMap", [
 		}, // end of metadata
 		
 		init : function () {
-      
-			try {
+			
+			//20240721 PES -START.
+			//amcharts 로드 하는 로직 주석 처리.
+			//(am chart의 존재하지 않는 라이브러리만 로드 처리 하기 위함)
+			/*try {
 				var amMap = AmCharts.maps.worldLow;
 			} catch(e) {
 			   jQuery.u4aJSloadAsync("/zu4a_imp/tools/ammap/v32114/ammap/ammap.js", function(){});
@@ -40,7 +43,25 @@ sap.ui.define("u4a.charts.am.WorldMap", [
 			   jQuery.u4aJSloadAsync("/zu4a_imp/tools/ammap/v32114/ammap/maps/js/worldLow.js", function(){});
 			   jQuery.u4aJSloadAsync("/zu4a_imp/tools/ammap/v32114/ammap/maps/js/continentsLow.js", function(){});
 			   
+			}*/
+			//20240721 PES -END.
+			
+			if(typeof window.AmCharts === "undefined"){
+				jQuery.u4aJSloadAsync("/zu4a_imp/tools/amchart/v343/amcharts/amcharts.js", function() {});
 			}
+			
+			if(typeof window.AmCharts.AmMap === "undefined"){
+				jQuery.u4aJSloadAsync("/zu4a_imp/tools/ammap/v32114/ammap/ammap.js", function(){});
+			}
+			
+			if(typeof window.AmCharts.maps.worldLow === "undefined"){
+				jQuery.u4aJSloadAsync("/zu4a_imp/tools/ammap/v32114/ammap/maps/js/worldLow.js", function(){});
+			}
+			
+			if(typeof window.AmCharts.maps.continentsLow === "undefined"){
+				jQuery.u4aJSloadAsync("/zu4a_imp/tools/ammap/v32114/ammap/maps/js/continentsLow.js", function(){});
+			}
+			
 	
 		}, // end of init
 		
