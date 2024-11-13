@@ -10,7 +10,19 @@ u4a.ui.IframeAlign = {
     Inherit: "inherit"
 };
 
-sap.ui.base.DataType.registerEnum("u4a.ui.IframeAlign", u4a.ui.IframeAlign);
+// 2024-11-13 soccerhs --- start
+// 1.120.21 버전에서 Custom Enum 등록 로직 추가
+if( sap && 
+    sap.ui && 
+    sap.ui.base && 
+    sap.ui.base.DataType && 
+    sap.ui.base.DataType.registerEnum && 
+    typeof sap.ui.base.DataType.registerEnum === "function"){
+
+    sap.ui.base.DataType.registerEnum("u4a.ui.IframeAlign", u4a.ui.IframeAlign);
+
+}
+// 2024-11-13 soccerhs --- end
 
 sap.ui.core.Control.extend("u4a.ui.Iframe", { //EXTENSION CONTROL NAME
     metadata: {

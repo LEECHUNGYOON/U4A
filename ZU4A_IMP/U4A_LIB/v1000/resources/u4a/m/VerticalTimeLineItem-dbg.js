@@ -1,7 +1,20 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
 u4a.m.PositionType = { Left : "Left", Right : "Right" };
 
-sap.ui.base.DataType.registerEnum("u4a.m.PositionType", u4a.m.PositionType);
+// 2024-11-13 soccerhs --- start
+// 1.120.21 버전에서 Custom Enum 등록 로직 추가
+if( sap && 
+    sap.ui && 
+    sap.ui.base && 
+    sap.ui.base.DataType && 
+    sap.ui.base.DataType.registerEnum && 
+    typeof sap.ui.base.DataType.registerEnum === "function"){
+
+	sap.ui.base.DataType.registerEnum("u4a.m.PositionType", u4a.m.PositionType);
+
+}
+// 2024-11-13 soccerhs --- end
+
 
 sap.ui.define("u4a.m.VerticalTimeLineItem", [
 'sap/ui/core/Control',

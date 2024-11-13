@@ -7,9 +7,22 @@ u4a.m.PositionType = { Left:"Left",Right:"Right" };
 u4a.m.StackConNaviSize = { Small:"Small",Medium:"Medium",Large:"Large" };
 u4a.m.DirectionType = { LTR:"LTR",RTL:"RTL" };
 
-sap.ui.base.DataType.registerEnum("u4a.m.PositionType", u4a.m.PositionType);
-sap.ui.base.DataType.registerEnum("u4a.m.StackConNaviSize", u4a.m.StackConNaviSize);
-sap.ui.base.DataType.registerEnum("u4a.m.DirectionType", u4a.m.DirectionType);
+// 2024-11-13 soccerhs --- start
+// 1.120.21 버전에서 Custom Enum 등록 로직 추가
+if( sap && 
+    sap.ui && 
+    sap.ui.base && 
+    sap.ui.base.DataType && 
+    sap.ui.base.DataType.registerEnum && 
+    typeof sap.ui.base.DataType.registerEnum === "function"){
+
+	sap.ui.base.DataType.registerEnum("u4a.m.PositionType", u4a.m.PositionType);
+	sap.ui.base.DataType.registerEnum("u4a.m.StackConNaviSize", u4a.m.StackConNaviSize);
+	sap.ui.base.DataType.registerEnum("u4a.m.DirectionType", u4a.m.DirectionType);
+
+}
+// 2024-11-13 soccerhs --- end
+
 
 $("#u4a_css_area").append("<link rel='stylesheet' type='text/css' href='/zu4a_imp/u4a_lib/v1000/css/m/StackNavContainer.css'>");
 
