@@ -1,6 +1,8 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
 u4a.m.PositionType = { Left : "Left", Right : "Right" };
 
+sap.ui.base.DataType.registerEnum("u4a.m.PositionType", u4a.m.PositionType);
+
 sap.ui.define("u4a.m.VerticalTimeLineItem", [
 'sap/ui/core/Control',
 'sap/ui/core/IconPool'

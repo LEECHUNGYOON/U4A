@@ -1,14 +1,16 @@
 ﻿//Copyright 2017. INFOCG Inc. all rights reserved.
 
-u4a.m.ImageMarkShapeType = {
+u4a.m.ImageMapShapeType = {
     Rect: "rect",
     Poly: "poly"
 };
 
+sap.ui.base.DataType.registerEnum("u4a.m.ImageMapShapeType", u4a.m.ImageMapShapeType);
+
 sap.ui.define("u4a.m.ImageMapGenerator", [
     "sap/ui/core/Control",
 
-], function (Control) {
+], function(Control) {
     "use strict";
 
     var ImageMapGenerator = Control.extend("u4a.m.ImageMapGenerator", {
@@ -28,7 +30,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
                     type: "sap.ui.core.CSSSize", defaultValue: ""
                 },
                 shape: {
-                    type: "u4a.m.ImageMarkShapeType", defaultValue: u4a.m.ImageMarkShapeType.Rect
+                    type: "u4a.m.ImageMapShapeType", defaultValue: u4a.m.ImageMapShapeType.Rect
                 },
                 maximumFileSize: {
                     type: "float", defaultValue: 1
@@ -51,13 +53,13 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         }, // end of metadata
 
-        init: function () {
+        init: function() {
 
             this._ImageMapInfo = {};
 
         },
 
-        onBeforeRendering: function () {
+        onBeforeRendering: function() {
 
             // image map 전체 영역
             var oVbox = new sap.m.VBox({
@@ -74,7 +76,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         }, // end of onBeforeRendering
 
-        renderer: function (oRm, oControl) {
+        renderer: function(oRm, oControl) {
 
             oRm.openStart("div", oControl);
             oRm.class("u4aMImageMapGenerator");
@@ -96,15 +98,15 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
         },
         // end of renderer
 
-        onAfterRendering: function () {
+        onAfterRendering: function() {
 
             // image map container 생성
             this._createImageMapContainer();
 
             var that = this,
-                oImageMapInfo = this._ImageMapInfo,
-                sMapId = oImageMapInfo.imageMapId,
-                oMap = document.getElementById(sMapId);
+            oImageMapInfo = this._ImageMapInfo,
+            sMapId = oImageMapInfo.imageMapId,
+            oMap = document.getElementById(sMapId);
 
             // image map 정보를 구성한다.
             if (!oMap.oMapInfo) {
@@ -120,8 +122,8 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
             // image map generator js load
             if (typeof jQuery.u4aImgMapGenerator == "undefined") {
-                jQuery.u4aJSloadAsync("/zu4a_imp/tools/imageMarkGenerator/jquery.u4a.imageMarkGenerator.js", function () {
-                    jQuery.u4aJSloadAsync("/zu4a_imp/tools/imageMarkGenerator/imageMarkGeneratorBootStrap.js", function () { });
+                jQuery.u4aJSloadAsync("/zu4a_imp/tools/imageMarkGenerator/jquery.u4a.imageMarkGenerator.js", function() {
+                    jQuery.u4aJSloadAsync("/zu4a_imp/tools/imageMarkGenerator/imageMarkGeneratorBootStrap.js", function() {});
                 });
             }
 
@@ -137,7 +139,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
             // no images
             var sImgAreaId = oMap.oMapInfo.imageId,
-                oImgArea = document.getElementById(sImgAreaId);
+            oImgArea = document.getElementById(sImgAreaId);
 
             if (oImgArea == null) {
                 return;
@@ -147,7 +149,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
                 oImgArea.src = "/zu4a_imp/sample_img?obkey=NOIMGNOBACK";
             }
 
-            oImgArea.onload = function (oEvent) {
+            oImgArea.onload = function(oEvent) {
                 that._imageLoad(oEvent);
             };
 
@@ -155,7 +157,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
         },
         // end of onAfterRendering
 
-        setImgMapWidth: function (sMapWidth) {
+        setImgMapWidth: function(sMapWidth) {
 
             this.setProperty("imgMapWidth", sMapWidth, true);
 
@@ -168,7 +170,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        setImgMapHeight: function (sMapHeight) {
+        setImgMapHeight: function(sMapHeight) {
 
             this.setProperty("imgMapHeight", sMapHeight, true);
 
@@ -181,7 +183,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        setImgWidth: function (sWidth) {
+        setImgWidth: function(sWidth) {
 
             this.setProperty("imgWidth", sWidth, true);
 
@@ -201,7 +203,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        setImgHeight: function (sHeight) {
+        setImgHeight: function(sHeight) {
 
             this.setProperty("imgHeight", sHeight, true);
 
@@ -221,7 +223,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        setShape: function (sType) {
+        setShape: function(sType) {
 
             this.setProperty("shape", sType, true);
 
@@ -231,19 +233,19 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        setMaximumFileSize: function (sSize) {
+        setMaximumFileSize: function(sSize) {
             this.setProperty("maximumFileSize", sSize, true);
         },
 
-        _imageResize: function () {
+        _imageResize: function() {
 
             var oImageMapInfo = this._ImageMapInfo,
-                oMapInfo = oImageMapInfo.mapInfo,
-                sImgId = oMapInfo.imageId,
-                sMapId = oImageMapInfo.imageMapId,
+            oMapInfo = oImageMapInfo.mapInfo,
+            sImgId = oMapInfo.imageId,
+            sMapId = oImageMapInfo.imageMapId,
 
-                sImageWidth = this.getImgWidth(),
-                sImageHeight = this.getImgHeight();
+            sImageWidth = this.getImgWidth(),
+            sImageHeight = this.getImgHeight();
 
             // 이미지 파일이 로드 되지 않았으면 리턴
             if (!oMapInfo.fileLoaded) {
@@ -261,7 +263,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             }
 
             var sOrgImgWidth = oImg.naturalWidth + "px",
-                sOrgImgHeight = oImg.naturalHeight + "px";
+            sOrgImgHeight = oImg.naturalHeight + "px";
 
             if (sImageWidth == "") {
                 oImgMap.style.width = sOrgImgWidth;
@@ -277,14 +279,14 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _createImageMapToolbar: function (oVBox) {
+        _createImageMapToolbar: function(oVBox) {
 
             if (!oVBox) {
                 return;
             }
 
             var that = this,
-                oTool = new sap.m.Toolbar();
+            oTool = new sap.m.Toolbar();
 
             // image file attach
             var oFileup = new sap.ui.unified.FileUploader({
@@ -297,15 +299,15 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             oFileup.oBrowse.setType(sap.m.ButtonType.Emphasized);
 
             // 첨부파일 이벤트 설정
-            oFileup.attachEvent("typeMissmatch", function (oEvent) {
+            oFileup.attachEvent("typeMissmatch", function(oEvent) {
                 that._typeMissmatch(oEvent);
             });
 
-            oFileup.attachEvent("change", function (oEvent) {
+            oFileup.attachEvent("change", function(oEvent) {
                 that._fileChange(oEvent);
             });
 
-            oFileup.attachEvent("fileSizeExceed", function (oEvent) {
+            oFileup.attachEvent("fileSizeExceed", function(oEvent) {
                 that._fileSizeExceed(oEvent);
             });
 
@@ -313,7 +315,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             var oCombo = new sap.m.ComboBox({
                 width: "100px", selectedKey: "rect"
             })
-                .addStyleClass("sapUiTinyMarginEnd");
+            .addStyleClass("sapUiTinyMarginEnd");
             oCombo.addItem(new sap.ui.core.Item({
                 key: "rect", text: "Rect"
             }));
@@ -322,7 +324,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             }));
             // oCombo.addItem(new sap.ui.core.Item({ key : "circle", text : "Circle" }));
 
-            oCombo.attachEvent("selectionChange", function (oEvent) {
+            oCombo.attachEvent("selectionChange", function(oEvent) {
                 that._comboSelectChange(oEvent);
             });
 
@@ -334,18 +336,18 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             var oCodeBtn = new sap.m.Button({
                 text: "코드보기", type: sap.m.ButtonType.Ghost
             })
-                .addStyleClass("sapUiTinyMarginEnd"),
-                // Code 보기
-                oClearBtn = new sap.m.Button({
-                    text: "Clear", type: sap.m.ButtonType.Ghost
-                })
-                    .addStyleClass("sapUiTinyMarginEnd"); // clear 버튼
+            .addStyleClass("sapUiTinyMarginEnd"),
+            // Code 보기
+            oClearBtn = new sap.m.Button({
+                text: "Clear", type: sap.m.ButtonType.Ghost
+            })
+            .addStyleClass("sapUiTinyMarginEnd"); // clear 버튼
 
-            oCodeBtn.attachEvent("press", function (oEvent) {
+            oCodeBtn.attachEvent("press", function(oEvent) {
                 that._coordsDisplay(oEvent);
             });
 
-            oClearBtn.attachEvent("press", function (oEvent) {
+            oClearBtn.attachEvent("press", function(oEvent) {
                 that._clearBtnPress(oEvent);
             });
 
@@ -365,7 +367,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _createImageMapContainer: function () {
+        _createImageMapContainer: function() {
 
             var oVBox = this.getAggregation("_container");
             if (!oVBox) {
@@ -373,8 +375,8 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             }
 
             var sThisId = this.getId(),
-                sVBoxId = oVBox.getId(),
-                oVboxDom = document.getElementById(sVBoxId);
+            sVBoxId = oVBox.getId(),
+            oVboxDom = document.getElementById(sVBoxId);
 
             if (oVboxDom == null) {
                 return;
@@ -425,7 +427,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             oMapCont.appendChild(oImgMap);
 
             var oTool = this._oTool,
-                oToolDom = oTool.getDomRef();
+            oToolDom = oTool.getDomRef();
             oToolDom.style.flex = "0 0 auto";
 
             // image map 정보
@@ -436,30 +438,30 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _typeMissmatch: function (oEvent) {
+        _typeMissmatch: function(oEvent) {
 
             this._message("이미지파일을 선택해 주세요.");
 
         },
 
-        _fileChange: function (oEvent) {
+        _fileChange: function(oEvent) {
 
             var aFiles = oEvent.getParameter("files"),
-                iFileLen = aFiles.length;
+            iFileLen = aFiles.length;
 
             if (iFileLen == 0) {
                 return;
             }
 
             var oImageMapInfo = this._ImageMapInfo,
-                sMapId = oImageMapInfo.imageMapId,
+            sMapId = oImageMapInfo.imageMapId,
 
-                oFile = aFiles[0],
-                oFileReader = new FileReader,
+            oFile = aFiles[0],
+            oFileReader = new FileReader,
 
-                that = this;
+            that = this;
 
-            oFileReader.onloadend = function (oFileReader) {
+            oFileReader.onloadend = function(oFileReader) {
 
                 // 파일 로드 시 전체 초기화 수행
                 that._oClearBtn.firePress();
@@ -474,47 +476,47 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
                 oMapInfo.fileLoaded = true;
 
             },
-                oFile ? oFileReader.readAsArrayBuffer(oFile) :
-                    $("#" + sMapId).imageMapper("update", {
-                        src: "",
-                        file: ""
-                    });
+            oFile ? oFileReader.readAsArrayBuffer(oFile):
+            $("#" + sMapId).imageMapper("update", {
+                src: "",
+                file: ""
+            });
 
         },
 
-        _fileSizeExceed: function (oEvent) {
+        _fileSizeExceed: function(oEvent) {
 
             this._message("파일 크기가 초과되었습니다.");
 
         },
 
-        _btoa: function (a) {
+        _btoa: function(a) {
             for (var b = "", c = new Uint8Array(a), d = c.byteLength, e = 0; d > e; e++)
                 b += String.fromCharCode(c[e]);
             return window.btoa(b);
         },
 
-        _clearBtnPress: function (oEvent) {
+        _clearBtnPress: function(oEvent) {
 
             this.setShape("rect");
 
             this._oCombo.setSelectedKey("rect");
 
             var oImageMapInfo = this._ImageMapInfo,
-                sMapId = oImageMapInfo.imageMapId,
-                $Map = $("#" + sMapId);
+            sMapId = oImageMapInfo.imageMapId,
+            $Map = $("#" + sMapId);
 
             $Map.imageMapperRemove();
 
         },
 
-        _coordsDisplay: function (oEvent) {
+        _coordsDisplay: function(oEvent) {
 
             var oImageMapInfo = this._ImageMapInfo,
-                sMapId = oImageMapInfo.imageMapId,
-                $Map = $("#" + sMapId),
-                oCoordData = $Map.imageMapper("getData"),
-                iCoordAreaLenth = oCoordData.area[0].coords.length;
+            sMapId = oImageMapInfo.imageMapId,
+            $Map = $("#" + sMapId),
+            oCoordData = $Map.imageMapper("getData"),
+            iCoordAreaLenth = oCoordData.area[0].coords.length;
 
             if (iCoordAreaLenth == 0) {
                 return;
@@ -531,7 +533,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _comboSelectChange: function (oEvent) {
+        _comboSelectChange: function(oEvent) {
 
             var sShapeType = oEvent.getSource().getSelectedKey();
 
@@ -539,17 +541,17 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _shapeTypeChange: function (sShapeType) {
+        _shapeTypeChange: function(sShapeType) {
 
             var oImageMapInfo = this._ImageMapInfo,
-                sMapId = oImageMapInfo.imageMapId;
+            sMapId = oImageMapInfo.imageMapId;
 
             if (sMapId == null) {
                 return;
             }
 
             var $Map = $("#" + sMapId),
-                iMarkIdx = $Map.data("imageMapper");
+            iMarkIdx = $Map.data("imageMapper");
 
             /****************************************************************************
             * 2023-01-18 soccerhs: ImageMapArea 가 없을경우에 오류 발생 되는 문제 수정
@@ -570,19 +572,19 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _getCoords: function (oCoordInfo) {
+        _getCoords: function(oCoordInfo) {
 
             var oArea = oCoordInfo.area[0],
-                oCoords = oArea.coords,
-                iCoordLength = oCoords.length,
-                sShapeType = oArea.shape,
-                aCoords = [];
+            oCoords = oArea.coords,
+            iCoordLength = oCoords.length,
+            sShapeType = oArea.shape,
+            aCoords = [];
 
             if (iCoordLength == 0) {
                 return;
             }
 
-            jQuery.each(oCoords, function (a, b) {
+            jQuery.each(oCoords, function(a, b) {
                 aCoords.push(b.naturalX, b.naturalY);
             });
 
@@ -609,7 +611,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _message: function (sMsg) {
+        _message: function(sMsg) {
 
             sap.m.MessageToast.show(sMsg, {
                 width: "30%",
@@ -619,7 +621,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        _setDefaultImageAreaSize: function () {
+        _setDefaultImageAreaSize: function() {
 
             var oImgCss = {
                 "max-width": "100%",
@@ -627,31 +629,31 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
                 "width": "100%",
                 "height": "100%"
             },
-                oMapSvgCss = {
-                    width: "100%",
-                    position: "absolute",
-                    top: "0",
-                    right: "0",
-                    bottom: "0",
-                    left: "0",
-                    height: "100%"
-                },
-                oMapInfo = this._ImageMapInfo.mapInfo,
-                sMapClass = oMapInfo.mapCls,
-                sSvgClass = oMapInfo.mapSvg,
+            oMapSvgCss = {
+                width: "100%",
+                position: "absolute",
+                top: "0",
+                right: "0",
+                bottom: "0",
+                left: "0",
+                height: "100%"
+            },
+            oMapInfo = this._ImageMapInfo.mapInfo,
+            sMapClass = oMapInfo.mapCls,
+            sSvgClass = oMapInfo.mapSvg,
 
-                $map = $("." + sMapClass),
-                $svg = $("." + sSvgClass);
+            $map = $("." + sMapClass),
+            $svg = $("." + sSvgClass);
 
             $map.css(oImgCss);
             $svg.css(oMapSvgCss);
 
         },
 
-        _imageLoad: function (oEvent) {
+        _imageLoad: function(oEvent) {
 
             var oImageMapInfo = this._ImageMapInfo,
-                oMapInfo = oImageMapInfo.mapInfo;
+            oMapInfo = oImageMapInfo.mapInfo;
 
             // 이미지가 로드 되었을 경우에만 실행
             if (!oMapInfo.fileLoaded) {
@@ -660,7 +662,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
             var sMapAreaId = oImageMapInfo.imageMapAreaId,
 
-                oImgArea = document.getElementById(sMapAreaId);
+            oImgArea = document.getElementById(sMapAreaId);
 
             oImgArea.style.justifyContent = "flex-start";
             oImgArea.style.alignItems = "";
@@ -671,7 +673,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
 
         },
 
-        exit: function () {
+        exit: function() {
 
             delete this._ImageMapInfo;
             delete this._oClearBtn;

@@ -10,6 +10,8 @@ u4a.ui.IframeAlign = {
     Inherit: "inherit"
 };
 
+sap.ui.base.DataType.registerEnum("u4a.ui.IframeAlign", u4a.ui.IframeAlign);
+
 sap.ui.core.Control.extend("u4a.ui.Iframe", { //EXTENSION CONTROL NAME
     metadata: {
         library: "u4a.ui", //U4A LIB PATH
