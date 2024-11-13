@@ -7,6 +7,10 @@ u4a.m.PositionType = { Left:"Left",Right:"Right" };
 u4a.m.StackConNaviSize = { Small:"Small",Medium:"Medium",Large:"Large" };
 u4a.m.DirectionType = { LTR:"LTR",RTL:"RTL" };
 
+sap.ui.base.DataType.registerEnum("u4a.m.PositionType", u4a.m.PositionType);
+sap.ui.base.DataType.registerEnum("u4a.m.StackConNaviSize", u4a.m.StackConNaviSize);
+sap.ui.base.DataType.registerEnum("u4a.m.DirectionType", u4a.m.DirectionType);
+
 $("#u4a_css_area").append("<link rel='stylesheet' type='text/css' href='/zu4a_imp/u4a_lib/v1000/css/m/StackNavContainer.css'>");
 
 sap.ui.core.Control.extend("u4a.m.StackNavContainer", {	//EXTENSION CONTROL NAME

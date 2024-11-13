@@ -2,6 +2,8 @@
 
 u4a.m.ImageMarkShapeType = { Rect : "rect", Circle : "circle",  Poly : "poly" };
 
+sap.ui.base.DataType.registerEnum("u4a.m.ImageMarkShapeType", u4a.m.ImageMarkShapeType);
+
 sap.ui.define("u4a.m.ImageMark", [
 "sap/ui/core/Element"
 
