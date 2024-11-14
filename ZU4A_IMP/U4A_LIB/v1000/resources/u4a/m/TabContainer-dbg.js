@@ -131,15 +131,34 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 			if(sItemKey == sSelecedKey){
 				return i;
 			}
-		}
-
+		}	
+		
 		return -1;
 			
 	},
 
+	// Array에 중복값 체크
+	_hasDuplicateStrings : function(arr){
+
+		if (!Array.isArray(arr)) {
+		  return "Invalid input: Input must be an array.";
+		}
+		const uniqueStrings = new Set();
+		for (const str of arr) {
+		  if (typeof str !== 'string') {
+			return "Invalid input: Array elements must be strings.";
+		  }
+		  if (uniqueStrings.has(str)) {
+			return true; // 중복된 값 발견
+		  }
+		  uniqueStrings.add(str);
+		}
+		return false; // 중복된 값 없음
+	},
+
 	onBeforeRendering : function(){
 		"use strict";
-
+		
 		try {
 			// 1. Item이 있는지 확인한다.
 			var aItems = this.getItems();
@@ -151,6 +170,46 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 				return;
 			}
 			
+
+			/**
+			 * 2024-11-14 soccerhs:	------- START
+			 * 전체 아이템 중, 중복값이 있는지 확인하여 만일 중복값이 존재하면 덤프를 발생시킨다.
+			 */
+			let _aItemKeys = [];
+			for(var i = 0; i < iItemLen; i++){
+
+				let _oItem = aItems[i];
+				let _sItemKey = _oItem.getKey();
+				if(!_sItemKey){
+					continue;
+				}
+
+				_aItemKeys.push(_sItemKey);
+
+			}
+
+			// 수집된 키 정보에서 중복값이 있는지 확인
+			let _bIsDupKey = this._hasDuplicateStrings(_aItemKeys);
+			if(_bIsDupKey === true){
+
+				let _sErrMsg = "Duplicate keys in TabContainerItem";
+
+				// U4A 덤프 오류를 발생시킨다.!!
+				if(oU4AErroHandle && typeof oU4AErroHandle.seterroHTML === "function"){
+					oU4AErroHandle.seterroHTML(_sErrMsg);
+				}
+				
+				console.error(_sErrMsg);
+
+				throw new Error(_sErrMsg);
+			
+			}
+			/**
+			 * 2024-11-14 soccerhs:	------- END
+			 * 전체 아이템 중, 중복값이 있는지 확인하여 만일 중복값이 존재하면 덤프를 발생시킨다.
+			 */
+			
+
 			// 2. TabContainer의 selectedKey를 구한다.
 			var sTabSelectedKey = this.getSelectedKey();
 			
@@ -171,11 +230,27 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 					return;
 				}
 			}
-			*/
+			*/		
+
 			
 			/**** 4. 삭제 이벤트를 수행하지 않은 경우 (Item 추가인 경우) ****/
 			if(this._bisRemoveCalled == false){
-	
+				
+				/* find()의 속도를 확인해볼것
+				var oFoundItem = aItems.find(function(oItem){
+					var itemKey = oItem.getKey();
+					return (sTabSelectedKey == itemKey)
+				});
+				
+				if(oFoundItem){
+					if(oFoundItem.getId() != this.getSelectedItem()){
+						this.setSelectedItem(oItem);
+					}
+				}
+				
+				return;
+				*/
+				
 				for(var i = 0; i < iItemLen; i++){
 					var oItem = aItems[i];
 					var sItemKey = oItem.getKey();
@@ -183,17 +258,12 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 					// 4-1. Item에 Key값이 없으면 Skip.
 					if(sItemKey == ""){
 						return;
-					}                   
-                    
+					}
+					
 					// 4-2. SelectedKey와 Item Key가 다르면 Skip.
 					if(sTabSelectedKey != sItemKey){
 						continue;
 					}
-                    
-                    // 2024-11-14 soccerhs: 선택된 키가 같다면 빠져나간다.
-                    if(sTabSelectedKey === sItemKey){
-                        return;
-                    }               
 					
 					/* 	4-3. TabContainer의 Key값과 Item의 Key값은 같지만, 
 						현재 선택된 Item의 ID와 선택하려는 아이템의 ID가 다를때만 실행.
@@ -258,12 +328,10 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 			// 6. 선택된 Item이 존재하는 경우
 			this.setProperty("selectedKey", aItems[iCurItmIdx].getProperty("key"), true);
 			this.setAssociation("selectedItem", aItems[iCurItmIdx], true);
-
 			
 		}
 		catch(e){
-            console.error(e);
-            return;
+		
 		}
 		finally {
 			
