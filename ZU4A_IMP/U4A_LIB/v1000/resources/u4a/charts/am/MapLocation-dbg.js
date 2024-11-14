@@ -60,6 +60,19 @@ u4a.charts.am.MapLocationName = {
 	Wyoming:"Wyoming"
 };
 
+// 2024-11-13 soccerhs --- start
+// 1.120.21 버전에서 Custom Enum 등록 로직 추가
+if( sap && 
+    sap.ui && 
+    sap.ui.base && 
+    sap.ui.base.DataType && 
+    sap.ui.base.DataType.registerEnum && 
+    typeof sap.ui.base.DataType.registerEnum === "function"){
+
+    sap.ui.base.DataType.registerEnum("u4a.charts.am.MapLocationName", u4a.charts.am.MapLocationName);
+
+}
+// 2024-11-13 soccerhs --- end
 
 sap.ui.core.Element.extend("u4a.charts.am.MapLocation", {
     metadata : {
