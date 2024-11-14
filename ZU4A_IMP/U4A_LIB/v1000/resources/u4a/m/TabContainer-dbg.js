@@ -131,15 +131,15 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 			if(sItemKey == sSelecedKey){
 				return i;
 			}
-		}	
-		
+		}
+
 		return -1;
 			
 	},
 
 	onBeforeRendering : function(){
 		"use strict";
-		
+
 		try {
 			// 1. Item이 있는지 확인한다.
 			var aItems = this.getItems();
@@ -175,22 +175,7 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 			
 			/**** 4. 삭제 이벤트를 수행하지 않은 경우 (Item 추가인 경우) ****/
 			if(this._bisRemoveCalled == false){
-				
-				/* find()의 속도를 확인해볼것
-				var oFoundItem = aItems.find(function(oItem){
-					var itemKey = oItem.getKey();
-					return (sTabSelectedKey == itemKey)
-				});
-				
-				if(oFoundItem){
-					if(oFoundItem.getId() != this.getSelectedItem()){
-						this.setSelectedItem(oItem);
-					}
-				}
-				
-				return;
-				*/
-				
+	
 				for(var i = 0; i < iItemLen; i++){
 					var oItem = aItems[i];
 					var sItemKey = oItem.getKey();
@@ -198,12 +183,17 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 					// 4-1. Item에 Key값이 없으면 Skip.
 					if(sItemKey == ""){
 						return;
-					}
-					
+					}                   
+                    
 					// 4-2. SelectedKey와 Item Key가 다르면 Skip.
 					if(sTabSelectedKey != sItemKey){
 						continue;
 					}
+                    
+                    // 2024-11-14 soccerhs: 선택된 키가 같다면 빠져나간다.
+                    if(sTabSelectedKey === sItemKey){
+                        return;
+                    }               
 					
 					/* 	4-3. TabContainer의 Key값과 Item의 Key값은 같지만, 
 						현재 선택된 Item의 ID와 선택하려는 아이템의 ID가 다를때만 실행.
@@ -268,10 +258,12 @@ sap.m.TabContainer.extend("u4a.m.TabContainer", {
 			// 6. 선택된 Item이 존재하는 경우
 			this.setProperty("selectedKey", aItems[iCurItmIdx].getProperty("key"), true);
 			this.setAssociation("selectedItem", aItems[iCurItmIdx], true);
+
 			
 		}
 		catch(e){
-		
+            console.error(e);
+            return;
 		}
 		finally {
 			
