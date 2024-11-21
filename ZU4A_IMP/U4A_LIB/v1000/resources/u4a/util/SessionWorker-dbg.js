@@ -10,7 +10,7 @@ sap.ui.define("u4a.util.SessionWorker",[
         metadata : {
             library : "u4a.util",
             properties : {
-               minute : { type: "int", defaultValue: 0 },
+               minute : { type: "int", defaultValue: 0 },   // max value: 120
                activeWorker : { type : "boolean", defaultValue : true },
             },
             events : {
@@ -21,7 +21,8 @@ sap.ui.define("u4a.util.SessionWorker",[
 
         }, // end of metadata
 
-        _oWorker : null,
+        _oWorker  : null,   // Worker instance
+        _maxMinute: 120,    // Max Minute(minute 속성의 최대 허용값)
 
         init : function(){
 
@@ -104,8 +105,33 @@ sap.ui.define("u4a.util.SessionWorker",[
 			
         }, // end of onMessage
 		
-		onAfterRendering : function(){
-			
+		onAfterRendering : function(){            
+         
+            /**
+             * 2024-11-21 yoon ---------- Start
+             * minute 속성에 2시간(120분) 이상 입력 시, 덤프를 발생시킨다
+             */
+            if(this.getMinute() > this._maxMinute){
+
+                let _sErrMsg = "The 'minute' property of the 'SessionWorker' cannot exceed a maximum value of 120 minutes.";
+
+				// U4A 덤프 오류를 발생시킨다.!!
+				if(oU4AErroHandle && typeof oU4AErroHandle.seterroHTML === "function"){
+					oU4AErroHandle.seterroHTML(_sErrMsg);
+				}
+				
+				console.error(_sErrMsg);
+
+				throw new Error(_sErrMsg);
+
+            }
+            /**
+             * 2024-11-21 yoon ---------- End
+             * minute 속성에 2시간(120분) 이상 입력 시, 덤프를 발생시킨다
+             */
+
+
+            // 워커를 생성한다.
 			this.createWorker();
 			
 		},
