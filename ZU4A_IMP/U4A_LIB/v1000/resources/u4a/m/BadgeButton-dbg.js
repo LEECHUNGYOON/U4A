@@ -42,7 +42,19 @@ sap.ui.define("u4a.m.BadgeButton", [
 				
 			// 뱃지의 Font Size 단위는 px만 가능하다.			
             if(!jQuery.sap.endsWith(iBadgeFontSize, 'px')){
-                throw new Error('[U4AIDE] property type error : (\"badgeFontSize\") --- \"px\" 단위만 입력하세요');
+
+                // throw new Error('[U4AIDE] property type error : (\"badgeFontSize\") --- \"px\" 단위만 입력하세요');
+
+                /**
+                 * 2024-11-22 yoon:
+                 * throw 오류 처리 시, WS3.0 미리보기 에서도 크리티컬 오류가 발생하여 console.error로 대체함.
+                 */
+
+                let _sErrMsg = '[U4AIDE] property type error : (\"badgeFontSize\") --- \"px\" 단위만 입력하세요';
+                
+                console.error(_sErrMsg);
+
+                return;
             }            
 
             // 아이콘의 Dom ID
