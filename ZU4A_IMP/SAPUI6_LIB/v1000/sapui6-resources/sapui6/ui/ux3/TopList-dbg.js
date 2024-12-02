@@ -71,6 +71,16 @@ sap.ui.core.Control.extend("sapui6.ui.ux3.TopList", {
 
 		var length = oControl.getItems().length;
 		if(oControl.getVisibleCount() && oControl.getVisibleCount() > 0) length = oControl.getVisibleCount();
+
+		//[U4A-001] 20241122 PES -START.
+		//items의 갯수보다 visibleCount의 값이 큰경우 화면을 구성하는 과정에서 스크립트 오류가 발생하여,
+		//visibleCount의 값이 items의 갯수를 초과하는경우 items 의 갯수로 고정 처리.		
+		let _itemCount = oControl.getItems().length;
+		if(length > _itemCount){
+			length = _itemCount;
+		}
+		//[U4A-001] 20241122 PES -END.
+
 		for(var i=0 ; i<length ; i++){
 			var item = oControl.getItems()[i];
 
