@@ -21,8 +21,9 @@ if( sap &&
 
 sap.ui.define("u4a.m.ImageMapGenerator", [
     "sap/ui/core/Control",
+	"sap/ui/unified/FileUploader"
 
-], function(Control) {
+], function(Control, FileUploader) {
     "use strict";
 
     var ImageMapGenerator = Control.extend("u4a.m.ImageMapGenerator", {
@@ -301,7 +302,7 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
             oTool = new sap.m.Toolbar();
 
             // image file attach
-            var oFileup = new sap.ui.unified.FileUploader({
+            var oFileup = new FileUploader({
                 buttonOnly: true,
                 buttonText: "찾아보기..",
                 fileType: ["jpg", "jpeg", "bmp", "gif", "png"],
@@ -701,3 +702,4 @@ sap.ui.define("u4a.m.ImageMapGenerator", [
     return ImageMapGenerator;
 
 });
+
