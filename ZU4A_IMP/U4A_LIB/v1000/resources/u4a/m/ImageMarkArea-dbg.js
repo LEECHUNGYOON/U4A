@@ -18,6 +18,8 @@ sap.ui.define("u4a.m.ImageMarkArea", [
 
 		}, // end of metadata
 
+        _resizeHandler: undefined,
+
 		init : function () {
 
 			var maphilight = $.fn.maphilight;
@@ -183,9 +185,21 @@ sap.ui.define("u4a.m.ImageMarkArea", [
             // Image Mark에 클릭 이벤트를 설정한다.
             this._attachMarkEvent();
 
-			$(window).resize(function(){
-				this._ImageMarkAreaResize();
-			}.bind(this));
+			// $(window).resize(function(){
+			// 	this._ImageMarkAreaResize();
+			// }.bind(this));
+
+            if(this._resizeHandler){
+
+                $(window).off("resize", this._resizeHandler);
+
+                delete this._resizeHandler;
+
+            }
+
+            this._resizeHandler = this._imageMarkResizeHandle.bind(this);
+
+            $(window).on("resize", this._resizeHandler);
 
         }, // end of onAfterRendering
 		
@@ -366,7 +380,16 @@ sap.ui.define("u4a.m.ImageMarkArea", [
 
 			return { width : oImgWidth, height : oImgHeight };
 
-		} // end of _getDummyImageSize
+		}, // end of _getDummyImageSize
+
+        exit: function() {
+
+            if(this._resizeHandler){
+                $(window).off("resize", this._resizeHandler);
+                delete this._resizeHandler;
+            }
+
+        } // end of exit
 
     });
 
