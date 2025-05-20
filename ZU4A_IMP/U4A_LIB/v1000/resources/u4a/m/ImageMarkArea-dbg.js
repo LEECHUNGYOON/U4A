@@ -189,6 +189,13 @@ sap.ui.define("u4a.m.ImageMarkArea", [
 			// 	this._ImageMarkAreaResize();
 			// }.bind(this));
 
+            /**
+             * @since   2025-05-20            
+             * @author  soccerhs
+             * 
+             * @description
+             * window resize 이벤트를 누적해서 거는 로직 개선             
+             */
             if(this._resizeHandler){
 
                 $(window).off("resize", this._resizeHandler);
@@ -317,9 +324,45 @@ sap.ui.define("u4a.m.ImageMarkArea", [
             // 이미지가 로드 되면 실행
             var oImgDom = document.getElementById(this._domId);
 
-            $(oImgDom).on('load', function(){
+            // $(oImgDom).on('load', function(){
+            //     this._ImageMarkAreaLoadComplete();
+            // }.bind(this)).attr("src", $(oImgDom).attr("src"));
+
+            /**
+             * @since   2025-05-20             
+             * @author  soccerhs
+             * 
+             * @description
+             * Image Dom에 Load 이벤트를 누적해서 거는 로직 개선             
+             */
+            if(!oImgDom){
+                return;
+            }
+            
+            const $img = $(oImgDom);
+
+            // 1. 기존 load 이벤트 제거
+            if (this._imageLoadedHandler) {
+                
+                $img.off('load', this._imageLoadedHandler);
+
+                delete this._imageLoadedHandler;
+            }
+
+            // 2. 새로운 load 이벤트 핸들러 정의
+            this._imageLoadedHandler = function () {
+
                 this._ImageMarkAreaLoadComplete();
-            }.bind(this)).attr("src", $(oImgDom).attr("src"));
+          
+            }.bind(this);
+
+            // 3. 새 핸들러 등록
+            $img.on('load', this._imageLoadedHandler);
+
+            // 4. src 다시 설정해서 load 이벤트 강제 발생
+            const currentSrc = $img.attr("src");
+            $img.attr("src", currentSrc);
+
 
         }, // end of _ImageMarkAreaResize
 
