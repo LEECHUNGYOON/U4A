@@ -202,6 +202,12 @@ sap.ui.define("u4a.m.ImageMarkArea", [
             $(window).on("resize", this._resizeHandler);
 
         }, // end of onAfterRendering
+
+        _imageMarkResizeHandle: function(){
+           
+            this._ImageMarkAreaResize();
+
+        },
 		
 		_attachMarkImageEvent : function(){
 			
