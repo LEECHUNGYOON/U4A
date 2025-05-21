@@ -1,0 +1,1 @@
+sap.ui.define("u4a.charts.am5.PercentChart",["u4a/charts/am5/SerialChart"],function(a){"use strict";let b=a.extend("u4a.charts.am5.PercentChart",{metadata:{library:"u4a.charts.am5"},init:function(){a.prototype.init.apply(this,arguments)},renderer:function(){},exit:function(){a.prototype.exit.apply(this,arguments)}});return b});
