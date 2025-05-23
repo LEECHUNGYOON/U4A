@@ -898,10 +898,23 @@ sap.ui.define("u4a.m.SplitApp", [
             }
 
             if (bIsCollapse) {
+                //20250513 PES -START.
+                //sap.m.SplitContainer에 autoHideMasterPage 프로퍼티를 라이브러리를 수정하여 추가 등록함.
+                //autoHideMasterPage 프로퍼티의 기능은 masterPage가 expand 됐을때, 
+                //masterPage 이외의 영역을 선택시 자동으로 접힘처리 될지 여부를 설정하는 속성 정보임.
+                //u4a.m.SplitApp의 경우 sap.m.SplitApp을 상속 받았기에(sap.m.SplitApp의 부모가 sap.m.SplitContainer)
+                //autoHideMasterPage 프로퍼티를 사용할 수 있음.
+                //u4a.m.SplitApp UI에서 autoHideMasterPage 프로퍼티를 설정했을때에도 기능이 동작하도록 기존 로직 주석 처리함.
+                // if (!this.getMasterPageFixed()) {
+                //     this.hideMaster();
+                // }
 
-                if (!this.getMasterPageFixed()) {
+                //autoHideMasterPage 프로퍼티를 true로 설정한경우(다른 영역 선택시 자동으로 masterpage를 접힘 처리함)
+                //master page를 접힘 처리 하도록 로직 변경.
+                if (!this.getMasterPageFixed() && this.getAutoHideMasterPage() === true) {
                     this.hideMaster();
                 }
+                //20250513 PES -END.
 
                 if (this.getRightPageAutoHide()) {
                     this.setRightPageExpand(false);
