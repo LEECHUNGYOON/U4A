@@ -416,9 +416,12 @@ sap.ui.define("u4a.charts.am5.Settings", [
                 return;
             }
 
-            if(typeof this.getBindingContext() !== "undefined"){
-                return;
-            }
+            //20250926 PES -START.
+            //바인딩을 통해 그려진 UI에 대해 DATA를 갱신가 안되는 문제가 있기에 해당 로직 주석 처리.
+            // if(typeof this.getBindingContext() !== "undefined"){
+            //     return;
+            // }
+            //20250926 PES -END.
 
             if(typeof _oSeriesX?._oChart?.aData !== "undefined"){
                 

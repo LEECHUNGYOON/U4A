@@ -1,7 +1,7 @@
 sap.ui.define("u4a.charts.am5.RadarLineSetting", [
-    "sap/ui/core/Element"
-    
-],function(Element){
+    "sap/ui/core/Element",
+    "u4a/charts/am5/Settings"     
+],function(Element, Settings){
     "use strict";
     
     let _oRadarLineSetting = Element.extend("u4a.charts.am5.RadarLineSetting", {
@@ -13,7 +13,12 @@ sap.ui.define("u4a.charts.am5.RadarLineSetting", [
                 //차트 요소를 식별할 수 있는 이름.
                 //(name 속성에 값을 지정한뒤 legendLabelText를 설정하지 않는경우
                 //범례 text는 name의 속성값으로 출력된다.)
-                name : { type : "string", defaultValue : "" }
+                name : { type : "string", defaultValue : "" },
+
+
+                //차트 요소의 꺾은선 색상.(#ffffff)(am5.Series)
+                //line Setting에서 설정한 색상은 legend의 lineSetting에 해당하는 색상과 연결된다.
+                stroke : { type : "sap.ui.core.CSSColor", defaultValue : "" }
 
             }
 
@@ -97,6 +102,21 @@ sap.ui.define("u4a.charts.am5.RadarLineSetting", [
 
                     break;
             }
+
+
+            //20250925 PES -START.
+            //꺾은선 색상을 지정했을때 legend의 해당 item의 색상과 다르게
+            //표현되는 문제가 있기에 lineSetting에서 색상을 설정하여 
+            //legend item의 색상을 설정할 수 있도록 로직 보완.
+            var _stroke = Settings.prototype._getAm5Color(this.getStroke());
+
+            if(_stroke){
+                _sChartProp.stroke = _stroke;
+
+                //tooltip의 색상 변경을 위함.
+                _sChartProp.fill = _stroke;
+            }
+            //20250925 PES -END.
 
 
             //am5 차트의 LineSeries 생성.
@@ -209,6 +229,52 @@ sap.ui.define("u4a.charts.am5.RadarLineSetting", [
             }
 
             return _maxCnt;
+
+        },
+
+
+        /*************************************************************
+         * @function - stroke 프로퍼티 값 변경.
+         *************************************************************/
+        setStroke : function(propValue){
+
+            this.setProperty("stroke", propValue, true);
+
+            if(!this?._oChart?.oChartInstance?.set){
+                return;
+            }
+
+            var _stroke = Settings.prototype._getAm5Color(propValue);
+
+            //색상이 존재하는경우.
+            if(_stroke){
+                //꺾은선의 색상 갱신 처리.
+                this._oChart.oChartInstance.set("stroke", _stroke);
+
+                //tooltip의 색상 변경을 위함.
+                this._oChart.oChartInstance.set('fill', _stroke);
+                
+                return;
+            }
+
+            //색상이 존재하지 않는경우 chart에서 color 속성 정보 얻기.
+            var _oColors = this._oChart.oChartInstance?.chart?.get?.('colors');
+
+            if(!_oColors){
+                return;
+            }
+
+            //다음 색상 코드 얻기.
+            var _stroke = _oColors?.next();
+
+            if(!_stroke){
+                return;
+            }
+
+            this._oChart.oChartInstance.set("stroke", _stroke);
+
+            //tooltip의 색상 변경을 위함.
+            this._oChart.oChartInstance.set('fill', _stroke);
 
         }
 

@@ -1,7 +1,8 @@
 sap.ui.define("u4a.charts.am5.BarSetting", [
-    "sap/ui/core/Element"
+    "sap/ui/core/Element",
+    "u4a/charts/am5/Settings"
     
-],function(Element){
+],function(Element, Settings){
     "use strict";
 
 
@@ -65,7 +66,12 @@ sap.ui.define("u4a.charts.am5.BarSetting", [
                 //valueShow을 설정하지 않는경우, 컬럼1은 10만큼 컬럼2는 30만큼, 컬럼3은 50만큼 막대를 표현하지만,
                 //각 컬럼의 valueShow를 TotalPercent로 설정하게 될 경우
                 //10, 30, 50의 값을 백분률로 계산하여 컬럼을 표현한다.
-                valueShow : { type : "u4a.charts.am5.ValueShowType" }
+                valueShow : { type : "u4a.charts.am5.ValueShowType" },
+
+
+                //차트 요소의 채우기 색상.(#ffffff)(am5.Series)
+                //bar Setting에서 설정한 색상은 legend의 barSetting에 해당하는 색상과 연결된다.
+                fill : { type : "sap.ui.core.CSSColor", defaultValue : "" }
                 
             }
     
@@ -191,6 +197,18 @@ sap.ui.define("u4a.charts.am5.BarSetting", [
                     break;
             }
 
+
+            //20250925 PES -START.
+            //막대 색상을 지정했을때 legend의 해당 item의 색상과 다르게
+            //표현되는 문제가 있기에 BarSetting에서 색상을 설정하여 
+            //legend item의 색상을 설정할 수 있도록 로직 보완.
+            var _fill = Settings.prototype._getAm5Color(this.getFill());
+
+            if(_fill){
+                _sChartProp.fill = _fill;
+            }
+            //20250925 PES -END.
+            
 
             //am5 차트의 columnSeries 생성.
             var _oColumn = am5xy.ColumnSeries.new(sParams.oChart._oChart.oRoot, _sChartProp);
@@ -344,6 +362,53 @@ sap.ui.define("u4a.charts.am5.BarSetting", [
             }
 
             return _maxCnt;
+
+        },
+
+
+        /*************************************************************
+         * @function - fill 프로퍼티 값 변경.
+         *************************************************************/
+        setFill : function(propValue){
+
+            this.setProperty("fill", propValue, true);
+
+            if(!this?._oChart?.oChartInstance?.columns?.template?.set){
+                return;
+            }
+
+            var _fill = Settings.prototype._getAm5Color(propValue);
+
+            //색상이 존재하는경우.
+            if(_fill){
+                //막대의 색상 갱신 처리.
+                this._oChart.oChartInstance.columns.template.set('fill', _fill);
+                
+                this._oChart.oChartInstance.markDirty();
+
+                return;
+            }
+
+            
+            //색상이 존재하지 않는경우 chart에서 color 속성 정보 얻기.
+            var _oColors = this._oChart.oChartInstance?.chart?.get?.('colors');
+
+            if(!_oColors){
+                return;
+            }
+
+            //다음 색상 코드 얻기.
+            var _fill = _oColors?.next();
+
+            if(!_fill){
+                return;
+            }
+
+            //해당 색상으로 매핑.
+            this._oChart.oChartInstance.columns.template.set('fill', _fill);
+
+            //차트 갱신.
+            this._oChart.oChartInstance.markDirty();
 
         }
         
