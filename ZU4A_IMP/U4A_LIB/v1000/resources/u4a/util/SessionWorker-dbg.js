@@ -1,149 +1,207 @@
-﻿//Copyright 2017. INFOCG Inc. all rights reserved.
+﻿// Copyright 2017. INFOCG Inc. all rights reserved.
 
-sap.ui.define("u4a.util.SessionWorker",[
-"sap/ui/core/Control"
+/*======================================================================
+ * Title      : u4a.util.SessionWorker
+ * Description: 일정 주기마다 백그라운드 Web Worker를 통해 서버를 호출하여
+ *              세션 타임아웃을 방지하는 UI5 컨트롤.
+ *
+ * Behavior   :
+ *   - minute 속성에 따라 세션 유지 주기를 분 단위로 설정함.
+ *   - activeWorker=false 시 즉시 워커 종료.
+ *   - minute 값에 따라 동작/비동작/오류 발생 조건이 달라짐.
+ *       · minute < 0      → 덤프 발생
+ *       · minute = 0      → 워커 미생성 (비동작)
+ *       · 1 ≤ minute ≤120 → 정상 동작
+ *       · minute > 120    → 덤프 발생
+ *   - Worker 내부에서 설정된 주기가 경과하면 `finished` 이벤트 발생.
+ *
+ * Internal   :
+ *   - Web Worker 스크립트 경로 : /zu4a_imp/publish/CommonJS/workers/SessionWorker.js
+ *   - 브라우저가 Worker를 지원하지 않을 경우 예외 덤프 처리.
+ *   - Worker 오류, 메시지 송신 실패 시 자동 종료 및 예외 덤프.
+ *   - 부모 컨트롤 rerender 시에도 기존 Worker는 유지.
+ *
+ * Author     : LEE CHUNGYOON
+ * Revised on : 2025-10-30
+ *======================================================================*/
 
-], function(Control){
+
+sap.ui.define("u4a.util.SessionWorker", [
+    "sap/ui/core/Control"
+], function (Control) {
     "use strict";
 
     var SessionWorker = Control.extend("u4a.util.SessionWorker", {
-        metadata : {
-            library : "u4a.util",
-            properties : {
-               minute : { type: "int", defaultValue: 0 },   // max value: 120
-               activeWorker : { type : "boolean", defaultValue : true },
+
+        metadata: {
+            library: "u4a.util",
+            properties: {
+                /**
+                 * @property {int} minute
+                 * 세션 유지 주기(분 단위)
+                 *  - < 0     → 덤프 발생
+                 *  - = 0     → 동작 안 함 (워커 미생성)
+                 *  - 1~120   → 정상 동작
+                 *  - > 120   → 덤프 발생
+                 */
+                minute: { type: "int", defaultValue: 0 },
+
+                /**
+                 * @property {boolean} activeWorker
+                 * true일 경우 워커를 활성화함.
+                 */
+                activeWorker: { type: "boolean", defaultValue: true },
             },
-            events : {
-                finished : {
-                    allowPreventDefault: true,
-                }
+            events: {
+                /**
+                 * @event finished
+                 * 설정된 minute 경과 후 호출됨.
+                 */
+                finished: { allowPreventDefault: true }
             }
+        },
 
-        }, // end of metadata
+        /*======================================================================
+         * 내부 변수
+         *======================================================================*/
+        _oWorker: null,      // Worker 인스턴스
+        _maxMinute: 120,     // 허용 최대값 (120까지 OK, 초과시 오류)
 
-        _oWorker  : null,   // Worker instance
-        _maxMinute: 120,    // Max Minute(minute 속성의 최대 허용값)
-
-        init : function(){
-
-            // 브라우저가 Worker를 지원하는지 여부 확인
-            if(!window.Worker) {
-                console.log("Does not support this browser.");
-                return;
+        /*======================================================================
+         * 초기화
+         *======================================================================*/
+        init: function () {
+            if (!window.Worker) {
+                this._dumpAndThrow("[SessionWorker] This browser does not support Web Worker.");
             }
+        },
 
-        }, // end of init
-
-        renderer : function(oRm, oWorker){
-			
+        /*======================================================================
+         * Renderer
+         *======================================================================*/
+        renderer: function (oRm, oControl) {
             oRm.write("<div");
-            oRm.writeControlData(oWorker);
-            oRm.writeAttribute("visibility", "hidden");
-			oRm.addStyle("display", 'none');
-			oRm.writeStyles();
-            oRm.write(">");
-            oRm.write("</div>");
-			
+            oRm.writeControlData(oControl);
+            oRm.addStyle("display", "none");
+            oRm.writeStyles();
+            oRm.write("></div>");
         },
 
-        setActiveWorker : function(bActive){
-			
-            var oMsgParam = {};
+        /*======================================================================
+         * 공통: 덤프 + throw
+         *======================================================================*/
+        _dumpAndThrow: function (sErrMsg) {
+            console.error(sErrMsg);
 
-            if(!bActive){
-                if(this._oWorker != null){
+            if (typeof oU4AErroHandle !== "undefined" &&
+                typeof oU4AErroHandle.seterroHTML === "function") {
+                oU4AErroHandle.seterroHTML(sErrMsg);
+            }
 
-                    oMsgParam.isActive = false;
+            throw new Error(sErrMsg);
+        },
 
-                    this._oWorker.postMessage(oMsgParam); // Worker Interval을 중지한다.
-                    this._oWorker.terminate();
-                    this._oWorker = null;
-                }
-
+        /*======================================================================
+         * 공통: Worker 종료
+         *======================================================================*/
+        _terminateWorker: function () {
+            if (!this._oWorker) {
                 return;
             }
 
-            this.createWorker();
+            try {
+                this._oWorker.terminate();
+            } catch (e) {
+                console.warn("[SessionWorker] Worker terminate failed:", e);
+            }
 
+            this._oWorker = null;
+            console.info("[SessionWorker] Worker terminated.");
         },
 
-        createWorker : function(){
-			
-            var oMsgParam = {};
+        /*======================================================================
+         * Worker 생성 (검증은 onAfterRendering에서 완료됨)
+         *======================================================================*/
+        createWorker: function () {
             var iKeepTime = this.getMinute();
-			
-			if(this._oWorker instanceof Worker){
-				this._oWorker.terminate();
-				this._oWorker = null;
+
+            try {
+                this._oWorker = new Worker('/zu4a_imp/publish/CommonJS/workers/SessionWorker.js');
+            } catch (ex) {
+                this._terminateWorker();
+                this._dumpAndThrow("[SessionWorker] Worker creation failed: " + ex.message);
             }
-			
-			if(iKeepTime == 0){
-				return;
-			}
 
-            this._oWorker = new Worker('/zu4a_imp/publish/CommonJS/workers/SessionWorker.js');
-
-            oMsgParam.keeptime = iKeepTime;
-
-            this._oWorker.postMessage(oMsgParam);  // 워커에 메시지를 보낸다.
-
-            this._oWorker.onmessage = function(e){
-                this.onMessage(e);
+            this._oWorker.onerror = function (e) {
+                this._terminateWorker();
+                this._dumpAndThrow("[SessionWorker] Worker runtime error: " + e.message +
+                    " (" + e.filename + ":" + e.lineno + ")");
             }.bind(this);
 
+            try {
+                this._oWorker.postMessage({ keeptime: iKeepTime });
+            } catch (ex2) {
+                this._terminateWorker();
+                this._dumpAndThrow("[SessionWorker] Failed to post message to Worker: " + ex2.message);
+            }
+
+            this._oWorker.onmessage = function (e) {
+                if (e.data === "X") {
+                    this.fireFinished();
+                }
+            }.bind(this);
+
+            console.info("[SessionWorker] Worker started (" + iKeepTime + " min)");
         },
 
-        onMessage : function(e){
+        /*======================================================================
+         * 렌더링 이후 처리 (속성 검증 + 워커 생성/종료 제어)
+         *======================================================================*/
+        onAfterRendering: function () {
 
-            var receiveData = e.data;
+            var bActive = this.getActiveWorker();
+            var iMinute = this.getMinute();
 
-            if(receiveData != "X"){
+            // activeWorker=false → 기존 워커 종료
+            if (!bActive) {
+                this._terminateWorker();
                 return;
             }
-			
-			this.fireFinished();
-			
-        }, // end of onMessage
-		
-		onAfterRendering : function(){            
-         
-            /**
-             * 2024-11-21 yoon ---------- Start
-             * minute 속성에 2시간(120분) 이상 입력 시, 덤프를 발생시킨다
-             */
-            if(this.getMinute() > this._maxMinute){
 
-                let _sErrMsg = "The 'minute' property of the 'SessionWorker' cannot exceed a maximum value of 120 minutes.";
-
-				// U4A 덤프 오류를 발생시킨다.!!
-				if(oU4AErroHandle && typeof oU4AErroHandle.seterroHTML === "function"){
-					oU4AErroHandle.seterroHTML(_sErrMsg);
-				}
-				
-				console.error(_sErrMsg);
-
-				throw new Error(_sErrMsg);
-
+            // minute < 0 → 덤프 + 워커 종료
+            if (iMinute < 0) {
+                this._terminateWorker();
+                this._dumpAndThrow("The 'minute' property of the 'SessionWorker' must not be negative.");
             }
-            /**
-             * 2024-11-21 yoon ---------- End
-             * minute 속성에 2시간(120분) 이상 입력 시, 덤프를 발생시킨다
-             */
 
+            // minute === 0 → 동작 안 함 (워커 미생성, 단순 종료)
+            if (iMinute === 0) {
+                this._terminateWorker();
+                console.info("[SessionWorker] minute = 0 → Worker not started.");
+                return;
+            }
 
-            // 워커를 생성한다.
-			this.createWorker();
-			
-		},
-		
-		exit : function(){
-			
-			if(this._oWorker){
-				this._oWorker.terminate();
-				this._oWorker = null;
-			}
-			
-		}
+            // minute > 120 → 덤프 + 워커 종료
+            if (iMinute > this._maxMinute) {
+                this._terminateWorker();
+                this._dumpAndThrow("The 'minute' property of the 'SessionWorker' cannot exceed 120 minutes.");
+            }
+
+            // 이미 워커가 존재한다면 유지 (부모 rerender에도 유지)
+            if (this._oWorker instanceof Worker) {
+                return;
+            }
+
+            // 모든 조건 통과 시 워커 생성
+            this.createWorker();
+        },
+
+        /*======================================================================
+         * 종료 처리
+         *======================================================================*/
+        exit: function () {
+            this._terminateWorker();
+        }
 
     });
 
