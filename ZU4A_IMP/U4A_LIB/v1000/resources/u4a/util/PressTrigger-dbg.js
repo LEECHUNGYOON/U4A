@@ -14,8 +14,8 @@
  *   · immediateRun=true && second>0 일 때 감시 활성화
  *   · 지정된 시간이 경과하면 `finished` 이벤트 발생
  *   · 사용자가 입력(클릭/키/터치)을 하면 타이머가 초기화되어 다시 카운트
- *   · 화면이 숨김(visibilitychange) 상태였다가 복귀 시 경과시간을 반영하여
- *     타이머 잔여 시간을 재계산 (모바일/PC 공통 지원)
+ *   · 화면이 숨김(visibilitychange) 상태였다가 복귀 시 실제 시간 기준으로
+ *     종료 여부를 판정함 (설정된 초 단위 시간은 절대적 기준)
  *
  * Internal   :
  *   - PC: window click, document keyup 이벤트로 사용자 입력 감시
@@ -29,7 +29,7 @@
  *   - 종료 시 자동으로 immediateRun=false 로 전환
  *
  * Author     : LEE CHUNGYOON
- * Revised on : 2025-10-30
+ * Revised on : 2025-10-30 (실제 시간 기준 finish 판정)
  *======================================================================*/
 
 sap.ui.define("u4a.util.PressTrigger", [
@@ -65,13 +65,13 @@ sap.ui.define("u4a.util.PressTrigger", [
         //============================================================
         onAfterRendering: function () {
 
-            console.log("PressTrigger --- onAfterRendering");
+            console.log("PressTrigger ---- onAfterRendering!");
 
             this._detachBrowserEvents();
             this._clearTriggerTimer();
             this._unregisterVisibilityHandler();
 
-            // 화면 가시성 감시 등록 (모바일 포함)
+            // 화면 가시성 감시 등록
             this._registerVisibilityHandler();
 
             // 조건 만족 시 실행
@@ -95,15 +95,18 @@ sap.ui.define("u4a.util.PressTrigger", [
             this._clearTriggerTimer();
 
             const iSec = this.getSecond();
-            if (iSec <= 0) {
-                return;
-            }
+            if (iSec <= 0) { return; }
 
-            this._triggerTimerStartTime = Date.now();
+            const now = Date.now();
+
+            // 절대 종료 예정 시각 (실제 시간 기준)
+            this._triggerDeadline = now + (iSec * 1000);
+
+            const remainMs = this._triggerDeadline - now;
 
             this._triggerTimer = setTimeout(function () {
                 this._handleInactivityTimeout();
-            }.bind(this), iSec * 1000);
+            }.bind(this), remainMs);
         },
 
         _clearTriggerTimer: function () {
@@ -114,6 +117,9 @@ sap.ui.define("u4a.util.PressTrigger", [
         },
 
         _restartTriggerTimer: function () {
+
+            console.log("PressTrigger --- restart!");
+
             this._clearTriggerTimer();
             if (this._isRunnable()) {
                 this._startTriggerTimer();
@@ -121,7 +127,7 @@ sap.ui.define("u4a.util.PressTrigger", [
         },
 
         //============================================================
-        // 윈도우 / 문서 이벤트
+        // 사용자 입력 이벤트
         //============================================================
         _attachBrowserEvents: function () {
             const sDeviceName = sap.ui.Device.os.name;
@@ -153,16 +159,13 @@ sap.ui.define("u4a.util.PressTrigger", [
         },
 
         _onUserAction: function () {
-
-            console.log("PressTrigger --- _onUserAction");
-
             if (this._isRunnable()) {
                 this._restartTriggerTimer();
             }
         },
 
         //============================================================
-        // 잠금/복귀 감시 로직 (모바일 포함)
+        // visibilitychange (숨김/복귀) 감시
         //============================================================
         _registerVisibilityHandler: function () {
             if (this._fnVisibilityHandler) {
@@ -182,33 +185,35 @@ sap.ui.define("u4a.util.PressTrigger", [
 
         _onVisibilityChange: function () {
             if (document.hidden) {
-                this._lastHiddenTime = Date.now();
                 return;
             }
 
-            if (!document.hidden && this._lastHiddenTime) {
-                const diffMs = Date.now() - this._lastHiddenTime;
-                this._adjustRemainingTime(diffMs);
-                this._lastHiddenTime = null;
-            }
+            // 복귀 시점: 실제 시간 기준으로 남은 시간 계산
+            this._adjustRemainingTime();
         },
 
-        _adjustRemainingTime: function (elapsedMs) {
-            if (!this._triggerTimerStartTime || !this._isRunnable()) {
+        //============================================================
+        // 실제 시간 기준 남은 시간 계산
+        //============================================================
+        _adjustRemainingTime: function () {
+            if (!this._triggerDeadline || !this._isRunnable()) {
                 return;
             }
 
-            const remainingMs = (this.getSecond() * 1000) - (Date.now() - this._triggerTimerStartTime);
-            const newRemainingMs = remainingMs - elapsedMs;
+            const remainMs = this._triggerDeadline - Date.now();
 
-            if (newRemainingMs <= 0) {
+            if (remainMs <= 0) {
+                // 이미 설정된 시간이 지난 경우 즉시 finish
                 this._handleInactivityTimeout();
                 return;
             }
 
-            const newSeconds = Math.ceil(newRemainingMs / 1000);
-            this.setProperty("second", newSeconds, true);
-            this._restartTriggerTimer();
+            // 남은 시간만큼 다시 타이머 설정
+            this._clearTriggerTimer();
+
+            this._triggerTimer = setTimeout(function () {
+                this._handleInactivityTimeout();
+            }.bind(this), remainMs);
         },
 
         //============================================================

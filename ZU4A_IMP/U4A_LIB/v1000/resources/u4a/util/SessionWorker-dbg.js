@@ -16,19 +16,22 @@
  *   - Worker 내부에서 설정된 주기가 경과하면 `finished` 이벤트 발생.
  *
  * Internal   :
- *   - Web Worker 스크립트 경로 : /zu4a_imp/publish/CommonJS/workers/SessionWorker.js
+ *   - Web Worker 스크립트는 외부 경로 파일이 아닌, 런타임 시 Blob 기반으로
+ *     동적으로 생성됨 (URL.createObjectURL 방식).
+ *   - 모바일 및 백그라운드 전환 시 실제 경과시간(Date.now) 기준으로
+ *     남은 시간을 자동 계산하여 호출 타이밍을 정확히 유지함.
  *   - 브라우저가 Worker를 지원하지 않을 경우 예외 덤프 처리.
  *   - Worker 오류, 메시지 송신 실패 시 자동 종료 및 예외 덤프.
  *   - 부모 컨트롤 rerender 시에도 기존 Worker는 유지.
+ *   - 종료 시 revokeObjectURL() 을 통해 Blob URL 캐시 해제.
  *
  * Author     : LEE CHUNGYOON
- * Revised on : 2025-10-30
+ * Revised on : 2025-10-31
  *======================================================================*/
-
 
 sap.ui.define("u4a.util.SessionWorker", [
     "sap/ui/core/Control"
-], function (Control) {
+], function(Control) {
     "use strict";
 
     var SessionWorker = Control.extend("u4a.util.SessionWorker", {
@@ -36,50 +39,57 @@ sap.ui.define("u4a.util.SessionWorker", [
         metadata: {
             library: "u4a.util",
             properties: {
-                /**
-                 * @property {int} minute
-                 * 세션 유지 주기(분 단위)
-                 *  - < 0     → 덤프 발생
-                 *  - = 0     → 동작 안 함 (워커 미생성)
-                 *  - 1~120   → 정상 동작
-                 *  - > 120   → 덤프 발생
-                 */
-                minute: { type: "int", defaultValue: 0 },
-
-                /**
-                 * @property {boolean} activeWorker
-                 * true일 경우 워커를 활성화함.
-                 */
-                activeWorker: { type: "boolean", defaultValue: true },
+                minute: {
+                    type: "int",
+                    defaultValue: 0
+                },
+                activeWorker: {
+                    type: "boolean",
+                    defaultValue: true
+                },
             },
             events: {
-                /**
-                 * @event finished
-                 * 설정된 minute 경과 후 호출됨.
-                 */
-                finished: { allowPreventDefault: true }
+                finished: {
+                    allowPreventDefault: true
+                }
             }
         },
 
-        /*======================================================================
-         * 내부 변수
-         *======================================================================*/
-        _oWorker: null,      // Worker 인스턴스
-        _maxMinute: 120,     // 허용 최대값 (120까지 OK, 초과시 오류)
+        // 내부 상태
+        _oWorker: null,
+        _sDynamicWorkerUrl: null,
+        _maxMinute: 120,
+        _bVisHandlerRegistered: false,
+        _deadlineTs: null, // ← 절대 종료시각 (ms)
+        _lastCycleStartTs: null,
 
-        /*======================================================================
-         * 초기화
-         *======================================================================*/
-        init: function () {
-            if (!window.Worker) {
-                this._dumpAndThrow("[SessionWorker] This browser does not support Web Worker.");
+        /*======================== 공통 유틸 ========================*/
+        _dumpAndThrow: function(msg) {
+            console.error(msg);
+            if (typeof oU4AErroHandle !== "undefined" &&
+                typeof oU4AErroHandle.seterroHTML === "function") {
+                oU4AErroHandle.seterroHTML(msg);
             }
+            throw new Error(msg);
         },
 
-        /*======================================================================
-         * Renderer
-         *======================================================================*/
-        renderer: function (oRm, oControl) {
+        _terminateWorker: function() {
+            if (this._oWorker) {
+                try {
+                    this._oWorker.terminate();
+                } catch (e) {
+                    console.warn(e);
+                }
+            }
+            if (this._sDynamicWorkerUrl) {
+                URL.revokeObjectURL(this._sDynamicWorkerUrl);
+                this._sDynamicWorkerUrl = null;
+            }
+            this._oWorker = null;
+        },
+
+        /*======================== 렌더러 ========================*/
+        renderer: function(oRm, oControl) {
             oRm.write("<div");
             oRm.writeControlData(oControl);
             oRm.addStyle("display", "none");
@@ -87,124 +97,202 @@ sap.ui.define("u4a.util.SessionWorker", [
             oRm.write("></div>");
         },
 
-        /*======================================================================
-         * 공통: 덤프 + throw
-         *======================================================================*/
-        _dumpAndThrow: function (sErrMsg) {
-            console.error(sErrMsg);
+        /*======================== 워커 스크립트 ========================*/
+        _getWorkerScript: function() {
+            // 단순: start(분단위, float 허용)만 지원. setInterval(1s)로 now>=targetTime시 "X".
+            return `
+        /***************************************************
+         * u4a.util.SessionWorker 용 워커 스크립트
+         ***************************************************/
+        
+        self.workInterval = null;
+        self.keepTime = null;
+        self.targetTime = null;
 
-            if (typeof oU4AErroHandle !== "undefined" &&
-                typeof oU4AErroHandle.seterroHTML === "function") {
-                oU4AErroHandle.seterroHTML(sErrMsg);
-            }
+        self.onmessage = function(e){
+          var d = e.data;
+          if(d && d.cmd === "start"){
+            if(self.workInterval){ clearInterval(self.workInterval); self.workInterval = null; }
+            self.keepTime = d.keeptime * 60000; // 분 → ms (float 허용)
+            self.targetTime = Date.now() + self.keepTime;
 
-            throw new Error(sErrMsg);
+            self.workInterval = setInterval(function(){
+              var remain = self.targetTime - Date.now();
+              if(remain <= 0){
+                postMessage("X");
+                clearInterval(self.workInterval);
+                self.workInterval = null;
+              }
+            }, 1000);
+          }
+          if(d && d.cmd === "stop"){
+            if(self.workInterval){ clearInterval(self.workInterval); self.workInterval = null; }
+          }
+        };
+      `;
         },
 
-        /*======================================================================
-         * 공통: Worker 종료
-         *======================================================================*/
-        _terminateWorker: function () {
-            if (!this._oWorker) {
-                return;
-            }
-
+        _createDynamicWorker: function() {
+            if (this._oWorker instanceof Worker) return;
             try {
-                this._oWorker.terminate();
-            } catch (e) {
-                console.warn("[SessionWorker] Worker terminate failed:", e);
-            }
+                const blob = new Blob([this._getWorkerScript()], {
+                    type: "application/javascript"
+                });
+                this._sDynamicWorkerUrl = URL.createObjectURL(blob);
+                this._oWorker = new Worker(this._sDynamicWorkerUrl);
 
-            this._oWorker = null;
-            console.info("[SessionWorker] Worker terminated.");
-        },
+                this._oWorker.onerror = function(e) {
+                    this._terminateWorker();
+                    this._dumpAndThrow("[SessionWorker] Worker runtime error: " + e.message);
+                }.bind(this);
 
-        /*======================================================================
-         * Worker 생성 (검증은 onAfterRendering에서 완료됨)
-         *======================================================================*/
-        createWorker: function () {
-            var iKeepTime = this.getMinute();
+                this._oWorker.onmessage = function(e) {
+                    if (e.data === "X") {
+                        this._onCycleFinishedFromWorker();
+                    }
+                }.bind(this);
 
-            try {
-                this._oWorker = new Worker('/zu4a_imp/publish/CommonJS/workers/SessionWorker.js');
             } catch (ex) {
                 this._terminateWorker();
-                this._dumpAndThrow("[SessionWorker] Worker creation failed: " + ex.message);
+                this._dumpAndThrow("[SessionWorker] Failed to create dynamic worker: " + ex.message);
             }
-
-            this._oWorker.onerror = function (e) {
-                this._terminateWorker();
-                this._dumpAndThrow("[SessionWorker] Worker runtime error: " + e.message +
-                    " (" + e.filename + ":" + e.lineno + ")");
-            }.bind(this);
-
-            try {
-                this._oWorker.postMessage({ keeptime: iKeepTime });
-            } catch (ex2) {
-                this._terminateWorker();
-                this._dumpAndThrow("[SessionWorker] Failed to post message to Worker: " + ex2.message);
-            }
-
-            this._oWorker.onmessage = function (e) {
-                if (e.data === "X") {
-                    this.fireFinished();
-                }
-            }.bind(this);
-
-            console.info("[SessionWorker] Worker started (" + iKeepTime + " min)");
         },
 
-        /*======================================================================
-         * 렌더링 이후 처리 (속성 검증 + 워커 생성/종료 제어)
-         *======================================================================*/
-        onAfterRendering: function () {
+        /*======================== 코어 로직 ========================*/
 
-            var bActive = this.getActiveWorker();
-            var iMinute = this.getMinute();
+        // deadline 설정 (시작점 고정)
+        _armDeadlineIfNeeded: function() {
+            if (this._deadlineTs == null) {
+                const ms = this.getMinute() * 60000;
+                this._lastCycleStartTs = Date.now();
+                this._deadlineTs = this._lastCycleStartTs + ms;
+            }
+        },
 
-            // activeWorker=false → 기존 워커 종료
+        // 남은 시간(ms) 계산 (음수 허용)
+        _getRemainMs: function() {
+            if (this._deadlineTs == null) return 0;
+            return this._deadlineTs - Date.now();
+        },
+
+        // 워커에 남은 시간만큼만 재시작 (remainMs>0일 때만)
+        _startWorkerForRemain: function(remainMs) {
+            this._createDynamicWorker();
+            const keepMinFloat = remainMs / 60000; // float 허용
+            try {
+                this._oWorker.postMessage({
+                    cmd: "start",
+                    keeptime: keepMinFloat
+                });
+            } catch (e) {
+                this._terminateWorker();
+                this._dumpAndThrow("[SessionWorker] postMessage(start) failed: " + e.message);
+            }
+        },
+
+        // 사이클 종료 처리: finished 이벤트 즉시 호출 + 다음 사이클 재가동
+        _onCycleFinishedFromWorker: function() {
+            // 1) 즉시 finished 알림
+            this.fireFinished();
+
+            // 2) 여전히 활성 상태라면 다음 사이클 재무장
+            if (this.getActiveWorker() && this.getMinute() > 0) {
+                const ms = this.getMinute() * 60000;
+                this._lastCycleStartTs = Date.now();
+                this._deadlineTs = this._lastCycleStartTs + ms;
+                // 다음 사이클 시작
+                const remain = this._getRemainMs();
+                if (remain > 0) this._startWorkerForRemain(remain);
+            } else {
+                // 비활성/0분이면 종료
+                this._deadlineTs = null;
+                this._terminateWorker();
+            }
+        },
+
+        // visible 복귀 시 절대시간 기준으로 즉시/잔여 처리
+        _resumeByDeadline: function() {
+            if (!this.getActiveWorker()) {
+                this._terminateWorker();
+                return;
+            }
+            if (this.getMinute() <= 0) {
+                this._terminateWorker();
+                return;
+            }
+
+            this._armDeadlineIfNeeded();
+
+            const remain = this._getRemainMs();
+            if (remain <= 0) {
+                // 이미 만료 → 즉시 finished + 다음 사이클 재무장
+                this._onCycleFinishedFromWorker();
+                return;
+            }
+            // 아직 남았음 → 정확히 남은 시간만 재시작
+            this._startWorkerForRemain(remain);
+        },
+
+        /*======================== 라이프사이클 ========================*/
+        onAfterRendering: function() {
+            const bActive = this.getActiveWorker();
+            const iMinute = this.getMinute();
+
             if (!bActive) {
                 this._terminateWorker();
+                this._deadlineTs = null;
                 return;
             }
-
-            // minute < 0 → 덤프 + 워커 종료
             if (iMinute < 0) {
                 this._terminateWorker();
-                this._dumpAndThrow("The 'minute' property of the 'SessionWorker' must not be negative.");
+                this._deadlineTs = null;
+                this._dumpAndThrow("The 'minute' must not be negative.");
             }
-
-            // minute === 0 → 동작 안 함 (워커 미생성, 단순 종료)
             if (iMinute === 0) {
                 this._terminateWorker();
-                console.info("[SessionWorker] minute = 0 → Worker not started.");
+                this._deadlineTs = null;
                 return;
             }
-
-            // minute > 120 → 덤프 + 워커 종료
             if (iMinute > this._maxMinute) {
                 this._terminateWorker();
-                this._dumpAndThrow("The 'minute' property of the 'SessionWorker' cannot exceed 120 minutes.");
+                this._deadlineTs = null;
+                this._dumpAndThrow("The 'minute' cannot exceed 120.");
             }
 
-            // 이미 워커가 존재한다면 유지 (부모 rerender에도 유지)
-            if (this._oWorker instanceof Worker) {
-                return;
+            this._armDeadlineIfNeeded();
+
+            // 현재 남은 시간으로 워커 가동(또는 재가동)
+            const remain = this._getRemainMs();
+            if (remain <= 0) {
+                this._onCycleFinishedFromWorker();
+            } else {
+                this._startWorkerForRemain(remain);
             }
 
-            // 모든 조건 통과 시 워커 생성
-            this.createWorker();
+            // visibility 핸들러 1회 등록
+            this._registerVisibilityHandler();
         },
 
-        /*======================================================================
-         * 종료 처리
-         *======================================================================*/
-        exit: function () {
+        _registerVisibilityHandler: function() {
+            if (this._bVisHandlerRegistered) return;
+            this._bVisHandlerRegistered = true;
+
+            document.addEventListener("visibilitychange", function() {
+                if (document.visibilityState === "visible") {
+                    // 복귀 시 절대시간 기준으로 즉시/잔여 처리
+                    this._resumeByDeadline();
+                } else {
+                    // hidden일 때는 아무 것도 하지 않음 (deadline 기준이라 필요 없음)
+                }
+            }.bind(this));
+        },
+
+        exit: function() {
+            this._deadlineTs = null;
             this._terminateWorker();
         }
 
     });
 
     return SessionWorker;
-
 });
