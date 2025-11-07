@@ -604,6 +604,11 @@ sap.ui.define([
                 //layoutData의 컬럼 병합 값 얻기.
                 var _colSpan = _oLayout?.[_colFunc]?.() || 1;
 
+                //컬럼 병합값이 컬럼 count보다 큰경우 컬럼 count으로 매핑.
+                if(_colSpan > sColInfo.colCount){
+                    _colSpan = sColInfo.colCount;
+                }
+
                 //layoutData의 row 병합 값 얻기.
                 var _rowSpan = _oLayout?.[_rowlFunc]?.() || 1;
 
