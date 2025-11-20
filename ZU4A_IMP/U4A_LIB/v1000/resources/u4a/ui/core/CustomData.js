@@ -1,0 +1,1 @@
+sap.ui.define("u4a.ui.core.CustomData",["sap/ui/core/CustomData"],function(t){"use strict";return t.extend("u4a.ui.core.CustomData",{metadata:{library:"u4a.ui.core"},_checkWriteToDom:function(){if(!this.getWriteToDom())return null;var t=this.getKey(),e=this.getValue();return"function"==typeof e?null:("object"==typeof e&&(e=JSON.stringify(e)),{key:t,value:e})}})});

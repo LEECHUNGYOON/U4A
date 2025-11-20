@@ -1,9 +1,3 @@
-/*!
- * OpenUI5
- * (c) Copyright 2009-2024 SAP SE or an SAP affiliate company.
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
- */
-
 sap.ui.define([
 ],	function() {
 	"use strict";
@@ -189,10 +183,33 @@ sap.ui.define([
 			return;
 		}
 
-		var _hAlign = oLayout.getHAlign();
 
+		/**
+		 * @since   2025-11-20 02:06:44
+		 * @version v3.5.6-16
+		 * @author  PES
+		 * @description
+		 * rowLayout에 추가되는 UI의 수평 정렬 처리를 위해 css 속성 추가 처리.
+		 * (text-align을 설정할 경우 정상적으로 수평 정렬이 이뤄지지 않음)
+		 * 
+		 */
+		oRm.style("display", "flex");
+
+		var _hAlign = oLayout.getHAlign();
+		
 		if(_hAlign){
-			oRm.style("text-align", _hAlign);
+
+			/**
+			 * @since   2025-11-20 02:06:44
+			 * @version v3.5.6-16
+			 * @author  PES
+			 * @description
+			 * display:flex 속성을 통해 수평 정렬 처리를 진행하기 위해 
+			 * justify-content 속성으로 수평 정렬 처리.
+			 * 
+			 */
+			//oRm.style("text-align", _hAlign);
+			oRm.style("justify-content", _hAlign);
 		}
 
 
