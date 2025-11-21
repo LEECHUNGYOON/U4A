@@ -1,0 +1,93 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": ".theming",
+			"size": 90,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "FilterBar.less",
+			"size": 600,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "SmartChart.less",
+			"size": 335,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "SmartTable.less",
+			"size": 591,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "ValueHelpDialog.less",
+			"size": 1006,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "css_variables.css",
+			"size": 287,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 143749,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 143381,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library-RTL.css",
+			"size": 25253,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library-parameters.json",
+			"module": "sap/ui/comp/themes/sap_horizon/library-parameters.json",
+			"size": 54,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library.css",
+			"size": 25246,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library.less",
+			"size": 3216,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library.source.less",
+			"size": 361,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 26457,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 26450,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "resources.json",
+			"size": 1612
+		}
+	]
+}

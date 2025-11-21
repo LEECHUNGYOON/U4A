@@ -1,0 +1,767 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": "AppFinder-dbg.controller.js",
+			"module": "sap/ushell/components/appfinder/AppFinder.controller.js",
+			"size": 31340,
+			"isDebug": true,
+			"required": [
+				"sap/base/util/extend.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Component.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/core/routing/HashChanger.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ui/thirdparty/hasher.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/ui5service/ShellUIService.js"
+			]
+		},
+		{
+			"name": "AppFinder.controller.js",
+			"module": "sap/ushell/components/appfinder/AppFinder.controller.js",
+			"size": 12043,
+			"required": [
+				"sap/base/util/extend.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Component.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/core/routing/HashChanger.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ui/thirdparty/hasher.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/ui5service/ShellUIService.js"
+			]
+		},
+		{
+			"name": "AppFinder.controller.js.map",
+			"size": 14138,
+			"isDebug": true
+		},
+		{
+			"name": "AppFinderView-dbg.js",
+			"module": "sap/ushell/components/appfinder/AppFinderView.js",
+			"size": 15228,
+			"isDebug": true,
+			"required": [
+				"sap/m/FlexBox.js",
+				"sap/m/MultiComboBox.js",
+				"sap/m/Page.js",
+				"sap/m/SearchField.js",
+				"sap/m/SegmentedButton.js",
+				"sap/m/SegmentedButtonItem.js",
+				"sap/m/ToggleButton.js",
+				"sap/m/Toolbar.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/InvisibleText.js",
+				"sap/ui/core/ListItem.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/BindingMode.js",
+				"sap/ui/model/Sorter.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js"
+			],
+			"condRequired": [
+				"sap/ushell/components/ComponentKeysHandler.js",
+				"sap/ushell/renderer/AccessKeysHandler.js"
+			]
+		},
+		{
+			"name": "AppFinderView.js",
+			"module": "sap/ushell/components/appfinder/AppFinderView.js",
+			"size": 6732,
+			"required": [
+				"sap/m/FlexBox.js",
+				"sap/m/MultiComboBox.js",
+				"sap/m/Page.js",
+				"sap/m/SearchField.js",
+				"sap/m/SegmentedButton.js",
+				"sap/m/SegmentedButtonItem.js",
+				"sap/m/ToggleButton.js",
+				"sap/m/Toolbar.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/InvisibleText.js",
+				"sap/ui/core/ListItem.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/BindingMode.js",
+				"sap/ui/model/Sorter.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js"
+			],
+			"condRequired": [
+				"sap/ushell/components/ComponentKeysHandler.js",
+				"sap/ushell/renderer/AccessKeysHandler.js"
+			]
+		},
+		{
+			"name": "AppFinderView.js.map",
+			"size": 7164,
+			"isDebug": true
+		},
+		{
+			"name": "Catalog-dbg.controller.js",
+			"module": "sap/ushell/components/appfinder/Catalog.controller.js",
+			"size": 54092,
+			"isDebug": true,
+			"required": [
+				"sap/base/Log.js",
+				"sap/base/util/extend.js",
+				"sap/m/MessageToast.js",
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/Context.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/components/_HomepageManager/PagingManager.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/library.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/utils/WindowUtils.js"
+			]
+		},
+		{
+			"name": "Catalog.controller.js",
+			"module": "sap/ushell/components/appfinder/Catalog.controller.js",
+			"size": 20513,
+			"required": [
+				"sap/base/Log.js",
+				"sap/base/util/extend.js",
+				"sap/m/MessageToast.js",
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/Context.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/components/_HomepageManager/PagingManager.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/library.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/utils/WindowUtils.js"
+			]
+		},
+		{
+			"name": "Catalog.controller.js.map",
+			"size": 26010,
+			"isDebug": true
+		},
+		{
+			"name": "CatalogView-dbg.js",
+			"module": "sap/ushell/components/appfinder/CatalogView.js",
+			"size": 21132,
+			"isDebug": true,
+			"required": [
+				"sap/m/BusyIndicator.js",
+				"sap/m/IllustratedMessage.js",
+				"sap/m/List.js",
+				"sap/m/Page.js",
+				"sap/m/PageAccessibleLandmarkInfo.js",
+				"sap/m/SplitApp.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/library.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/performance/Measurement.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/appfinder/AppBox.js",
+				"sap/ushell/ui/appfinder/PinButton.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/launchpad/CatalogEntryContainer.js",
+				"sap/ushell/ui/launchpad/CatalogsContainer.js",
+				"sap/ushell/ui/launchpad/Tile.js"
+			],
+			"condRequired": [
+				"sap/ushell/components/ComponentKeysHandler.js",
+				"sap/ushell/renderer/AccessKeysHandler.js"
+			]
+		},
+		{
+			"name": "CatalogView.js",
+			"module": "sap/ushell/components/appfinder/CatalogView.js",
+			"size": 9338,
+			"required": [
+				"sap/m/BusyIndicator.js",
+				"sap/m/IllustratedMessage.js",
+				"sap/m/List.js",
+				"sap/m/Page.js",
+				"sap/m/PageAccessibleLandmarkInfo.js",
+				"sap/m/SplitApp.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/library.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/performance/Measurement.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/appfinder/AppBox.js",
+				"sap/ushell/ui/appfinder/PinButton.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/launchpad/CatalogEntryContainer.js",
+				"sap/ushell/ui/launchpad/CatalogsContainer.js",
+				"sap/ushell/ui/launchpad/Tile.js"
+			],
+			"condRequired": [
+				"sap/ushell/components/ComponentKeysHandler.js",
+				"sap/ushell/renderer/AccessKeysHandler.js"
+			]
+		},
+		{
+			"name": "CatalogView.js.map",
+			"size": 11039,
+			"isDebug": true
+		},
+		{
+			"name": "Component-dbg.js",
+			"module": "sap/ushell/components/appfinder/Component.js",
+			"size": 3989,
+			"isDebug": true,
+			"required": [
+				"sap/base/util/UriParameters.js",
+				"sap/m/library.js",
+				"sap/m/routing/Router.js",
+				"sap/ui/core/UIComponent.js",
+				"sap/ui/core/library.js",
+				"sap/ui/thirdparty/hasher.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/bootstrap/common/common.load.model.js",
+				"sap/ushell/components/CatalogsManager.js",
+				"sap/ushell/components/SharedComponentUtils.js",
+				"sap/ushell/components/appfinder/AppFinderView.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "Component-preload.js",
+			"module": "sap/ushell/components/appfinder/Component-preload.js",
+			"size": 97519,
+			"merged": true,
+			"required": [
+				"sap/base/Log.js",
+				"sap/base/util/UriParameters.js",
+				"sap/base/util/extend.js",
+				"sap/m/Bar.js",
+				"sap/m/Breadcrumbs.js",
+				"sap/m/BusyIndicator.js",
+				"sap/m/Button.js",
+				"sap/m/DisplayListItem.js",
+				"sap/m/FlexBox.js",
+				"sap/m/IllustratedMessage.js",
+				"sap/m/Input.js",
+				"sap/m/Label.js",
+				"sap/m/Link.js",
+				"sap/m/List.js",
+				"sap/m/MessagePage.js",
+				"sap/m/MessageToast.js",
+				"sap/m/MultiComboBox.js",
+				"sap/m/Page.js",
+				"sap/m/PageAccessibleLandmarkInfo.js",
+				"sap/m/ResponsivePopover.js",
+				"sap/m/ScrollContainer.js",
+				"sap/m/SearchField.js",
+				"sap/m/SegmentedButton.js",
+				"sap/m/SegmentedButtonItem.js",
+				"sap/m/SelectDialog.js",
+				"sap/m/SplitApp.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/Text.js",
+				"sap/m/Title.js",
+				"sap/m/ToggleButton.js",
+				"sap/m/Toolbar.js",
+				"sap/m/library.js",
+				"sap/m/routing/Router.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Component.js",
+				"sap/ui/core/Configuration.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/IconPool.js",
+				"sap/ui/core/InvisibleText.js",
+				"sap/ui/core/ListItem.js",
+				"sap/ui/core/UIComponent.js",
+				"sap/ui/core/library.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/core/routing/HashChanger.js",
+				"sap/ui/model/BindingMode.js",
+				"sap/ui/model/Context.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/model/Sorter.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ui/model/odata/ODataUtils.js",
+				"sap/ui/performance/Measurement.js",
+				"sap/ui/thirdparty/datajs.js",
+				"sap/ui/thirdparty/hasher.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/bootstrap/common/common.load.model.js",
+				"sap/ushell/components/CatalogsManager.js",
+				"sap/ushell/components/SharedComponentUtils.js",
+				"sap/ushell/components/_HomepageManager/PagingManager.js",
+				"sap/ushell/library.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/appfinder/AppBox.js",
+				"sap/ushell/ui/appfinder/PinButton.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js",
+				"sap/ushell/ui/launchpad/CatalogEntryContainer.js",
+				"sap/ushell/ui/launchpad/CatalogsContainer.js",
+				"sap/ushell/ui/launchpad/Tile.js",
+				"sap/ushell/ui5service/ShellUIService.js",
+				"sap/ushell/utils/WindowUtils.js"
+			],
+			"condRequired": [
+				"sap/m/MessageBox.js",
+				"sap/ushell/components/ComponentKeysHandler.js",
+				"sap/ushell/components/HomepageManager.js",
+				"sap/ushell/components/visualizationOrganizer/Component.js",
+				"sap/ushell/renderer/AccessKeysHandler.js"
+			],
+			"included": [
+				"sap/ushell/components/appfinder/AppFinder.controller.js",
+				"sap/ushell/components/appfinder/AppFinderView.js",
+				"sap/ushell/components/appfinder/Catalog.controller.js",
+				"sap/ushell/components/appfinder/CatalogView.js",
+				"sap/ushell/components/appfinder/Component.js",
+				"sap/ushell/components/appfinder/EasyAccess.controller.js",
+				"sap/ushell/components/appfinder/EasyAccessView.js",
+				"sap/ushell/components/appfinder/GroupListPopover.controller.js",
+				"sap/ushell/components/appfinder/GroupListPopoverView.js",
+				"sap/ushell/components/appfinder/HierarchyApps.controller.js",
+				"sap/ushell/components/appfinder/HierarchyAppsView.js",
+				"sap/ushell/components/appfinder/HierarchyFolders.controller.js",
+				"sap/ushell/components/appfinder/HierarchyFoldersView.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/components/appfinder/manifest.json"
+			]
+		},
+		{
+			"name": "Component-preload.js.map",
+			"size": 119027,
+			"isDebug": true
+		},
+		{
+			"name": "Component.js",
+			"module": "sap/ushell/components/appfinder/Component.js",
+			"size": 1730,
+			"required": [
+				"sap/base/util/UriParameters.js",
+				"sap/m/library.js",
+				"sap/m/routing/Router.js",
+				"sap/ui/core/UIComponent.js",
+				"sap/ui/core/library.js",
+				"sap/ui/thirdparty/hasher.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/bootstrap/common/common.load.model.js",
+				"sap/ushell/components/CatalogsManager.js",
+				"sap/ushell/components/SharedComponentUtils.js",
+				"sap/ushell/components/appfinder/AppFinderView.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "Component.js.map",
+			"size": 2289,
+			"isDebug": true
+		},
+		{
+			"name": "EasyAccess-dbg.controller.js",
+			"module": "sap/ushell/components/appfinder/EasyAccess.controller.js",
+			"size": 30929,
+			"isDebug": true,
+			"required": [
+				"sap/base/Log.js",
+				"sap/ui/core/Configuration.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ui/model/odata/ODataUtils.js",
+				"sap/ui/thirdparty/datajs.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js"
+			],
+			"condRequired": [
+				"sap/m/MessageBox.js",
+				"sap/ushell/components/HomepageManager.js"
+			]
+		},
+		{
+			"name": "EasyAccess.controller.js",
+			"module": "sap/ushell/components/appfinder/EasyAccess.controller.js",
+			"size": 13034,
+			"required": [
+				"sap/base/Log.js",
+				"sap/ui/core/Configuration.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ui/model/odata/ODataUtils.js",
+				"sap/ui/thirdparty/datajs.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js"
+			],
+			"condRequired": [
+				"sap/m/MessageBox.js",
+				"sap/ushell/components/HomepageManager.js"
+			]
+		},
+		{
+			"name": "EasyAccess.controller.js.map",
+			"size": 15632,
+			"isDebug": true
+		},
+		{
+			"name": "EasyAccessView-dbg.js",
+			"module": "sap/ushell/components/appfinder/EasyAccessView.js",
+			"size": 2903,
+			"isDebug": true,
+			"required": [
+				"sap/m/SplitApp.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "EasyAccessView.js",
+			"module": "sap/ushell/components/appfinder/EasyAccessView.js",
+			"size": 1696,
+			"required": [
+				"sap/m/SplitApp.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "EasyAccessView.js.map",
+			"size": 1805,
+			"isDebug": true
+		},
+		{
+			"name": "GroupListPopover-dbg.controller.js",
+			"module": "sap/ushell/components/appfinder/GroupListPopover.controller.js",
+			"size": 5952,
+			"isDebug": true,
+			"required": [
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "GroupListPopover.controller.js",
+			"module": "sap/ushell/components/appfinder/GroupListPopover.controller.js",
+			"size": 2999,
+			"required": [
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "GroupListPopover.controller.js.map",
+			"size": 4070,
+			"isDebug": true
+		},
+		{
+			"name": "GroupListPopoverView-dbg.js",
+			"module": "sap/ushell/components/appfinder/GroupListPopoverView.js",
+			"size": 8894,
+			"isDebug": true,
+			"required": [
+				"sap/m/Bar.js",
+				"sap/m/Button.js",
+				"sap/m/DisplayListItem.js",
+				"sap/m/Input.js",
+				"sap/m/Label.js",
+				"sap/m/List.js",
+				"sap/m/ResponsivePopover.js",
+				"sap/m/ScrollContainer.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/IconPool.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "GroupListPopoverView.js",
+			"module": "sap/ushell/components/appfinder/GroupListPopoverView.js",
+			"size": 4127,
+			"required": [
+				"sap/m/Bar.js",
+				"sap/m/Button.js",
+				"sap/m/DisplayListItem.js",
+				"sap/m/Input.js",
+				"sap/m/Label.js",
+				"sap/m/List.js",
+				"sap/m/ResponsivePopover.js",
+				"sap/m/ScrollContainer.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/library.js",
+				"sap/ui/Device.js",
+				"sap/ui/core/IconPool.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "GroupListPopoverView.js.map",
+			"size": 5102,
+			"isDebug": true
+		},
+		{
+			"name": "HierarchyApps-dbg.controller.js",
+			"module": "sap/ushell/components/appfinder/HierarchyApps.controller.js",
+			"size": 16087,
+			"isDebug": true,
+			"required": [
+				"sap/m/MessageToast.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "HierarchyApps.controller.js",
+			"module": "sap/ushell/components/appfinder/HierarchyApps.controller.js",
+			"size": 6106,
+			"required": [
+				"sap/m/MessageToast.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/thirdparty/jquery.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "HierarchyApps.controller.js.map",
+			"size": 8848,
+			"isDebug": true
+		},
+		{
+			"name": "HierarchyAppsView-dbg.js",
+			"module": "sap/ushell/components/appfinder/HierarchyAppsView.js",
+			"size": 10755,
+			"isDebug": true,
+			"required": [
+				"sap/m/Breadcrumbs.js",
+				"sap/m/Button.js",
+				"sap/m/FlexBox.js",
+				"sap/m/Link.js",
+				"sap/m/MessagePage.js",
+				"sap/m/Page.js",
+				"sap/m/PageAccessibleLandmarkInfo.js",
+				"sap/m/Text.js",
+				"sap/m/Title.js",
+				"sap/m/library.js",
+				"sap/ui/core/library.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/appfinder/AppBox.js",
+				"sap/ushell/ui/appfinder/PinButton.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js"
+			]
+		},
+		{
+			"name": "HierarchyAppsView.js",
+			"module": "sap/ushell/components/appfinder/HierarchyAppsView.js",
+			"size": 4810,
+			"required": [
+				"sap/m/Breadcrumbs.js",
+				"sap/m/Button.js",
+				"sap/m/FlexBox.js",
+				"sap/m/Link.js",
+				"sap/m/MessagePage.js",
+				"sap/m/Page.js",
+				"sap/m/PageAccessibleLandmarkInfo.js",
+				"sap/m/Text.js",
+				"sap/m/Title.js",
+				"sap/m/library.js",
+				"sap/ui/core/library.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ui/model/json/JSONModel.js",
+				"sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+				"sap/ushell/resources.js",
+				"sap/ushell/ui/appfinder/AppBox.js",
+				"sap/ushell/ui/appfinder/PinButton.js",
+				"sap/ushell/ui/launchpad/AccessibilityCustomData.js"
+			]
+		},
+		{
+			"name": "HierarchyAppsView.js.map",
+			"size": 5724,
+			"isDebug": true
+		},
+		{
+			"name": "HierarchyFolders-dbg.controller.js",
+			"module": "sap/ushell/components/appfinder/HierarchyFolders.controller.js",
+			"size": 11505,
+			"isDebug": true,
+			"required": [
+				"sap/base/Log.js",
+				"sap/m/SelectDialog.js",
+				"sap/m/StandardListItem.js",
+				"sap/ui/core/Component.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/thirdparty/jquery.js"
+			]
+		},
+		{
+			"name": "HierarchyFolders.controller.js",
+			"module": "sap/ushell/components/appfinder/HierarchyFolders.controller.js",
+			"size": 4847,
+			"required": [
+				"sap/base/Log.js",
+				"sap/m/SelectDialog.js",
+				"sap/m/StandardListItem.js",
+				"sap/ui/core/Component.js",
+				"sap/ui/core/mvc/Controller.js",
+				"sap/ui/model/Filter.js",
+				"sap/ui/model/FilterOperator.js",
+				"sap/ui/thirdparty/jquery.js"
+			]
+		},
+		{
+			"name": "HierarchyFolders.controller.js.map",
+			"size": 5772,
+			"isDebug": true
+		},
+		{
+			"name": "HierarchyFoldersView-dbg.js",
+			"module": "sap/ushell/components/appfinder/HierarchyFoldersView.js",
+			"size": 7291,
+			"isDebug": true,
+			"required": [
+				"sap/m/Bar.js",
+				"sap/m/Button.js",
+				"sap/m/Label.js",
+				"sap/m/List.js",
+				"sap/m/Page.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/Text.js",
+				"sap/m/library.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "HierarchyFoldersView.js",
+			"module": "sap/ushell/components/appfinder/HierarchyFoldersView.js",
+			"size": 3561,
+			"required": [
+				"sap/m/Bar.js",
+				"sap/m/Button.js",
+				"sap/m/Label.js",
+				"sap/m/List.js",
+				"sap/m/Page.js",
+				"sap/m/StandardListItem.js",
+				"sap/m/Text.js",
+				"sap/m/library.js",
+				"sap/ui/core/Core.js",
+				"sap/ui/core/mvc/View.js",
+				"sap/ushell/resources.js"
+			]
+		},
+		{
+			"name": "HierarchyFoldersView.js.map",
+			"size": 4214,
+			"isDebug": true
+		},
+		{
+			"name": "VisualizationOrganizerHelper-dbg.js",
+			"module": "sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+			"size": 20229,
+			"isDebug": true,
+			"required": [
+				"sap/m/library.js",
+				"sap/ui/core/Core.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/resources.js"
+			],
+			"condRequired": [
+				"sap/ushell/components/visualizationOrganizer/Component.js"
+			]
+		},
+		{
+			"name": "VisualizationOrganizerHelper.js",
+			"module": "sap/ushell/components/appfinder/VisualizationOrganizerHelper.js",
+			"size": 4349,
+			"required": [
+				"sap/m/library.js",
+				"sap/ui/core/Core.js",
+				"sap/ushell/Config.js",
+				"sap/ushell/EventHub.js",
+				"sap/ushell/resources.js"
+			],
+			"condRequired": [
+				"sap/ushell/components/visualizationOrganizer/Component.js"
+			]
+		},
+		{
+			"name": "VisualizationOrganizerHelper.js.map",
+			"size": 6112,
+			"isDebug": true
+		},
+		{
+			"name": "manifest.json",
+			"module": "sap/ushell/components/appfinder/manifest.json",
+			"size": 1905
+		},
+		{
+			"name": "resources.json",
+			"size": 21904
+		}
+	]
+}

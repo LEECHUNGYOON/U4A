@@ -1,0 +1,99 @@
+{
+	"_version": "1.1.0",
+	"resources": [
+		{
+			"name": ".theming",
+			"size": 90,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "InfoLabel.less",
+			"size": 2422,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "NavigationList.less",
+			"size": 2690,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "SideNavigation.less",
+			"size": 1166,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "ToolHeader.less",
+			"size": 8709,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "ToolPage.less",
+			"size": 1265,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "css_variables.css",
+			"size": 17054,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "css_variables.less",
+			"size": 162578,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "css_variables.source.less",
+			"size": 162216,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library-RTL.css",
+			"size": 38429,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library-parameters.json",
+			"module": "sap/tnt/themes/sap_horizon/library-parameters.json",
+			"size": 7426,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library.css",
+			"size": 38430,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library.less",
+			"size": 17172,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library.source.less",
+			"size": 566,
+			"designtime": true,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library_skeleton-RTL.css",
+			"size": 35154,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "library_skeleton.css",
+			"size": 35157,
+			"theme": "sap_horizon"
+		},
+		{
+			"name": "resources.json",
+			"size": 1722
+		}
+	]
+}

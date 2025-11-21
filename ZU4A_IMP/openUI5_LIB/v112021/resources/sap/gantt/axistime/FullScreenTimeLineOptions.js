@@ -1,0 +1,2 @@
+sap.ui.define(["sap/gantt/library"],function(t){"use strict";return t.config.DEFAULT_TIME_ZOOM_STRATEGY},true);
+//# sourceMappingURL=FullScreenTimeLineOptions.js.map

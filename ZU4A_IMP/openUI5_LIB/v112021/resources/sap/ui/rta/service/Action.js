@@ -1,0 +1,7 @@
+/*!
+ * OpenUI5
+ * (c) Copyright 2009-2024 SAP SE or an SAP affiliate company.
+ * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
+ */
+sap.ui.define(["sap/ui/dt/OverlayRegistry","sap/ui/dt/Util","sap/base/util/restricted/_castArray","sap/base/util/restricted/_pick"],function(t,n,r,e){"use strict";return function(n){function i(t,n){return typeof t==="function"?t(n):t}function o(t){var r=n._oDesignTime.getPlugins().map(function(n){return n.getMenuItems(t)});return Promise.all(r).then(function(n){return n.reduce(function(t,n){return n?t.concat(n):t},[]).map(function(n){return Object.assign({},n,{enabled:i(n.enabled,t),text:i(n.text,t[0])})})})}function u(n){var i=r(n);var u=i.map(function(n){var r=t.getOverlay(n);if(!r){throw new Error(`Control with id="${n}" is not under a root element or ignored.'`)}return r});return o(u).then(function(t){return t.map(function(t){return e(t,["id","icon","rank","group","enabled","text"])})})}function a(n,e){var i=r(n);var u=i.map(function(n){var r=t.getOverlay(n);if(!r){throw new Error(`Control with id="${n}" is not under a root element or ignored.`)}return r});return o(u).then(function(t){var n=t.filter(function(t){return t.id===e}).pop();if(!n){throw new Error("No action found by specified ID")}else{return n.handler(u,{})}})}return{exports:{get:u,execute:a}}}});
+//# sourceMappingURL=Action.js.map

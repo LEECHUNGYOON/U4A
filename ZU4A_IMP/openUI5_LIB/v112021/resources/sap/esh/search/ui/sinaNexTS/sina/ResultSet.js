@@ -1,0 +1,14 @@
+/*! 
+ * SAPUI5
+
+		(c) Copyright 2009-2021 SAP SE. All rights reserved
+	 
+ */
+(function(){sap.ui.define(["./SinaObject","../core/Log","../core/core"],function(e,t,r){function n(e,t){if(!(e instanceof t)){throw new TypeError("Cannot call a class as a function")}}function o(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||false;n.configurable=true;if("value"in n)n.writable=true;Object.defineProperty(e,n.key,n)}}function i(e,t,r){if(t)o(e.prototype,t);if(r)o(e,r);Object.defineProperty(e,"prototype",{writable:false});return e}function u(e,t){if(typeof t!=="function"&&t!==null){throw new TypeError("Super expression must either be null or a function")}e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:true,configurable:true}});Object.defineProperty(e,"prototype",{writable:false});if(t)f(e,t)}function f(e,t){f=Object.setPrototypeOf?Object.setPrototypeOf.bind():function e(t,r){t.__proto__=r;return t};return f(e,t)}function c(e){var t=s();return function r(){var n=p(e),o;if(t){var i=p(this).constructor;o=Reflect.construct(n,arguments,i)}else{o=n.apply(this,arguments)}return l(this,o)}}function l(e,t){if(t&&(typeof t==="object"||typeof t==="function")){return t}else if(t!==void 0){throw new TypeError("Derived constructors may only return object or undefined")}return a(e)}function a(e){if(e===void 0){throw new ReferenceError("this hasn't been initialised - super() hasn't been called")}return e}function s(){if(typeof Reflect==="undefined"||!Reflect.construct)return false;if(Reflect.construct.sham)return false;if(typeof Proxy==="function")return true;try{Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}));return true}catch(e){return false}}function p(e){p=Object.setPrototypeOf?Object.getPrototypeOf.bind():function e(t){return t.__proto__||Object.getPrototypeOf(t)};return p(e)}function y(e,t,r){if(t in e){Object.defineProperty(e,t,{value:r,enumerable:true,configurable:true,writable:true})}else{e[t]=r}return e}
+/*!
+   * SAPUI5
+
+		(c) Copyright 2009-2021 SAP SE. All rights reserved
+	
+   */var v=e["SinaObject"];var b=t["Log"];var d=function(e){u(o,e);var t=c(o);function o(e){var i,u,f,c;var l;n(this,o);l=t.call(this,e);y(a(l),"id",r.generateId());y(a(l),"items",[]);y(a(l),"log",new b);l.id=(i=e.id)!==null&&i!==void 0?i:l.id;l.title=(u=e.title)!==null&&u!==void 0?u:l.title;l.setItems(e.items||[]);l.query=(f=e.query)!==null&&f!==void 0?f:l.query;l.log=(c=e.log)!==null&&c!==void 0?c:l.log;return l}i(o,[{key:"setItems",value:function e(t){if(!Array.isArray(t)||t.length<1){return this}this.items=[];for(var r=0;r<(t===null||t===void 0?void 0:t.length);r++){var n=t[r];n.parent=this;this.items.push(n)}return this}},{key:"toString",value:function e(){var t=[];for(var r=0;r<this.items.length;++r){var n=this.items[r];t.push(n.toString())}return t.join("\n")}}]);return o}(v);var h={__esModule:true};h.ResultSet=d;return h})})();
+//# sourceMappingURL=ResultSet.js.map

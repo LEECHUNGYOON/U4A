@@ -1,0 +1,2 @@
+sap.ui.define(["sap/suite/ui/commons/BaseContainer","./library"],function(e,t){"use strict";var i=t.LayoutType;var s=e.extend("sap.suite.ui.commons.AppsContainer",{metadata:{properties:{layout:{type:"sap.suite.ui.commons.LayoutType",group:"Misc",visibility:"hidden"}}},renderer:{apiVersion:2}});s.prototype.init=function(){this.setLayout(i.SideBySide);this.setTitle(this.getResourceBundle().getText("appsTitle"));e.prototype.init.apply(this,arguments)};return s});
+//# sourceMappingURL=AppsContainer.js.map

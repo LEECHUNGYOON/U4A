@@ -1,0 +1,1 @@
+sap.ui.define(["sap/ui/core/Core"],(function(e){"use strict";return sap.ui.requireSync("sap/base/i18n/ResourceBundle").create.bind(e,{bundleName:"sap.ui.vk.i18n.messagebundle"})}),!0);

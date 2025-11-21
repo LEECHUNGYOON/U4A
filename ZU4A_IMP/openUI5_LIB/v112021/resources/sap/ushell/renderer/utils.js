@@ -1,0 +1,3 @@
+// Copyright (c) 2009-2023 SAP SE, All Rights Reserved
+sap.ui.define(["sap/ushell/EventHub","sap/ui/core/Core"],function(e,r){"use strict";function n(n){setTimeout(function(){r.getEventBus().publish("sap.ushell","rendererLoaded",{rendererName:"fiori2"})},0);e.emit("RendererLoaded",{rendererName:"fiori2"})}function i(e,n){setTimeout(function(){r.getEventBus().publish("sap.ushell.renderers.fiori2.Renderer",e,n)},0)}return{publishExternalEvent:i,init:n}});
+//# sourceMappingURL=utils.js.map
