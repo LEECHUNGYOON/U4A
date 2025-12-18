@@ -92,28 +92,61 @@ sap.ui.define("u4a.m.CountdownTimer", [
         // ======================================================================
         // Renderer
         // ======================================================================
-        renderer: function (oRm, oControl) {
-            oRm.write("<div");
-            oRm.writeControlData(oControl);
+        // renderer: function (oRm, oControl) {
+            
+        //     oRm.write("<div");
+        //     oRm.writeControlData(oControl);            
+        //     oRm.writeClasses(oControl);
+        //     oRm.addStyle("font-size", oControl.getFontSize());
+        //     oRm.addStyle("color", oControl.getFontColor());
+        //     oRm.addStyle("font-weight", "bold");
 
-            oRm.addStyle("font-size", oControl.getFontSize());
-            oRm.addStyle("color", oControl.getFontColor());
-            oRm.addStyle("font-weight", "bold");
+        //     if (!oControl.getVisible()) {
+        //         oRm.addStyle("display", "none");
+        //     }
+
+        //     oRm.writeStyles();
+        //     oRm.write(">");
+
+        //     var h = oControl.getHourCount(),
+        //         m = oControl.getMinCount(),
+        //         s = oControl.getSecCount();
+
+        //     // displayFormat 적용
+        //     oRm.writeEscaped(oControl._formatDisplay(h, m, s));
+        //     oRm.write("</div>");
+        // },
+        
+        /**
+         * @since   2025-12-17 16:50:56
+         * @version v3.5.7-3
+         * @author  soccerhs
+         * @description
+         * 
+         * Renderer API v2 버전으로 변경
+         * 
+         */
+        renderer: function (oRm, oControl) {
+            
+            oRm.openStart("div", oControl);
+
+            oRm.style("font-size", oControl.getFontSize());
+            oRm.style("color", oControl.getFontColor());
+            oRm.style("font-weight", "bold");
 
             if (!oControl.getVisible()) {
-                oRm.addStyle("display", "none");
+                oRm.style("display", "none");
             }
 
-            oRm.writeStyles();
-            oRm.write(">");
+            oRm.openEnd();
 
-            var h = oControl.getHourCount(),
-                m = oControl.getMinCount(),
-                s = oControl.getSecCount();
+            oRm.text(oControl._formatDisplay(
+                oControl.getHourCount(),
+                oControl.getMinCount(),
+                oControl.getSecCount()
+            ));
 
-            // displayFormat 적용
-            oRm.writeEscaped(oControl._formatDisplay(h, m, s));
-            oRm.write("</div>");
+            oRm.close("div");
         },
 
         // displayFormat setter → invalidate() 막고 바로 화면만 갱신

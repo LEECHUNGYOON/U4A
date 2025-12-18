@@ -80,7 +80,16 @@ sap.ui.core.Control.extend("u4a.m.StackNavContainer", {	//EXTENSION CONTROL NAME
 				rm.addClass("U4A_StackPage U4A_StackPage-" + idx);
 			}
 
-			rm.writeClasses();
+			/**
+			 * @since   2025-12-17 16:50:56
+			 * @version v3.5.7-3
+			 * @author  soccerhs
+			 * @description
+			 * 
+			 * PAGE 영역에 addStyleClass 미적용 수정.
+			 * 
+			 */
+			rm.writeClasses(oPage);
 			rm.write(">");
 
 			if(oLeftPage){
@@ -463,4 +472,3 @@ sap.ui.core.Control.extend("u4a.m.StackNavContainer", {	//EXTENSION CONTROL NAME
 		});
 	}
 });
-

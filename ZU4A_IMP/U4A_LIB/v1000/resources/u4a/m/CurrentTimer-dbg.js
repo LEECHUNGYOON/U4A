@@ -56,37 +56,81 @@ sap.ui.define("u4a.m.CurrentTimer", [
         //=============================================================
         // Renderer
         //=============================================================
-        renderer: function (oRm, oControl) {
-            var sWidth = oControl.getWidth(),
-                sFontSize = oControl.getFontSize(),
-                sFontColor = oControl.getFontColor(),
-                sTextAlign = oControl.getTextAlign(),
-                bSupport2400 = oControl.getSupport2400();
+//         renderer: function (oRm, oControl) {
+//             var sWidth = oControl.getWidth(),
+//                 sFontSize = oControl.getFontSize(),
+//                 sFontColor = oControl.getFontColor(),
+//                 sTextAlign = oControl.getTextAlign(),
+//                 bSupport2400 = oControl.getSupport2400();
 
-            // [개선] 수정된 시간 포맷 함수 사용
-            var sInitTime = oControl._getFormattedCurrentTime(bSupport2400);
+//             // [개선] 수정된 시간 포맷 함수 사용
+//             var sInitTime = oControl._getFormattedCurrentTime(bSupport2400);
 
-            oRm.write("<span");
-            oRm.writeControlData(oControl);
-            oRm.addStyle("display", "inline-block");
-            sWidth ? oRm.addStyle("width", sWidth) : oRm.addStyle("max-width", "100%");
-            oRm.addStyle("color", sFontColor);
-            oRm.addStyle("font-size", sFontSize);
+//             oRm.write("<span");
+//             oRm.writeControlData(oControl);
+//             oRm.writeClasses(oControl);
+//             oRm.addStyle("display", "inline-block");
+//             sWidth ? oRm.addStyle("width", sWidth) : oRm.addStyle("max-width", "100%");
+//             oRm.addStyle("color", sFontColor);
+//             oRm.addStyle("font-size", sFontSize);
 
-            if (sTextAlign) {
-                var sBrowser = sap.ui.Device.browser.name;
-                if ((sBrowser === "ie" || sBrowser === "ed") && sTextAlign === TextAlign.End) {
-                    oRm.addStyle("text-align", "right");
-                } else {
-                    oRm.addStyle("text-align", sTextAlign);
-                }
-            }
+//             if (sTextAlign) {
+//                 var sBrowser = sap.ui.Device.browser.name;
+//                 if ((sBrowser === "ie" || sBrowser === "ed") && sTextAlign === TextAlign.End) {
+//                     oRm.addStyle("text-align", "right");
+//                 } else {
+//                     oRm.addStyle("text-align", sTextAlign);
+//                 }
+//             }
 
-            oRm.writeStyles();
-            oRm.write(">");
-            oRm.writeEscaped(sInitTime);
-            oRm.write("</span>");
-        },
+//             oRm.writeStyles();
+//             oRm.write(">");
+//             oRm.writeEscaped(sInitTime);
+//             oRm.write("</span>");
+//         },
+
+        /**
+         * @since   2025-12-17 16:50:56
+         * @version v3.5.7-3
+         * @author  soccerhs
+         * @description
+         * 
+         * Renderer API v2 버전으로 변경
+         * 
+         */
+        renderer: function (oRm, oControl) {
+  
+            var sWidth        = oControl.getWidth(),
+                sFontSize     = oControl.getFontSize(),
+                sFontColor    = oControl.getFontColor(),
+                sTextAlign    = oControl.getTextAlign(),
+                bSupport2400  = oControl.getSupport2400();
+
+            // [개선] 수정된 시간 포맷 함수 사용
+            var sInitTime = oControl._getFormattedCurrentTime(bSupport2400);
+
+            oRm.openStart("span", oControl);
+
+            oRm.style("display", "inline-block");
+            sWidth ? oRm.style("width", sWidth) : oRm.style("max-width", "100%");
+            oRm.style("color", sFontColor);
+            oRm.style("font-size", sFontSize);
+
+            if (sTextAlign) {
+                var sBrowser = sap.ui.Device.browser.name;
+                if ((sBrowser === "ie" || sBrowser === "ed") && sTextAlign === TextAlign.End) {
+                    oRm.style("text-align", "right");
+                } else {
+                    oRm.style("text-align", sTextAlign);
+                }
+            }
+
+            oRm.openEnd();
+
+            oRm.text(sInitTime);
+
+            oRm.close("span");
+        },
 
         //=============================================================
         // Lifecycle
