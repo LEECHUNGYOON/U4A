@@ -1,2 +1,0 @@
-sap.ui.define(["./library"],function(e){"use strict";var n=e.LayoutType;return{apiVersion:2,render:function(e,r){e.openStart("div",r).class("sapUiBaseContainer");if(r.getLayout()===n.SideBySide){e.class("sapUiSideBySide")}else if(r.getLayout()===n.Horizontal){e.class("sapUiHorizontal")}else{e.class("sapUiVertical")}e.openEnd();this.renderContent(e,r);e.close("div")},renderContent:function(e,n){e.renderControl(n.getHeader());e.renderControl(n.getInnerControl())}}});
-//# sourceMappingURL=BaseContainerRenderer.js.map

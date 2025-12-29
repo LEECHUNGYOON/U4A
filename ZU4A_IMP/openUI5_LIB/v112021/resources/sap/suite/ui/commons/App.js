@@ -1,2 +1,0 @@
-sap.ui.define(["sap/suite/ui/commons/BaseApp"],function(e){"use strict";var t=e.extend("sap.suite.ui.commons.App",{metadata:{properties:{icon:{type:"string",group:"Misc",defaultValue:""},url:{type:"string",group:"Misc",defaultValue:""}}},events:{}});t.prototype.launchApp=async(e,t,a)=>{const s=await sap.ushell.Container.getServiceAsync("SpaceContent");s.launchTileTarget(t,a)};return t});
-//# sourceMappingURL=App.js.map

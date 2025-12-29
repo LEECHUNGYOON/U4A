@@ -1,7 +1,0 @@
-/*!
- * OpenUI5
- * (c) Copyright 2009-2024 SAP SE or an SAP affiliate company.
- * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
- */
-sap.ui.define(["sap/ui/core/Popup","sap/ui/core/BusyIndicator","sap/base/Log","sap/ui/dt/Util","sap/m/InstanceManager","sap/base/util/includes","sap/base/util/restricted/_max","sap/base/util/restricted/_min"],function(e,t,n,r,i,a,u,o){"use strict";var p=10;var s=3;var c=[];var l=[];function d(){return i.getOpenDialogs().concat(i.getOpenPopovers(),t.oPopup&&t.oPopup.isOpen()?[t.oPopup]:[])}function f(e,t,r){if(++e<=t){if(a(r,e)){return f(e,t,r)}return e}n.error(`sap.ui.dt.util.ZIndexManager: z-index limit has been exceeded, therefore all following calls receive the same z-Index = ${t}`);return t}function v(e){return e.map(function(e){return e._iZIndex||e.oPopup._iZIndex})}var x={getNextZIndex(){var t=d();var n=[];var r=[];t.forEach(function(e){var t=l.every(function(t){return t(e)});t&&l.length>0?n.push(e):r.push(e)});var i=n.length>0?u(v(n)):-1;var a=r.length>0?o(v(r)):-1;if(i<a){return this._getNextMinZIndex(a)}return e.getNextZIndex()},getZIndexBelowPopups(){var t=d();var n;if(t.length>0){n=Math.min.apply(null,v(t))}if(!r.isInteger(n)){return e.getNextZIndex()}return this._getNextMinZIndex(n)},addPopupFilter(e){if(typeof e==="function"){l=l.concat([e])}},removePopupFilter(e){l=l.filter(function(t){return t===e})},_getNextMinZIndex(e){var t=e-s;var n=e-p;var r=f(n,t,c);c.push(r);return r}};return x});
-//# sourceMappingURL=ZIndexManager.js.map

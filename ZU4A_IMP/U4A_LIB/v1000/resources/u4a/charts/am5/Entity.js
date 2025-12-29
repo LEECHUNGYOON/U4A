@@ -1,1 +1,0 @@
-sap.ui.define("u4a.charts.am5.Entity",["u4a/charts/am5/Settings"],function(a){"use strict";let b=a.extend("u4a.charts.am5.Entity",{metadata:{library:"u4a.charts.am5"},init:function(){a.prototype.init.apply(this,arguments)},renderer:function(){},exit:function(){a.prototype.exit.apply(this,arguments)}});return b});

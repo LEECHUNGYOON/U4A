@@ -1,6 +1,0 @@
-/*!
- * SAPUI5
- * (c) Copyright 2009-2023 SAP SE. All rights reserved.
- */
-sap.ui.define(["sap/ui/core/Core","sap/ui/core/library","sap/ui/comp/smartfield/type/String"],function(t,o,e){"use strict";var r=e.extend("sap.ui.comp.odata.type.NumericText",{constructor:function(t,o){if(t&&t.isStringNullable){t=Object.assign({parseKeepsEmptyString:true},t)}e.call(this,t,o);this.oCustomRegex=new RegExp("^[0]*$")}});r.prototype.parseValue=function(t,o,r){if(this.oCustomRegex.test(t)&&!r){if(this.oFormatOptions&&(this.oFormatOptions.bFixedKey||this.oFormatOptions.textArrangement)){return t}if(typeof this.oFieldControl==="function"){this.oFieldControl(t,o)}if(this.oFormatOptions&&this.oFormatOptions.parseKeepsEmptyString){return""}return null}return e.prototype.parseValue.apply(this,arguments)};r.prototype.formatValue=function(t,o,r){if(this.oCustomRegex.test(t)){if(this.oFormatOptions&&(this.oFormatOptions.bFixedKey||this.oFormatOptions.textArrangement)){return t}if(r){return"0"}return""}if(t===null&&this.oFormatOptions&&this.oFormatOptions.isStringNullable){return null}return e.prototype.formatValue.apply(this,arguments)};r.prototype.getName=function(){return"sap.ui.comp.odata.type.NumericText"};r.prototype.destroy=function(){e.prototype.destroy.apply(this,arguments)};return r});
-//# sourceMappingURL=NumericText.js.map

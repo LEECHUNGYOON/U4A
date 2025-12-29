@@ -1,2 +1,0 @@
-sap.ui.define(["sap/suite/ui/commons/BaseContainer"],function(t){"use strict";var e=t.extend("sap.suite.ui.commons.InsightsContainer",{renderer:{apiVersion:2}});e.prototype.init=function(){this.setTitle(this.getResourceBundle().getText("insights"));t.prototype.init.apply(this,arguments)};e.prototype._onPressMenuButton=function(){};return e});
-//# sourceMappingURL=InsightsContainer.js.map

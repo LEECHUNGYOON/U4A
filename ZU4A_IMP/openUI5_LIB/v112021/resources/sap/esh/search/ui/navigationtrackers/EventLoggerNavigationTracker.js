@@ -1,8 +1,0 @@
-/*! 
- * SAPUI5
-
-		(c) Copyright 2009-2021 SAP SE. All rights reserved
-	 
- */
-(function(){sap.ui.define(["../eventlogging/UserEvents","../sinaNexTS/sina/ObjectSuggestion","../sinaNexTS/sina/ResultSet","../sinaNexTS/sina/SearchResultSetItem","../sinaNexTS/sina/SearchResultSetItemAttributeBase"],function(e,t,n,r,i){var a=e["UserEventType"];var s=t["ObjectSuggestion"];var o=n["ResultSet"];var u=r["SearchResultSetItem"];var T=i["SearchResultSetItemAttributeBase"];function g(e){if(!e){return{executionId:"-1",positionInList:-1}}var t=e.parent;if(!(t instanceof o)){return{executionId:"-1",positionInList:-1}}return{executionId:t.id,positionInList:t===null||t===void 0?void 0:t.items.indexOf(e)}}function I(e){var t=e.parent;if(t instanceof T){return Object.assign({type:a.RESULT_LIST_ITEM_ATTRIBUTE_NAVIGATE,targetUrl:e.targetUrl},g(t.parent))}if(t instanceof u&&t.parent instanceof s){return Object.assign({type:a.OBJECT_SUGGESTION_NAVIGATE,targetUrl:e.targetUrl},g(t.parent))}if(t instanceof u){var n=t.defaultNavigationTarget===e?a.RESULT_LIST_ITEM_NAVIGATE:a.RESULT_LIST_ITEM_NAVIGATE_CONTEXT;return Object.assign({type:n,targetUrl:e.targetUrl},g(t))}return{type:a.ITEM_NAVIGATE,targetUrl:e.targetUrl,executionId:"",positionInList:-1}}function c(e){return function(t){var n=I(t);e.eventLogger.logEvent(n)}}var S={__esModule:true};S.generateEventLoggerNavigationTracker=c;return S})})();
-//# sourceMappingURL=EventLoggerNavigationTracker.js.map
